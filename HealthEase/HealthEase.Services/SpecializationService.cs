@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using MapsterMapper;
 using HealthEase.Model.DTOs;
 using HealthEase.Model.Requests;
 using HealthEase.Model.SearchObjects;
@@ -20,10 +20,12 @@ namespace HealthEase.Services
         }
         public override IQueryable<Specialization> AddFilter(SpecializationSearchObject search, IQueryable<Specialization> query)
         {
+            
             if (!string.IsNullOrEmpty(search?.SpecializationNameGTE))
             {
                 query = query.Where(x => x.Name.ToLower().StartsWith(search.SpecializationNameGTE));
             }
+            query = query.Where(x => !x.IsDeleted);
             return query;
         }
     }

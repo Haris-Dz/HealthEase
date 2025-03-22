@@ -4,7 +4,7 @@ using HealthEase.Services.BaseServiceInterfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using HealthEase.Services.Database;
-using AutoMapper;
+using MapsterMapper;
 using HealthEase.Model.Exceptions;
 
 namespace HealthEase.Services.BaseServices
