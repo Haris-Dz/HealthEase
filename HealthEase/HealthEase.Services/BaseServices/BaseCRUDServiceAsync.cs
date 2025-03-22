@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using MapsterMapper;
 using HealthEase.Model.Exceptions;
 using HealthEase.Model.SearchObjects;
 using HealthEase.Services.Database;
@@ -10,11 +10,12 @@ using System.Threading.Tasks;
 
 namespace HealthEase.Services.BaseServices
 {
-    public class BaseCRUDServiceAsync<TModel, TSearch, TDbEntity, TInsert, TUpdate> : BaseServiceAsync<TModel, TSearch, TDbEntity> where TModel : class where TSearch : BaseSearchObject where TDbEntity : class
+    public class BaseCRUDServiceAsync<TModel, TSearch, TDbEntity, TInsert, TUpdate> : BaseServiceAsync<TModel, TSearch, TDbEntity>
+        where TModel : class
+        where TSearch : BaseSearchObject
+        where TDbEntity : class
     {
-        public BaseCRUDServiceAsync(HealthEaseContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
+        public BaseCRUDServiceAsync(HealthEaseContext context, IMapper mapper) : base(context, mapper) { }
 
         public virtual async Task<TModel> InsertAsync(TInsert request, CancellationToken cancellationToken = default)
         {
@@ -29,7 +30,11 @@ namespace HealthEase.Services.BaseServices
 
             return Mapper.Map<TModel>(entity);
         }
+
+        // Method for actions before insert (can be overridden)
         public virtual async Task BeforeInsertAsync(TInsert request, TDbEntity entity, CancellationToken cancellationToken = default) { }
+
+        // Method for actions after insert (can be overridden)
         public virtual async Task AfterInsertAsync(TInsert request, TDbEntity entity, CancellationToken cancellationToken = default) { }
 
         public virtual async Task<TModel> UpdateAsync(int id, TUpdate request, CancellationToken cancellationToken = default)
@@ -41,6 +46,7 @@ namespace HealthEase.Services.BaseServices
             {
                 throw new UserException("Unable to find an object with the provided ID!");
             }
+
             Mapper.Map(request, entity);
 
             await BeforeUpdateAsync(request, entity);
@@ -52,7 +58,10 @@ namespace HealthEase.Services.BaseServices
             return Mapper.Map<TModel>(entity);
         }
 
+        // Method for actions before update (can be overridden)
         public virtual async Task BeforeUpdateAsync(TUpdate request, TDbEntity entity, CancellationToken cancellationToken = default) { }
+
+        // Method for actions after update (can be overridden)
         public virtual async Task AfterUpdateAsync(TUpdate request, TDbEntity entity, CancellationToken cancellationToken = default) { }
 
         public virtual async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
@@ -63,6 +72,7 @@ namespace HealthEase.Services.BaseServices
                 throw new UserException("Unable to find an object with the provided ID!");
             }
 
+            // Soft delete if entity supports soft deletion, otherwise remove
             if (entity is ISoftDeletable softDeleteEntity)
             {
                 softDeleteEntity.IsDeleted = true;
@@ -79,6 +89,7 @@ namespace HealthEase.Services.BaseServices
             await AfterDeleteAsync(entity, cancellationToken);
         }
 
+        // Method for actions after delete (can be overridden)
         public virtual async Task AfterDeleteAsync(TDbEntity entity, CancellationToken cancellationToken) { }
     }
 }

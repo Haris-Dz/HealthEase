@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using MapsterMapper;
 using HealthEase.Model.Exceptions;
 using HealthEase.Model.SearchObjects;
 using HealthEase.Model;
@@ -13,7 +13,10 @@ using HealthEase.Services.Database;
 
 namespace HealthEase.Services.BaseServices
 {
-    public class BaseServiceAsync<TModel, TSearch, TDbEntity> : IServiceAsync<TModel, TSearch> where TSearch : BaseSearchObject where TDbEntity : class where TModel : class
+    public class BaseServiceAsync<TModel, TSearch, TDbEntity> : IServiceAsync<TModel, TSearch>
+        where TSearch : BaseSearchObject
+        where TDbEntity : class
+        where TModel : class
     {
         public HealthEaseContext Context { get; }
         public IMapper Mapper { get; }
@@ -24,6 +27,7 @@ namespace HealthEase.Services.BaseServices
             Mapper = mapper;
         }
 
+        // Fetches paged results with applied filters, sorting, and pagination
         public virtual async Task<PagedResult<TModel>> GetPagedAsync(TSearch search, CancellationToken cancellationToken = default)
         {
             List<TModel> result = new List<TModel>();
@@ -32,29 +36,27 @@ namespace HealthEase.Services.BaseServices
 
             if (!string.IsNullOrEmpty(search?.IncludeTables))
             {
-                query = ApplyIncludes(query, search.IncludeTables);
+                query = ApplyIncludes(query, search.IncludeTables); // Applies related table includes
             }
 
-            query = AddFilter(search, query);
+            query = AddFilter(search, query); // Adds search filters
 
-            int count = await query.CountAsync(cancellationToken);
+            int count = await query.CountAsync(cancellationToken); // Counts total matching records
 
             if (!string.IsNullOrEmpty(search?.OrderBy) && !string.IsNullOrEmpty(search?.SortDirection))
             {
-                query = ApplySorting(query, search.OrderBy, search.SortDirection);
+                query = ApplySorting(query, search.OrderBy, search.SortDirection); // Applies sorting
             }
 
             if (search?.Page.HasValue == true && search?.PageSize.HasValue == true && (search?.RetrieveAll.HasValue == false || search?.RetrieveAll == null))
             {
-                query = query.Skip((search.Page.Value - 1) * search.PageSize.Value).Take(search.PageSize.Value);
+                query = query.Skip((search.Page.Value - 1) * search.PageSize.Value).Take(search.PageSize.Value); // Applies pagination
             }
 
             var list = await query.ToListAsync(cancellationToken);
-
-            //result = Mapper.Map(list, result);
             result = Mapper.Map<List<TModel>>(list);
 
-            await CustomMapPagedResponseAsync(result, cancellationToken);
+            await CustomMapPagedResponseAsync(result, cancellationToken); // Custom mapping for the response
 
             PagedResult<TModel> pagedResult = new PagedResult<TModel>();
             pagedResult.ResultList = result;
@@ -63,8 +65,10 @@ namespace HealthEase.Services.BaseServices
             return pagedResult;
         }
 
+        // Placeholder for additional custom mapping on paged response
         public virtual async Task CustomMapPagedResponseAsync(List<TModel> result, CancellationToken cancellationToken = default) { }
 
+        // Applies table includes for related entities based on comma-separated string
         private IQueryable<TDbEntity> ApplyIncludes(IQueryable<TDbEntity> query, string includes)
         {
             try
@@ -80,6 +84,7 @@ namespace HealthEase.Services.BaseServices
             return query;
         }
 
+        // Applies sorting based on specified column and direction (ASC/DESC)
         public IQueryable<TDbEntity> ApplySorting(IQueryable<TDbEntity> query, string sortColumn, string sortDirection)
         {
             var entityType = typeof(TDbEntity);
@@ -99,7 +104,7 @@ namespace HealthEase.Services.BaseServices
 
                 if (methodName == "")
                 {
-                    return query;
+                    return query; // If no valid sorting direction, return query unsorted
                 }
 
                 var resultExpression = Expression.Call(typeof(Queryable), methodName,
@@ -110,7 +115,7 @@ namespace HealthEase.Services.BaseServices
             }
             else
             {
-                return query;
+                return query; // Return unsorted if column not found
             }
         }
 
@@ -119,22 +124,20 @@ namespace HealthEase.Services.BaseServices
             return query;
         }
 
-
         public virtual async Task<TModel> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var entity = await Context.Set<TDbEntity>().FindAsync(id, cancellationToken);
             if (entity == null)
             {
-                throw new UserException("Unable to find an object with the provided ID!");
+                throw new UserException("Unable to find an object with the provided ID!"); 
             }
 
-            {
-                var mappedObj = Mapper.Map<TModel>(entity);
-                await CustomMapResponseAsync(mappedObj, cancellationToken);
-                return mappedObj;
-            }
+            var mappedObj = Mapper.Map<TModel>(entity);
+            await CustomMapResponseAsync(mappedObj, cancellationToken); // Custom response mapping if needed
+            return mappedObj;
         }
 
+        // Placeholder for additional custom mapping on single record response
         public virtual async Task CustomMapResponseAsync(TModel mappedObj, CancellationToken cancellationToken = default) { }
     }
 }

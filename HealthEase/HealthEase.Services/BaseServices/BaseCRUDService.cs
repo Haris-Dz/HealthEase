@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using MapsterMapper;
 using HealthEase.Model.Exceptions;
 using HealthEase.Model.SearchObjects;
 using HealthEase.Services.Database;
