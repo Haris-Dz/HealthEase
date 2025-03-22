@@ -12,16 +12,10 @@ namespace HealthEase.Services.Database
     {
         [Key]
         public int PaymentId { get; set; }
-
-        [Required]
-        public double Amount { get; set; }
-
-        [Required]
+        public double? Amount { get; set; }
         public int PatientId { get; set; }
         [ForeignKey("PatientId")]
         public virtual Patient Patient { get; set; } = null!;
-
-        [Required]
-        public DateTime PaymentDate { get; set; }
+        public DateTime? PaymentDate { get; set; }
     }
 }

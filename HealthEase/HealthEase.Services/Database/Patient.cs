@@ -11,9 +11,9 @@ namespace HealthEase.Services.Database
     {
         [Key]
         public int PatientId { get; set; }
-        [Required, MaxLength(100)]
+        [MaxLength(100)]
         public string Name { get; set; } = null!;
-        [Required, EmailAddress]
+        [EmailAddress]
         public string Email { get; set; } = null!;
 
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

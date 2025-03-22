@@ -30,7 +30,7 @@ namespace HealthEase.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentId"));
 
-                    b.Property<DateTime>("AppointmentDate")
+                    b.Property<DateTime?>("AppointmentDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletionTime")
@@ -152,7 +152,7 @@ namespace HealthEase.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationId"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletionTime")
@@ -162,7 +162,6 @@ namespace HealthEase.Services.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Message")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
@@ -211,7 +210,7 @@ namespace HealthEase.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
 
-                    b.Property<double>("Amount")
+                    b.Property<double?>("Amount")
                         .HasColumnType("float");
 
                     b.Property<DateTime?>("DeletionTime")
@@ -223,7 +222,7 @@ namespace HealthEase.Services.Migrations
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PaymentDate")
+                    b.Property<DateTime?>("PaymentDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("PaymentId");
@@ -257,13 +256,12 @@ namespace HealthEase.Services.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Medication")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PrescriptionDate")
+                    b.Property<DateTime?>("PrescriptionDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("PrescriptionId");
@@ -301,7 +299,7 @@ namespace HealthEase.Services.Migrations
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Rating")
+                    b.Property<int?>("Rating")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")

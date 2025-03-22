@@ -12,19 +12,15 @@ namespace HealthEase.Services.Database
     {
         [Key]
         public int ReviewId { get; set; }
-
-        [Required]
         public int DoctorId { get; set; }
         [ForeignKey("DoctorId")]
         public virtual Doctor Doctor { get; set; } = null!;
-
-        [Required]
         public int PatientId { get; set; }
         [ForeignKey("PatientId")]
         public virtual Patient Patient { get; set; } = null!;
 
-        [Required]
-        public int Rating { get; set; } // rating 1 - 5
+        [Range(1,5)]
+        public int? Rating { get; set; } // rating 1 - 5
         [MaxLength(500)]
         public string? Comment { get; set; }
     }
