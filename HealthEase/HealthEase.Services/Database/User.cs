@@ -11,17 +11,14 @@ namespace HealthEase.Services.Database
     {
         [Key]
         public int UserId { get; set; }
-        [Required, MaxLength(100)]
+        [MaxLength(100)]
         public string FirstName { get; set; } = null!;
-        [Required, MaxLength(100)]
+        [MaxLength(100)]
         public string LastName { get; set; } = null!;
-        [Required, EmailAddress]
+        [EmailAddress]
         public string Email { get; set; } = null!;
-        [Required]
         public string PasswordHash { get; set; } = null!;
-        [Required]
         public string PasswordSalt { get; set; } = null!;
-        [Required]
         public UserRole Role { get; set; } = null!;
 
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

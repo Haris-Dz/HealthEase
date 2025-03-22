@@ -11,8 +11,8 @@ namespace HealthEase.Services.Database
     {
         [Key]
         public int PrescriptionStatusId { get; set; }
-        [Required, MaxLength(100)]
-        public string Status { get; set; } = null!;
+        [MaxLength(100)]
+        public string? Status { get; set; } 
 
         public virtual ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
     }

@@ -11,8 +11,6 @@ namespace HealthEase.Services.Database
     {
         [Key]
         public int PaymentStatusId { get; set; }
-
-        [Required]
         public string Status { get; set; } = null!;
 
         public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

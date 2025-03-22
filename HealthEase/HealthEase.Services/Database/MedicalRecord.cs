@@ -12,7 +12,6 @@ namespace HealthEase.Services.Database
     {
         [Key]
         public int MedicalRecordId { get; set; }
-        [Required]
         public int PatientId { get; set; }
         [ForeignKey("PatientId")]
         public virtual Patient Patient { get; set; } = null!;

@@ -12,16 +12,10 @@ namespace HealthEase.Services.Database
     {
         [Key]
         public int NotificationId { get; set; }
-
-        [Required]
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public virtual User User { get; set; } = null!;
-
-        [Required]
-        public string Message { get; set; } = null!;
-
-        [Required]
-        public DateTime CreatedAt { get; set; }
+        public string? Message { get; set; }
+        public DateTime? CreatedAt { get; set; }
     }
 }

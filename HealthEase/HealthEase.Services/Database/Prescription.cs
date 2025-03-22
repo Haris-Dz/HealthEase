@@ -13,21 +13,15 @@ namespace HealthEase.Services.Database
     {
         [Key]
         public int PrescriptionId { get; set; }
-
-        [Required]
         public int DoctorId { get; set; }
         [ForeignKey("DoctorId")]
         public virtual Doctor Doctor { get; set; } = null!;
-
-        [Required]
         public int PatientId { get; set; }
         [ForeignKey("PatientId")]
         public virtual Patient Patient { get; set; } = null!;
-
-        [Required]
-        public string Medication { get; set; } = null!;
+        public string? Medication { get; set; } = null!;
 
         public string? Dosage { get; set; }
-        public DateTime PrescriptionDate { get; set; }
+        public DateTime? PrescriptionDate { get; set; }
     }
 }
