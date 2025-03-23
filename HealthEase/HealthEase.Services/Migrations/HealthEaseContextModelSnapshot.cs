@@ -33,11 +33,11 @@ namespace HealthEase.Services.Migrations
                     b.Property<DateTime?>("AppointmentDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("AppointmentStatusId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -45,12 +45,12 @@ namespace HealthEase.Services.Migrations
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("AppointmentId");
 
-                    b.HasIndex("DoctorId");
+                    b.HasIndex("AppointmentStatusId");
 
                     b.HasIndex("PatientId");
 
@@ -59,13 +59,13 @@ namespace HealthEase.Services.Migrations
                     b.ToTable("Appointments");
                 });
 
-            modelBuilder.Entity("HealthEase.Services.Database.Doctor", b =>
+            modelBuilder.Entity("HealthEase.Services.Database.AppointmentStatus", b =>
                 {
-                    b.Property<int>("DoctorId")
+                    b.Property<int>("AppointmentStatusId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DoctorId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentStatusId"));
 
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
@@ -73,47 +73,13 @@ namespace HealthEase.Services.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("Status")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Specialty")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("AppointmentStatusId");
 
-                    b.HasKey("DoctorId");
-
-                    b.ToTable("Doctors");
-                });
-
-            modelBuilder.Entity("HealthEase.Services.Database.DoctorSpecialization", b =>
-                {
-                    b.Property<int>("DoctorSpecializationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DoctorSpecializationId"));
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("SpecializationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DoctorSpecializationId");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("SpecializationId");
-
-                    b.ToTable("DoctorSpecializations");
+                    b.ToTable("AppointmentStatuses");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.MedicalRecord", b =>
@@ -164,12 +130,12 @@ namespace HealthEase.Services.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("PatientId")
                         .HasColumnType("int");
 
                     b.HasKey("NotificationId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PatientId");
 
                     b.ToTable("Notifications");
                 });
@@ -189,13 +155,26 @@ namespace HealthEase.Services.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PatientId");
 
@@ -225,11 +204,39 @@ namespace HealthEase.Services.Migrations
                     b.Property<DateTime?>("PaymentDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("PaymentStatusId")
+                        .HasColumnType("int");
+
                     b.HasKey("PaymentId");
 
                     b.HasIndex("PatientId");
 
+                    b.HasIndex("PaymentStatusId");
+
                     b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.PaymentStatus", b =>
+                {
+                    b.Property<int>("PaymentStatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentStatusId"));
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PaymentStatusId");
+
+                    b.ToTable("PaymentStatuses");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Prescription", b =>
@@ -242,9 +249,6 @@ namespace HealthEase.Services.Migrations
 
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Dosage")
                         .HasColumnType("nvarchar(max)");
@@ -264,15 +268,46 @@ namespace HealthEase.Services.Migrations
                     b.Property<DateTime?>("PrescriptionDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("PrescriptionId");
+                    b.Property<int?>("PrescriptionStatusId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("DoctorId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PrescriptionId");
 
                     b.HasIndex("MedicalRecordId");
 
                     b.HasIndex("PatientId");
 
+                    b.HasIndex("PrescriptionStatusId");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("Prescriptions");
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.PrescriptionStatus", b =>
+                {
+                    b.Property<int>("PrescriptionStatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PrescriptionStatusId"));
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("PrescriptionStatusId");
+
+                    b.ToTable("PrescriptionStatuses");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Review", b =>
@@ -290,9 +325,6 @@ namespace HealthEase.Services.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -302,18 +334,66 @@ namespace HealthEase.Services.Migrations
                     b.Property<int?>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ReviewId");
-
-                    b.HasIndex("DoctorId");
 
                     b.HasIndex("PatientId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.Role", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("RoleId");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            Description = "Administrator with full access to settings, user permissions and platform operations.",
+                            IsDeleted = false,
+                            RoleName = "Admin"
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            Description = "Medical professional providing consultations and working with patients.",
+                            IsDeleted = false,
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            Description = "Supports doctors by managing appointments and assisting with patient coordination.",
+                            IsDeleted = false,
+                            RoleName = "Assistant"
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Specialization", b =>
@@ -338,6 +418,44 @@ namespace HealthEase.Services.Migrations
                     b.HasKey("SpecializationId");
 
                     b.ToTable("Specializations");
+
+                    b.HasData(
+                        new
+                        {
+                            SpecializationId = 1,
+                            IsDeleted = false,
+                            Name = "Cardiologist"
+                        },
+                        new
+                        {
+                            SpecializationId = 2,
+                            IsDeleted = false,
+                            Name = "Oncologists"
+                        },
+                        new
+                        {
+                            SpecializationId = 3,
+                            IsDeleted = false,
+                            Name = "Neurologist"
+                        },
+                        new
+                        {
+                            SpecializationId = 4,
+                            IsDeleted = false,
+                            Name = "Pediatrician"
+                        },
+                        new
+                        {
+                            SpecializationId = 5,
+                            IsDeleted = false,
+                            Name = "Psychiatrist"
+                        },
+                        new
+                        {
+                            SpecializationId = 6,
+                            IsDeleted = false,
+                            Name = "Chiropractor"
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.User", b =>
@@ -376,14 +494,67 @@ namespace HealthEase.Services.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleUserRoleId")
-                        .HasColumnType("int");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("RoleUserRoleId");
-
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            Email = "1",
+                            FirstName = "1",
+                            IsDeleted = false,
+                            LastName = "1",
+                            PasswordHash = "XVDI7NKoOCtMiSrKR1uSSGWvA7o=",
+                            PasswordSalt = "NHVv+8KhAiQqFlz7k1P53Q==",
+                            PhoneNumber = "1",
+                            Username = "1"
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            Email = "admin@mail.com",
+                            FirstName = "Admin",
+                            IsDeleted = false,
+                            LastName = "Admin",
+                            PasswordHash = "vjxFUddajZn+mD4TXhrpKJFpwCk=",
+                            PasswordSalt = "BAbir1GLAnT8mlkl48K82Q==",
+                            PhoneNumber = "000000000",
+                            Username = "admin"
+                        },
+                        new
+                        {
+                            UserId = 3,
+                            Email = "doctor@mail.com",
+                            FirstName = "Doctor",
+                            IsDeleted = false,
+                            LastName = "Doctor",
+                            PasswordHash = "pfDtnGt/IRu/L9EaFAjdfv0ngwk=",
+                            PasswordSalt = "8am+nUzj04mmtBMFrnDslw==",
+                            PhoneNumber = "000000001",
+                            Username = "doctor"
+                        },
+                        new
+                        {
+                            UserId = 4,
+                            Email = "assistant@mail.com",
+                            FirstName = "Assistant",
+                            IsDeleted = false,
+                            LastName = "Assistant",
+                            PasswordHash = "1bwUDDXJ0XBRKYVYycBm+yVzUlQ=",
+                            PasswordSalt = "fQs/0a4aqARNG/avZ7mRlg==",
+                            PhoneNumber = "000000002",
+                            Username = "assistant"
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.UserRole", b =>
@@ -394,29 +565,69 @@ namespace HealthEase.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRoleId"));
 
+                    b.Property<DateTime>("ChangeDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("UserRoleId");
 
-                    b.ToTable("UserRole");
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserRoleId = 1,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 913, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 1,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            UserRoleId = 2,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 913, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 1,
+                            UserId = 2
+                        },
+                        new
+                        {
+                            UserRoleId = 3,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 913, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 3
+                        },
+                        new
+                        {
+                            UserRoleId = 4,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 913, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 3,
+                            UserId = 4
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Appointment", b =>
                 {
-                    b.HasOne("HealthEase.Services.Database.Doctor", "Doctor")
+                    b.HasOne("HealthEase.Services.Database.AppointmentStatus", null)
                         .WithMany("Appointments")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AppointmentStatusId");
 
                     b.HasOne("HealthEase.Services.Database.Patient", "Patient")
                         .WithMany("Appointments")
@@ -424,32 +635,15 @@ namespace HealthEase.Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HealthEase.Services.Database.User", null)
-                        .WithMany("Appointments")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Doctor");
+                    b.HasOne("HealthEase.Services.Database.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Patient");
-                });
 
-            modelBuilder.Entity("HealthEase.Services.Database.DoctorSpecialization", b =>
-                {
-                    b.HasOne("HealthEase.Services.Database.Doctor", "Doctor")
-                        .WithMany("DoctorSpecializations")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HealthEase.Services.Database.Specialization", "Specialization")
-                        .WithMany("DoctorSpecializations")
-                        .HasForeignKey("SpecializationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Specialization");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.MedicalRecord", b =>
@@ -465,13 +659,13 @@ namespace HealthEase.Services.Migrations
 
             modelBuilder.Entity("HealthEase.Services.Database.Notification", b =>
                 {
-                    b.HasOne("HealthEase.Services.Database.User", "User")
+                    b.HasOne("HealthEase.Services.Database.Patient", "Patient")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Payment", b =>
@@ -482,17 +676,15 @@ namespace HealthEase.Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HealthEase.Services.Database.PaymentStatus", null)
+                        .WithMany("Payments")
+                        .HasForeignKey("PaymentStatusId");
+
                     b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Prescription", b =>
                 {
-                    b.HasOne("HealthEase.Services.Database.Doctor", "Doctor")
-                        .WithMany("Prescriptions")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("HealthEase.Services.Database.MedicalRecord", null)
                         .WithMany("Prescriptions")
                         .HasForeignKey("MedicalRecordId");
@@ -503,54 +695,62 @@ namespace HealthEase.Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Doctor");
+                    b.HasOne("HealthEase.Services.Database.PrescriptionStatus", null)
+                        .WithMany("Prescriptions")
+                        .HasForeignKey("PrescriptionStatusId");
+
+                    b.HasOne("HealthEase.Services.Database.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Patient");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Review", b =>
                 {
-                    b.HasOne("HealthEase.Services.Database.Doctor", "Doctor")
-                        .WithMany("Reviews")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("HealthEase.Services.Database.Patient", "Patient")
                         .WithMany("Reviews")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HealthEase.Services.Database.User", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Doctor");
+                    b.HasOne("HealthEase.Services.Database.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Patient");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HealthEase.Services.Database.User", b =>
+            modelBuilder.Entity("HealthEase.Services.Database.UserRole", b =>
                 {
-                    b.HasOne("HealthEase.Services.Database.UserRole", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleUserRoleId")
+                    b.HasOne("HealthEase.Services.Database.Role", "Role")
+                        .WithMany("UserRole")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HealthEase.Services.Database.User", "User")
+                        .WithMany("UserRole")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HealthEase.Services.Database.Doctor", b =>
+            modelBuilder.Entity("HealthEase.Services.Database.AppointmentStatus", b =>
                 {
                     b.Navigation("Appointments");
-
-                    b.Navigation("DoctorSpecializations");
-
-                    b.Navigation("Prescriptions");
-
-                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.MedicalRecord", b =>
@@ -569,21 +769,24 @@ namespace HealthEase.Services.Migrations
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("HealthEase.Services.Database.Specialization", b =>
+            modelBuilder.Entity("HealthEase.Services.Database.PaymentStatus", b =>
                 {
-                    b.Navigation("DoctorSpecializations");
+                    b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.PrescriptionStatus", b =>
+                {
+                    b.Navigation("Prescriptions");
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.Role", b =>
+                {
+                    b.Navigation("UserRole");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.User", b =>
                 {
-                    b.Navigation("Appointments");
-
-                    b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("HealthEase.Services.Database.UserRole", b =>
-                {
-                    b.Navigation("Users");
+                    b.Navigation("UserRole");
                 });
 #pragma warning restore 612, 618
         }
