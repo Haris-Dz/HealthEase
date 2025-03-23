@@ -9,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddTransient<ISpecializationService, SpecializationService>();
-
+builder.Services.AddTransient<IroleService, RoleService>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 
 builder.Services.AddControllers(x =>

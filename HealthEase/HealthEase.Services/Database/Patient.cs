@@ -12,9 +12,13 @@ namespace HealthEase.Services.Database
         [Key]
         public int PatientId { get; set; }
         [MaxLength(100)]
-        public string Name { get; set; } = null!;
+        public string FirstName { get; set; } = null!;
+        [MaxLength(100)]
+        public string LastName { get; set; } = null!;
         [EmailAddress]
         public string Email { get; set; } = null!;
+        public string PasswordHash { get; set; } = null!;
+        public string PasswordSalt { get; set; } = null!;
 
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();

@@ -12,9 +12,9 @@ namespace HealthEase.Services.Database
     {
         [Key]
         public int ReviewId { get; set; }
-        public int DoctorId { get; set; }
-        [ForeignKey("DoctorId")]
-        public virtual Doctor Doctor { get; set; } = null!;
+        public int UserId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; } = null!;
         public int PatientId { get; set; }
         [ForeignKey("PatientId")]
         public virtual Patient Patient { get; set; } = null!;
