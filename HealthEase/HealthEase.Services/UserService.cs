@@ -54,11 +54,6 @@ namespace HealthEase.Services
             {
                 query = query.Where(x => x.Username == searchObject.Username);
             }
-
-            if (searchObject.IsUserRoleIncluded == true)
-            {
-                query = query.Include(x => x.UserRole).ThenInclude(x => x.Role);
-            }
             query = query.Where(x => !x.IsDeleted);
             return query;
         }
@@ -95,14 +90,14 @@ namespace HealthEase.Services
 
         public override async Task AfterInsertAsync(UserInsertRequest request, User entity, CancellationToken cancellationToken = default)
         {
-            //Context.UserRoles.Add(new UserRole
-            //{
-            //    UserId = entity.UserId,
-            //    RoleId = request.RoleId,
-            //    ChangeDate = DateTime.Now,
-            //    IsDeleted = false
-            //});
-            //await Context.SaveChangesAsync(cancellationToken);
+            Context.UserRoles.Add(new UserRole
+            {
+                UserId = entity.UserId,
+                RoleId = request.RoleId,
+                ChangeDate = DateTime.Now,
+                IsDeleted = false
+            });
+            await Context.SaveChangesAsync(cancellationToken);
         }
 
         public override async Task BeforeUpdateAsync(UserUpdateRequest request, User entity, CancellationToken cancellationToken = default)
@@ -131,7 +126,7 @@ namespace HealthEase.Services
         {
             var entity = Context
                 .Users
-                .Include(x => x.UserRole)
+                .Include(x => x.UserRoles)
                     .ThenInclude(y => y.Role).FirstOrDefault(x => x.Username == username);
 
             if (entity == null)

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthEase.Services.Migrations
 {
     [DbContext(typeof(HealthEaseContext))]
-    [Migration("20250323232217_InitialCreate")]
+    [Migration("20250325114645_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -595,7 +595,7 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             UserRoleId = 1,
-                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 913, DateTimeKind.Unspecified),
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             RoleId = 1,
                             UserId = 1
@@ -603,7 +603,7 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             UserRoleId = 2,
-                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 913, DateTimeKind.Unspecified),
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             RoleId = 1,
                             UserId = 2
@@ -611,7 +611,7 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             UserRoleId = 3,
-                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 913, DateTimeKind.Unspecified),
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             RoleId = 2,
                             UserId = 3
@@ -619,7 +619,7 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             UserRoleId = 4,
-                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 913, DateTimeKind.Unspecified),
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             RoleId = 3,
                             UserId = 4
@@ -735,13 +735,13 @@ namespace HealthEase.Services.Migrations
             modelBuilder.Entity("HealthEase.Services.Database.UserRole", b =>
                 {
                     b.HasOne("HealthEase.Services.Database.Role", "Role")
-                        .WithMany("UserRole")
+                        .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("HealthEase.Services.Database.User", "User")
-                        .WithMany("UserRole")
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -784,12 +784,12 @@ namespace HealthEase.Services.Migrations
 
             modelBuilder.Entity("HealthEase.Services.Database.Role", b =>
                 {
-                    b.Navigation("UserRole");
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.User", b =>
                 {
-                    b.Navigation("UserRole");
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

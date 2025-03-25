@@ -14,6 +14,6 @@ namespace HealthEase.Services.Database
         [MaxLength(100)]
         public string RoleName { get; set; } = null!;
         public string? Description { get; set; }
-        public virtual ICollection<UserRole> UserRole { get; set; } = new List<UserRole>();
+        public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     }
 }
