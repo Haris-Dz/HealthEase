@@ -33,6 +33,18 @@ namespace HealthEase.Services.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Specialization>().HasData(
                 new Specialization { SpecializationId = 1, Name = "Cardiologist", IsDeleted = false},
                 new Specialization { SpecializationId = 2, Name = "Oncologists", IsDeleted = false },
@@ -53,10 +65,10 @@ namespace HealthEase.Services.Database
                 new User { UserId = 4, FirstName = "Assistant", LastName = "Assistant", Username = "assistant", Email = "assistant@mail.com", PhoneNumber = "000000002", IsDeleted = false, PasswordSalt = "fQs/0a4aqARNG/avZ7mRlg==", PasswordHash = "1bwUDDXJ0XBRKYVYycBm+yVzUlQ=" }
                 );
             modelBuilder.Entity<UserRole>().HasData(
-                new UserRole { UserRoleId = 1,RoleId=1,UserId=1,ChangeDate= DateTime.Parse("2025-03-23 22:48:41.913"), IsDeleted = false },
-                new UserRole { UserRoleId = 2, RoleId = 1, UserId = 2, ChangeDate = DateTime.Parse("2025-03-23 22:48:41.913"), IsDeleted = false },
-                new UserRole { UserRoleId = 3, RoleId = 2, UserId = 3, ChangeDate = DateTime.Parse("2025-03-23 22:48:41.913"), IsDeleted = false },
-                new UserRole { UserRoleId = 4, RoleId = 3, UserId = 4, ChangeDate = DateTime.Parse("2025-03-23 22:48:41.913"), IsDeleted = false }
+                new UserRole { UserRoleId = 1, RoleId = 1, UserId = 1, ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41), IsDeleted = false },
+                new UserRole { UserRoleId = 2, RoleId = 1, UserId = 2, ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41), IsDeleted = false },
+                new UserRole { UserRoleId = 3, RoleId = 2, UserId = 3, ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41), IsDeleted = false },
+                new UserRole { UserRoleId = 4, RoleId = 3, UserId = 4, ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41), IsDeleted = false }
                 );
 
         }

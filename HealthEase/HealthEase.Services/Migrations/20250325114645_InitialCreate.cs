@@ -379,10 +379,10 @@ namespace HealthEase.Services.Migrations
                 columns: new[] { "UserRoleId", "ChangeDate", "DeletionTime", "IsDeleted", "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 3, 23, 22, 48, 41, 913, DateTimeKind.Unspecified), null, false, 1, 1 },
-                    { 2, new DateTime(2025, 3, 23, 22, 48, 41, 913, DateTimeKind.Unspecified), null, false, 1, 2 },
-                    { 3, new DateTime(2025, 3, 23, 22, 48, 41, 913, DateTimeKind.Unspecified), null, false, 2, 3 },
-                    { 4, new DateTime(2025, 3, 23, 22, 48, 41, 913, DateTimeKind.Unspecified), null, false, 3, 4 }
+                    { 1, new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified), null, false, 1, 1 },
+                    { 2, new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified), null, false, 1, 2 },
+                    { 3, new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified), null, false, 2, 3 },
+                    { 4, new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified), null, false, 3, 4 }
                 });
 
             migrationBuilder.CreateIndex(
