@@ -19,10 +19,10 @@ namespace Healthease.API.Auth
             UrlEncoder encoder,
             ISystemClock clock,
             IUserService userService
-            /*,ICitaociService citaociService*/) : base(options, logger, encoder, clock)
+            /*,IPatientService PatientService*/) : base(options, logger, encoder, clock)
         {
             _userService = userService;
-            //this._citaociService = citaociService;
+            //this._patientService = patientService;
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -44,10 +44,10 @@ namespace Healthease.API.Auth
             if (user == null)
             {
                 return AuthenticateResult.Fail("Auth failed");
-                //potrebna provjera da li je citaoc, te ako nije vracamo fail
-                //var citalac = _citaociService.Login(username, password);
+                //potrebna provjera da li je pacijent, te ako nije vracamo fail
+                //var patient = _patientService.Login(username, password);
 
-                //if (citalac == null)
+                //if (patient == null)
                 //{
                 //    return AuthenticateResult.Fail("Auth failed");
                 //}
@@ -55,11 +55,11 @@ namespace Healthease.API.Auth
                 //{
                 //    var claims = new List<Claim>()
                 //    {
-                //    new Claim(ClaimTypes.Name, citalac.Ime),
-                //    new Claim(ClaimTypes.NameIdentifier, citalac.KorisnickoIme)
+                //    new Claim(ClaimTypes.Name, patient.FirstName),
+                //    new Claim(ClaimTypes.NameIdentifier, citalac.Username)
                 //    };
 
-                //    claims.Add(new Claim(ClaimTypes.Role, "Citalac"));
+                //    claims.Add(new Claim(ClaimTypes.Role, "Patient"));
 
                 //    var identity = new ClaimsIdentity(claims, Scheme.Name);
 
@@ -77,7 +77,7 @@ namespace Healthease.API.Auth
                     new Claim(ClaimTypes.NameIdentifier, user.Username)
                 };
 
-                foreach (var role in user.UserRole)
+                foreach (var role in user.UserRoles)
                 {
                     claims.Add(new Claim(ClaimTypes.Role, role.Role.RoleName));
                 }

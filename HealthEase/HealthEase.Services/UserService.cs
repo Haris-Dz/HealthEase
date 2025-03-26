@@ -54,6 +54,10 @@ namespace HealthEase.Services
             {
                 query = query.Where(x => x.Username == searchObject.Username);
             }
+            if (searchObject?.IsUserRoleIncluded == true)
+            {
+                query = query.Include(x => x.UserRoles).ThenInclude(x => x.Role);
+            }
             query = query.Where(x => !x.IsDeleted);
             return query;
         }
@@ -124,10 +128,8 @@ namespace HealthEase.Services
         }
         public UserDTO Login(string username, string password)
         {
-            var entity = Context
-                .Users
-                .Include(x => x.UserRoles)
-                    .ThenInclude(y => y.Role).FirstOrDefault(x => x.Username == username);
+            var entity = Context.Users.Where(u => u.Username == username).Include(ur => ur.UserRoles).ThenInclude(r => r.Role).FirstOrDefault();
+
 
             if (entity == null)
             {
