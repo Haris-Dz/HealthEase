@@ -15,8 +15,6 @@ namespace HealthEase.Model.DTOs
 
         public DateTime ChangeDate { get; set; }
 
-        public virtual UserDTO? User { get; set; }
-
-        public virtual RoleDTO? Role { get; set; }
+        public virtual RoleDTO Role { get; set; } = null!;
     }
 }

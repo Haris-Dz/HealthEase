@@ -15,6 +15,6 @@ namespace HealthEase.Model.DTOs
         public string? PhoneNumber { get; set; }
         public bool IsDeleted { get; set; }
         public int UserRoleId { get; set; }
-        public virtual ICollection<UserRoleDTO> UserRole { get; set; } = new List<UserRoleDTO>();
+        public virtual ICollection<UserRoleDTO> UserRoles { get; set; } = new List<UserRoleDTO>();
     }
 }

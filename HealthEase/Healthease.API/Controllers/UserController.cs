@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Healthease.API.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     public class UserController : BaseCRUDControllerAsync<UserDTO, UserSearchObject, UserInsertRequest, UserUpdateRequest>
     {

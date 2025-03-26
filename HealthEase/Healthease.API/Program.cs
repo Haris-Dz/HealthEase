@@ -5,6 +5,8 @@ using DotNetEnv;
 using HealthEase.Services;
 using Healthease.API.Filters;
 using Mapster;
+using Healthease.API.Auth;
+using Microsoft.AspNetCore.Authentication;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
@@ -45,6 +47,10 @@ var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 builder.Services.AddDbContext<HealthEaseContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddMapster();
+
+builder.Services.AddAuthentication("BasicAuthentication")
+    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
