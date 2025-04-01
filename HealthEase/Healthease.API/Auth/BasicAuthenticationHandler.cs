@@ -12,17 +12,17 @@ namespace Healthease.API.Auth
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly IUserService _userService;
-        //private readonly IPatientService _patientService;
+        private readonly IPatientService _patientService;
 
         public BasicAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
             IUserService userService
-            /*,IPatientService PatientService*/) : base(options, logger, encoder, clock)
+            ,IPatientService patientService) : base(options, logger, encoder, clock)
         {
             _userService = userService;
-            //this._patientService = patientService;
+            this._patientService = patientService;
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -43,31 +43,30 @@ namespace Healthease.API.Auth
 
             if (user == null)
             {
-                return AuthenticateResult.Fail("Auth failed");
-                //potrebna provjera da li je pacijent, te ako nije vracamo fail
-                //var patient = _patientService.Login(username, password);
+                //Checking if logged in user is Patient
+                var patient = _patientService.Login(username, password);
 
-                //if (patient == null)
-                //{
-                //    return AuthenticateResult.Fail("Auth failed");
-                //}
-                //else
-                //{
-                //    var claims = new List<Claim>()
-                //    {
-                //    new Claim(ClaimTypes.Name, patient.FirstName),
-                //    new Claim(ClaimTypes.NameIdentifier, citalac.Username)
-                //    };
+                if (patient == null)
+                {
+                    return AuthenticateResult.Fail("Auth failed");
+                }
+                else
+                {
+                    var claims = new List<Claim>()
+                    {
+                    new Claim(ClaimTypes.Name, patient.FirstName),
+                    new Claim(ClaimTypes.NameIdentifier, patient.Username)
+                    };
 
-                //    claims.Add(new Claim(ClaimTypes.Role, "Patient"));
+                    claims.Add(new Claim(ClaimTypes.Role, "Patient"));
 
-                //    var identity = new ClaimsIdentity(claims, Scheme.Name);
+                    var identity = new ClaimsIdentity(claims, Scheme.Name);
 
-                //    var principal = new ClaimsPrincipal(identity);
+                    var principal = new ClaimsPrincipal(identity);
 
-                //    var ticket = new AuthenticationTicket(principal, Scheme.Name);
-                //    return AuthenticateResult.Success(ticket);
-                //}
+                    var ticket = new AuthenticationTicket(principal, Scheme.Name);
+                    return AuthenticateResult.Success(ticket);
+                }
             }
             else
             {

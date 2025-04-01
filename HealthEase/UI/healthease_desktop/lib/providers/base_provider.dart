@@ -83,7 +83,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
     var headers = createHeaders();
 
     var response = await http.get(uri, headers: headers);
-    // throw new Exception("Greška");
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
 
