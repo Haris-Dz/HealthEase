@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthEase.Services.Migrations
 {
     [DbContext(typeof(HealthEaseContext))]
-    [Migration("20250325114645_InitialCreate")]
+    [Migration("20250401143842_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -178,6 +178,20 @@ namespace HealthEase.Services.Migrations
                     b.Property<string>("PasswordSalt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("PatientId");
 

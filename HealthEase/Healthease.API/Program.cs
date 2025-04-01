@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<ISpecializationService, SpecializationService>();
 builder.Services.AddTransient<IroleService, RoleService>();
 builder.Services.AddTransient<IUserService, UserService>();
-
+builder.Services.AddTransient<IPatientService, PatientService>();
 
 builder.Services.AddControllers(x =>
 {
