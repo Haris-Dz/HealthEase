@@ -24,9 +24,9 @@ class _MasterScreenState extends State<MasterScreen> {
             color: const Color(0xFF1976D2), // Svjetlija plava za sidebar
             child: Column(
               children: [
-                const SizedBox(height: 2),
+                const SizedBox(height: 0),
                 Container(
-                  height: 120, // You can adjust the height based on your needs
+                  height: 130, // You can adjust the height based on your needs
                   width: double.infinity, // This makes the width expand to the right end
                   decoration: const BoxDecoration(
                     image: DecorationImage(
@@ -36,7 +36,7 @@ class _MasterScreenState extends State<MasterScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildSidebarItem(context, "Korisnici", Icons.people),
+                _buildSidebarItem(context, "Users", Icons.people),
                 _buildSidebarItem(context, "Termini", Icons.event),
                 _buildSidebarItem(context, "Statistika", Icons.bar_chart),
                 _buildSidebarItem(context, "Recepti", Icons.receipt),
