@@ -76,6 +76,10 @@ namespace HealthEase.Services
             {
                 throw new Exception("Password and password confirmation must match!");
             }
+            if(request.ProfilePicture == null)
+            {
+                entity.ProfilePicture = null;
+            }
             entity.RegistrationDate = DateTime.Now;
             entity.PasswordSalt = Helpers.Helper.GenerateSalt();
             entity.PasswordHash = Helpers.Helper.GenerateHash(entity.PasswordSalt, request.Password);
