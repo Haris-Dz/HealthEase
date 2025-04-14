@@ -14,7 +14,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   BaseProvider(String endpoint) {
     _endpoint = endpoint;
     baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://localhost:5181/api/");
+        defaultValue: "http://10.0.2.2:5181/api/");
   }
 
   Future<SearchResult<T>> get(
@@ -84,6 +84,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     var response = await http.get(uri, headers: headers);
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
+
       return fromJson(data);
     } else {
       throw new Exception("Unknown error");
