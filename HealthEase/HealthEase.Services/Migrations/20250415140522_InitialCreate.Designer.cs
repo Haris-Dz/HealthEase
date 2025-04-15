@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthEase.Services.Migrations
 {
     [DbContext(typeof(HealthEaseContext))]
-    [Migration("20250401143842_InitialCreate")]
+    [Migration("20250415140522_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -193,9 +193,56 @@ namespace HealthEase.Services.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
+
                     b.HasKey("PatientId");
 
                     b.ToTable("Patients");
+
+                    b.HasData(
+                        new
+                        {
+                            PatientId = 1,
+                            Email = "patient@mail.com",
+                            FirstName = "Patient",
+                            IsDeleted = false,
+                            LastName = "Patient",
+                            PasswordHash = "O44iKOh/G//phQTcSDoD6bvVYJA=",
+                            PasswordSalt = "xJWRSHLNdETt+kIqCoBJFg==",
+                            PhoneNumber = "000000003",
+                            RegistrationDate = new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified),
+                            Username = "patient",
+                            isActive = true
+                        },
+                        new
+                        {
+                            PatientId = 2,
+                            Email = "patient1@mail.com",
+                            FirstName = "Patient1",
+                            IsDeleted = false,
+                            LastName = "Patient1",
+                            PasswordHash = "Y5PY6ThpfFSmRPQxSSgEEUfSMDc=",
+                            PasswordSalt = "0gXuSZgjHZnAhePy8gl7RQ==",
+                            PhoneNumber = "000000004",
+                            RegistrationDate = new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified),
+                            Username = "patient1",
+                            isActive = false
+                        },
+                        new
+                        {
+                            PatientId = 3,
+                            Email = "patient2@mail.com",
+                            FirstName = "Patient2",
+                            IsDeleted = false,
+                            LastName = "Patient2",
+                            PasswordHash = "qIpSzM06en3MCcODqz5q0JhtBJQ=",
+                            PasswordSalt = "+tA31RiJ9vyUd2Lgu5jgNQ==",
+                            PhoneNumber = "000000005",
+                            RegistrationDate = new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified),
+                            Username = "patient2",
+                            isActive = true
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Payment", b =>
@@ -543,8 +590,8 @@ namespace HealthEase.Services.Migrations
                             FirstName = "Admin",
                             IsDeleted = false,
                             LastName = "Admin",
-                            PasswordHash = "vjxFUddajZn+mD4TXhrpKJFpwCk=",
-                            PasswordSalt = "BAbir1GLAnT8mlkl48K82Q==",
+                            PasswordHash = "wSG+yBth9HCj0O1AdRBL+CJjtR4=",
+                            PasswordSalt = "c0MJh5XS8DYQtkJavp5lsA==",
                             PhoneNumber = "000000000",
                             Username = "admin"
                         },
@@ -555,8 +602,8 @@ namespace HealthEase.Services.Migrations
                             FirstName = "Doctor",
                             IsDeleted = false,
                             LastName = "Doctor",
-                            PasswordHash = "pfDtnGt/IRu/L9EaFAjdfv0ngwk=",
-                            PasswordSalt = "8am+nUzj04mmtBMFrnDslw==",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "000000001",
                             Username = "doctor"
                         },
@@ -567,8 +614,8 @@ namespace HealthEase.Services.Migrations
                             FirstName = "Assistant",
                             IsDeleted = false,
                             LastName = "Assistant",
-                            PasswordHash = "1bwUDDXJ0XBRKYVYycBm+yVzUlQ=",
-                            PasswordSalt = "fQs/0a4aqARNG/avZ7mRlg==",
+                            PasswordHash = "3JVNj98T0GrBkWatJPLYoaIqBEA=",
+                            PasswordSalt = "/gLAN9q37ktD4sUpWLjN1g==",
                             PhoneNumber = "000000002",
                             Username = "assistant"
                         });

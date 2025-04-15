@@ -58,11 +58,17 @@ namespace HealthEase.Services.Database
                 new Role { RoleId = 2, RoleName = "Doctor", Description = "Medical professional providing consultations and working with patients.", IsDeleted = false },
                 new Role { RoleId = 3, RoleName = "Assistant", Description = "Supports doctors by managing appointments and assisting with patient coordination.", IsDeleted = false }
                 );
+
             modelBuilder.Entity<User>().HasData(
                 new User { UserId = 1, FirstName = "1", LastName = "1", Username = "1", Email = "1", PhoneNumber = "1", IsDeleted = false, PasswordSalt = "NHVv+8KhAiQqFlz7k1P53Q==", PasswordHash = "XVDI7NKoOCtMiSrKR1uSSGWvA7o=" },
-                new User { UserId = 2, FirstName = "Admin", LastName = "Admin", Username = "admin", Email = "admin@mail.com", PhoneNumber = "000000000", IsDeleted = false, PasswordSalt = "BAbir1GLAnT8mlkl48K82Q==", PasswordHash = "vjxFUddajZn+mD4TXhrpKJFpwCk=" },
-                new User { UserId = 3, FirstName = "Doctor", LastName = "Doctor", Username = "doctor", Email = "doctor@mail.com", PhoneNumber = "000000001", IsDeleted = false, PasswordSalt = "8am+nUzj04mmtBMFrnDslw==", PasswordHash = "pfDtnGt/IRu/L9EaFAjdfv0ngwk=" },
-                new User { UserId = 4, FirstName = "Assistant", LastName = "Assistant", Username = "assistant", Email = "assistant@mail.com", PhoneNumber = "000000002", IsDeleted = false, PasswordSalt = "fQs/0a4aqARNG/avZ7mRlg==", PasswordHash = "1bwUDDXJ0XBRKYVYycBm+yVzUlQ=" }
+                new User { UserId = 2, FirstName = "Admin", LastName = "Admin", Username = "admin", Email = "admin@mail.com", PhoneNumber = "000000000", IsDeleted = false, PasswordSalt = "c0MJh5XS8DYQtkJavp5lsA==", PasswordHash = "wSG+yBth9HCj0O1AdRBL+CJjtR4=" },
+                new User { UserId = 3, FirstName = "Doctor", LastName = "Doctor", Username = "doctor", Email = "doctor@mail.com", PhoneNumber = "000000001", IsDeleted = false, PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==", PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=" },
+                new User { UserId = 4, FirstName = "Assistant", LastName = "Assistant", Username = "assistant", Email = "assistant@mail.com", PhoneNumber = "000000002", IsDeleted = false, PasswordSalt = "/gLAN9q37ktD4sUpWLjN1g==", PasswordHash = "3JVNj98T0GrBkWatJPLYoaIqBEA=" }
+                );
+            modelBuilder.Entity<Patient>().HasData(
+                new Patient { PatientId = 1, FirstName = "Patient", LastName = "Patient", Username = "patient", Email = "patient@mail.com", PhoneNumber = "000000003", RegistrationDate = new DateTime(2025, 4, 14, 22, 13, 13), ProfilePicture = null, IsDeleted = false, isActive = true, PasswordSalt = "xJWRSHLNdETt+kIqCoBJFg==", PasswordHash = "O44iKOh/G//phQTcSDoD6bvVYJA=" },
+                new Patient { PatientId = 2, FirstName = "Patient1", LastName = "Patient1", Username = "patient1", Email = "patient1@mail.com", PhoneNumber = "000000004", RegistrationDate = new DateTime(2025, 4, 14, 22, 13, 13), ProfilePicture = null, IsDeleted = false, isActive = false, PasswordSalt = "0gXuSZgjHZnAhePy8gl7RQ==", PasswordHash = "Y5PY6ThpfFSmRPQxSSgEEUfSMDc=" },
+                new Patient { PatientId = 3, FirstName = "Patient2", LastName = "Patient2", Username = "patient2", Email = "patient2@mail.com", PhoneNumber = "000000005", RegistrationDate = new DateTime(2025, 4, 14, 22, 13, 13), ProfilePicture = null, IsDeleted = false, isActive = true, PasswordSalt = "+tA31RiJ9vyUd2Lgu5jgNQ==", PasswordHash = "qIpSzM06en3MCcODqz5q0JhtBJQ=" }
                 );
             modelBuilder.Entity<UserRole>().HasData(
                 new UserRole { UserRoleId = 1, RoleId = 1, UserId = 1, ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41), IsDeleted = false },

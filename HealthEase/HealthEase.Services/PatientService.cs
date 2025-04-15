@@ -80,6 +80,7 @@ namespace HealthEase.Services
             {
                 entity.ProfilePicture = null;
             }
+            entity.isActive = true;
             entity.RegistrationDate = DateTime.Now;
             entity.PasswordSalt = Helpers.Helper.GenerateSalt();
             entity.PasswordHash = Helpers.Helper.GenerateHash(entity.PasswordSalt, request.Password);
@@ -122,11 +123,10 @@ namespace HealthEase.Services
             var entity = Context.Patients.Where(u => u.Username == username).FirstOrDefault();
 
 
-            if (entity == null)
+            if (entity == null || entity.IsDeleted || !entity.isActive)
             {
                 return null;
             }
-
             var hash = Helpers.Helper.GenerateHash(entity.PasswordSalt, password);
 
             if (hash != entity.PasswordHash)

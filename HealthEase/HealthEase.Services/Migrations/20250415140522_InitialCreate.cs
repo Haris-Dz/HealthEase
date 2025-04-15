@@ -43,6 +43,7 @@ namespace HealthEase.Services.Migrations
                     PasswordSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    isActive = table.Column<bool>(type: "bit", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -345,6 +346,16 @@ namespace HealthEase.Services.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Patients",
+                columns: new[] { "PatientId", "DeletionTime", "Email", "FirstName", "IsDeleted", "LastName", "PasswordHash", "PasswordSalt", "PhoneNumber", "ProfilePicture", "RegistrationDate", "Username", "isActive" },
+                values: new object[,]
+                {
+                    { 1, null, "patient@mail.com", "Patient", false, "Patient", "O44iKOh/G//phQTcSDoD6bvVYJA=", "xJWRSHLNdETt+kIqCoBJFg==", "000000003", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "patient", true },
+                    { 2, null, "patient1@mail.com", "Patient1", false, "Patient1", "Y5PY6ThpfFSmRPQxSSgEEUfSMDc=", "0gXuSZgjHZnAhePy8gl7RQ==", "000000004", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "patient1", false },
+                    { 3, null, "patient2@mail.com", "Patient2", false, "Patient2", "qIpSzM06en3MCcODqz5q0JhtBJQ=", "+tA31RiJ9vyUd2Lgu5jgNQ==", "000000005", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "patient2", true }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "RoleId", "DeletionTime", "Description", "IsDeleted", "RoleName" },
                 values: new object[,]
@@ -373,9 +384,9 @@ namespace HealthEase.Services.Migrations
                 values: new object[,]
                 {
                     { 1, null, "1", "1", false, "1", "XVDI7NKoOCtMiSrKR1uSSGWvA7o=", "NHVv+8KhAiQqFlz7k1P53Q==", "1", "1" },
-                    { 2, null, "admin@mail.com", "Admin", false, "Admin", "vjxFUddajZn+mD4TXhrpKJFpwCk=", "BAbir1GLAnT8mlkl48K82Q==", "000000000", "admin" },
-                    { 3, null, "doctor@mail.com", "Doctor", false, "Doctor", "pfDtnGt/IRu/L9EaFAjdfv0ngwk=", "8am+nUzj04mmtBMFrnDslw==", "000000001", "doctor" },
-                    { 4, null, "assistant@mail.com", "Assistant", false, "Assistant", "1bwUDDXJ0XBRKYVYycBm+yVzUlQ=", "fQs/0a4aqARNG/avZ7mRlg==", "000000002", "assistant" }
+                    { 2, null, "admin@mail.com", "Admin", false, "Admin", "wSG+yBth9HCj0O1AdRBL+CJjtR4=", "c0MJh5XS8DYQtkJavp5lsA==", "000000000", "admin" },
+                    { 3, null, "doctor@mail.com", "Doctor", false, "Doctor", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000001", "doctor" },
+                    { 4, null, "assistant@mail.com", "Assistant", false, "Assistant", "3JVNj98T0GrBkWatJPLYoaIqBEA=", "/gLAN9q37ktD4sUpWLjN1g==", "000000002", "assistant" }
                 });
 
             migrationBuilder.InsertData(
