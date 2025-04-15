@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:healthease_desktop/screens/users_screen.dart';
 
 class MasterScreen extends StatefulWidget {
   final String title;
   final Widget child;
 
-  // Updated constructor with named parameters
   const MasterScreen({super.key, required this.title, required this.child});
 
   @override
@@ -12,6 +12,23 @@ class MasterScreen extends StatefulWidget {
 }
 
 class _MasterScreenState extends State<MasterScreen> {
+  late Widget _currentChild;
+  late String _currentTitle;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentChild = widget.child;
+    _currentTitle = widget.title;
+  }
+
+  void _onSidebarItemTapped(String title, Widget screen) {
+    setState(() {
+      _currentTitle = title;
+      _currentChild = screen;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,29 +43,40 @@ class _MasterScreenState extends State<MasterScreen> {
               children: [
                 const SizedBox(height: 0),
                 Container(
-                  height: 130, // You can adjust the height based on your needs
-                  width: double.infinity, // This makes the width expand to the right end
+                  height: 130,
+                  width: double.infinity,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/images/logo.png'),
-                      fit: BoxFit.cover, // This ensures the logo fills the container and adjusts its size
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildSidebarItem(context, "Users", Icons.people),
-                _buildSidebarItem(context, "Termini", Icons.event),
-                _buildSidebarItem(context, "Statistika", Icons.bar_chart),
-                _buildSidebarItem(context, "Recepti", Icons.receipt),
-                _buildSidebarItem(context, "Obavještenja", Icons.notifications),
+                _buildSidebarItem("Users", Icons.people, () {
+                  _onSidebarItemTapped("Users", const UsersScreen());
+                }),
+                _buildSidebarItem("Termini", Icons.event, () {
+                  _onSidebarItemTapped("Termini", const Placeholder());
+                }),
+                _buildSidebarItem("Statistika", Icons.bar_chart, () {
+                  _onSidebarItemTapped("Statistika", const Placeholder());
+                }),
+                _buildSidebarItem("Recepti", Icons.receipt, () {
+                  _onSidebarItemTapped("Recepti", const Placeholder());
+                }),
+                _buildSidebarItem("Obavještenja", Icons.notifications, () {
+                  _onSidebarItemTapped("Obavještenja", const Placeholder());
+                }),
               ],
             ),
           ),
+
           // Main Content
           Expanded(
             child: Column(
               children: [
-                // Top Bar - Zaglavlje
+                // Top Bar
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   height: 60,
@@ -57,7 +85,7 @@ class _MasterScreenState extends State<MasterScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        widget.title,
+                        _currentTitle,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -84,8 +112,8 @@ class _MasterScreenState extends State<MasterScreen> {
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(20),
-                    color: Colors.white, // Svijetla pozadina za bolji kontrast
-                    child: widget.child,
+                    color: Colors.white,
+                    child: _currentChild,
                   ),
                 ),
               ],
@@ -96,13 +124,11 @@ class _MasterScreenState extends State<MasterScreen> {
     );
   }
 
-  Widget _buildSidebarItem(BuildContext context, String title, IconData icon) {
+  Widget _buildSidebarItem(String title, IconData icon, VoidCallback onTap) {
     return ListTile(
       leading: Icon(icon, color: Colors.white),
       title: Text(title, style: const TextStyle(color: Colors.white)),
-      onTap: () {
-        // Navigacija prema odgovarajućem ekranu
-      },
+      onTap: onTap,
     );
   }
 }

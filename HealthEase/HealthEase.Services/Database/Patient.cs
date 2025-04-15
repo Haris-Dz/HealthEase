@@ -24,6 +24,7 @@ namespace HealthEase.Services.Database
         public string PasswordSalt { get; set; } = null!;
         public byte[]? ProfilePicture { get; set; }
         public DateTime RegistrationDate { get; set; }
+        public bool isActive { get; set; }
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
         public virtual ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();

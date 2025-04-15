@@ -14,6 +14,7 @@ namespace HealthEase.Model.DTOs
         public string? PhoneNumber { get; set; }
         public byte[]? ProfilePicture { get; set; }
         public DateTime RegistrationDate { get; set; }
+        public bool isActive { get; set; }
         public bool IsDeleted { get; set; }
         //public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
         //public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
