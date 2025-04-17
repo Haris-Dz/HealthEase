@@ -106,20 +106,38 @@ namespace HealthEase.Services
 
         public override async Task BeforeUpdateAsync(UserUpdateRequest request, User entity, CancellationToken cancellationToken = default)
         {
-            if (request.Password != null && request.PasswordConfirmation != null && request.CurrentPassword != null)
-            {
-                var currentPw = Helpers.Helper.GenerateHash(entity.PasswordSalt, request.CurrentPassword);
+                if (request.Password != null && request.PasswordConfirmation != null && request.CurrentPassword != null)
+                {
+                    var currentPw = Helpers.Helper.GenerateHash(entity.PasswordSalt, request.CurrentPassword);
 
-                if (currentPw != entity.PasswordHash)
-                {
-                    throw new Exception("Invalid current password");
+                    if (currentPw != entity.PasswordHash)
+                    {
+                        throw new Exception("Invalid current password");
+                    }
+                    if (request.Password != request.PasswordConfirmation)
+                    {
+                        throw new Exception("Password and password confirmation must match!");
+                    }
+                    entity.PasswordSalt = Helpers.Helper.GenerateSalt();
+                    entity.PasswordHash = Helpers.Helper.GenerateHash(entity.PasswordSalt, request.Password);
                 }
-                if (request.Password != request.PasswordConfirmation)
+        }
+        public override async Task AfterUpdateAsync(int id, UserUpdateRequest request, User entity, CancellationToken cancellationToken = default)
+        {
+            if (request.Edit)
+            {
+                var userRole = await Context.Set<UserRole>()
+                    .FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+                if (userRole == null)
                 {
-                    throw new Exception("Password and password confirmation must match!");
+                    throw new UserException("User role not found for the given UserID!");
                 }
-                entity.PasswordSalt = Helpers.Helper.GenerateSalt();
-                entity.PasswordHash = Helpers.Helper.GenerateHash(entity.PasswordSalt, request.Password);
+                if (userRole != null)
+                {
+                    userRole.RoleId = request.RoleId.Value;
+                }
+                userRole.ChangeDate = DateTime.Now;
+                await Context.SaveChangesAsync(cancellationToken);
             }
         }
         public override async Task<UserDTO> GetByIdAsync(int id, CancellationToken cancellationToken = default)

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthease_desktop/layouts/master_screen.dart';
 import 'package:healthease_desktop/providers/patients_provider.dart';
+import 'package:healthease_desktop/providers/roles_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:healthease_desktop/providers/auth_provider.dart';
 import 'package:healthease_desktop/providers/users_provider.dart';
@@ -13,6 +14,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => UsersProvider()),
         ChangeNotifierProvider(create: (_) => PatientsProvider()),
+        ChangeNotifierProvider(create: (_) => RolesProvider()),
       ],
       child: const MyApp(),
     ),
@@ -161,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (context) => MasterScreen(
-                                      title: "Korisnici",
+                                      title: "Users",
                                       child: const UsersScreen(),
                                     ),
                                   ),

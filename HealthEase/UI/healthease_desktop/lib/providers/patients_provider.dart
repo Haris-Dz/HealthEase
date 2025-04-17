@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'package:healthease_desktop/models/patient.dart';
 import 'package:healthease_desktop/providers/base_provider.dart';
-import 'package:http/http.dart' as http;
 
 class PatientsProvider extends BaseProvider<Patient> {
   PatientsProvider() : super("Patient");

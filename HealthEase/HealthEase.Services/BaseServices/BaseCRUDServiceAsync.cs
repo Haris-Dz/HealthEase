@@ -53,7 +53,7 @@ namespace HealthEase.Services.BaseServices
 
             await Context.SaveChangesAsync(cancellationToken);
 
-            await AfterUpdateAsync(request, entity);
+            await AfterUpdateAsync(id, request, entity);
 
             return Mapper.Map<TModel>(entity);
         }
@@ -62,7 +62,7 @@ namespace HealthEase.Services.BaseServices
         public virtual async Task BeforeUpdateAsync(TUpdate request, TDbEntity entity, CancellationToken cancellationToken = default) { }
 
         // Method for actions after update (can be overridden)
-        public virtual async Task AfterUpdateAsync(TUpdate request, TDbEntity entity, CancellationToken cancellationToken = default) { }
+        public virtual async Task AfterUpdateAsync(int id, TUpdate request, TDbEntity entity, CancellationToken cancellationToken = default) { }
 
         public virtual async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
