@@ -17,7 +17,5 @@ namespace HealthEase.Model.Requests
         public string? Password { get; set; }
 
         public string? PasswordConfirmation { get; set; }
-        public bool Edit { get; set; }
-        public int? RoleId { get; set; }
     }
 }

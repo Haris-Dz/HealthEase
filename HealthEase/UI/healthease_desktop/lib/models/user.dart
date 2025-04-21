@@ -11,7 +11,6 @@ class User {
   String? email;
   String? phoneNumber;
   String? username;
-  bool? edit;
   List<UserRole>? userRoles;
 
   User();

@@ -391,29 +391,35 @@ void _showAddOrEditUserDialog(BuildContext context, {User? existingUser}) {
                       ),
 
                       const SizedBox(height: 10),
-                      TextFormField(
-                        controller: emailController,
-                        enabled: existingUser == null,
-                        decoration: const InputDecoration(labelText: "Email"),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "This field is required";
-                          }
-                          final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
-                          if (!emailRegex.hasMatch(value)) {
-                            return "Enter a valid email address";
-                          }
-                          return null;
-                        },
-                      ),
-
+                        Tooltip(
+                          message: existingUser != null ? "Email cannot be changed after creation" : "",
+                          child: TextFormField(
+                            controller: emailController,
+                            enabled: existingUser == null,
+                            decoration: const InputDecoration(labelText: "Email"),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "This field is required";
+                              }
+                              final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+                              if (!emailRegex.hasMatch(value)) {
+                                return "Enter a valid email address";
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
                       const SizedBox(height: 10),
-                      TextFormField(
-                        controller: usernameController,
-                        enabled: existingUser == null,
-                        decoration: const InputDecoration(labelText: "Username"),
-                        validator: (value) => value == null || value.isEmpty ? "This field is required" : null,
-                      ),
+                        Tooltip(
+                          message: existingUser != null ? "Username cannot be changed after creation" : "",
+                          child: TextFormField(
+                            controller: usernameController,
+                            enabled: existingUser == null,
+                            decoration: const InputDecoration(labelText: "Username"),
+                            validator: (value) =>
+                                value == null || value.isEmpty ? "This field is required" : null,
+                          ),
+                        ),
                       const SizedBox(height: 10),
                       FutureBuilder(
                         future: Provider.of<RolesProvider>(context, listen: false).get(),
@@ -424,20 +430,26 @@ void _showAddOrEditUserDialog(BuildContext context, {User? existingUser}) {
                             return const Text("Failed to load roles");
                           } else {
                             final roles = (snapshot.data as SearchResult<Role>).resultList;
-                            return DropdownButtonFormField<int>(
-                              decoration: const InputDecoration(labelText: "Role"),
-                              value: selectedRoleId,
-                              items: roles.map((role) {
-                                return DropdownMenuItem<int>(
-                                  value: role.roleId,
-                                  child: Text(role.roleName ?? ""),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                selectedRoleId = value;
-                              },
-                              validator: (value) => value == null ? "Select a role" : null,
-                            );
+                              return Tooltip(
+                                message: existingUser != null ? "Role cannot be changed after creation." : "",
+                                child: DropdownButtonFormField<int>(
+                                  decoration: const InputDecoration(labelText: "Role"),
+                                  value: selectedRoleId,
+                                  items: roles.map((role) {
+                                    return DropdownMenuItem<int>(
+                                      value: role.roleId,
+                                      child: Text(role.roleName ?? ""),
+                                    );
+                                  }).toList(),
+                                  onChanged: existingUser == null
+                                      ? (value) {
+                                          selectedRoleId = value;
+                                        }
+                                      : null,
+                                  validator: (value) =>
+                                      existingUser == null && value == null ? "Select a role" : null,
+                                ),
+                              );
                           }
                         },
                       ),
@@ -461,8 +473,6 @@ void _showAddOrEditUserDialog(BuildContext context, {User? existingUser}) {
                                     "firstName": firstNameController.text,
                                     "lastName": lastNameController.text,
                                     "phoneNumber": phoneNumberController.text,
-                                    "roleId": selectedRoleId,
-                                    "edit": true,
                                   });
                                 }
 

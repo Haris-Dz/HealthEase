@@ -13,5 +13,7 @@ namespace HealthEase.Services.Database
         public int SpecializationId { get; set; }
         [MaxLength(100)]
         public string Name { get; set; } = null!;
+        public string Description { get; set; } = null!;
+        public virtual ICollection<DoctorSpecialization> DoctorSpecializations { get; set; } = new List<DoctorSpecialization>();
     }
 }
