@@ -7,6 +7,7 @@ using Healthease.API.Filters;
 using Mapster;
 using Healthease.API.Auth;
 using Microsoft.AspNetCore.Authentication;
+using HealthEase.Services.DoctorStateMachine;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
@@ -14,6 +15,13 @@ builder.Services.AddTransient<ISpecializationService, SpecializationService>();
 builder.Services.AddTransient<IroleService, RoleService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IPatientService, PatientService>();
+builder.Services.AddTransient<IDoctorService, DoctorService>();
+
+builder.Services.AddTransient<InitialDoctorState>();
+builder.Services.AddTransient<DraftDoctorState>();
+builder.Services.AddTransient<ActiveDoctorState>();
+builder.Services.AddTransient<HiddenDoctorState>();
+
 
 builder.Services.AddControllers(x =>
 {

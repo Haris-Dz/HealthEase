@@ -82,6 +82,150 @@ namespace HealthEase.Services.Migrations
                     b.ToTable("AppointmentStatuses");
                 });
 
+            modelBuilder.Entity("HealthEase.Services.Database.Doctor", b =>
+                {
+                    b.Property<int>("DoctorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DoctorId"));
+
+                    b.Property<string>("Biography")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("StateMachine")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DoctorId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Doctors");
+
+                    b.HasData(
+                        new
+                        {
+                            DoctorId = 1,
+                            Biography = "Dr. Doctor1 is an experienced specialist in internal medicine. He has dedicated over 10 years to diagnosing and treating a wide range of chronic diseases, with a focus on patient-centered care and health education.",
+                            IsDeleted = false,
+                            ProfilePicture = new byte[] { 0 },
+                            StateMachine = "draft",
+                            Title = "Dr. med.",
+                            UserId = 3
+                        },
+                        new
+                        {
+                            DoctorId = 2,
+                            Biography = "Dr. Doctor2 is a double specialist in cardiology and neurology. With a strong academic background and clinical expertise, she combines knowledge from both fields to provide comprehensive diagnostic and treatment solutions.",
+                            IsDeleted = false,
+                            ProfilePicture = new byte[] { 0 },
+                            StateMachine = "active",
+                            Title = "Dr. sci. med.",
+                            UserId = 4
+                        },
+                        new
+                        {
+                            DoctorId = 3,
+                            Biography = "Dr. Doctor3 is a pediatrician with more than 7 years of experience in treating children of all ages. Known for a compassionate approach and excellent communication with both kids and parents.",
+                            IsDeleted = false,
+                            ProfilePicture = new byte[] { 0 },
+                            StateMachine = "active",
+                            Title = "Mr. sci. med.",
+                            UserId = 5
+                        },
+                        new
+                        {
+                            DoctorId = 4,
+                            Biography = "Dr. Doctor4 is a skilled dermatologist who has worked extensively with skin conditions ranging from acne to rare autoimmune diseases. She emphasizes early diagnosis and personalized treatment plans.",
+                            IsDeleted = false,
+                            ProfilePicture = new byte[] { 0 },
+                            StateMachine = "active",
+                            Title = "Dr. med.",
+                            UserId = 6
+                        });
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.DoctorSpecialization", b =>
+                {
+                    b.Property<int>("DoctorSpecializationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DoctorSpecializationId"));
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SpecializationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DoctorSpecializationId");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("SpecializationId");
+
+                    b.ToTable("DoctorSpecializations");
+
+                    b.HasData(
+                        new
+                        {
+                            DoctorSpecializationId = 1,
+                            DoctorId = 1,
+                            IsDeleted = false,
+                            SpecializationId = 1
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 2,
+                            DoctorId = 2,
+                            IsDeleted = false,
+                            SpecializationId = 1
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 3,
+                            DoctorId = 2,
+                            IsDeleted = false,
+                            SpecializationId = 2
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 4,
+                            DoctorId = 3,
+                            IsDeleted = false,
+                            SpecializationId = 3
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 5,
+                            DoctorId = 4,
+                            IsDeleted = false,
+                            SpecializationId = 4
+                        });
+                });
+
             modelBuilder.Entity("HealthEase.Services.Database.MedicalRecord", b =>
                 {
                     b.Property<int>("MedicalRecordId")
@@ -468,6 +612,10 @@ namespace HealthEase.Services.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -484,38 +632,30 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             SpecializationId = 1,
+                            Description = "Specializes in diagnosing and treating diseases of the cardiovascular system.",
                             IsDeleted = false,
-                            Name = "Cardiologist"
+                            Name = "Cardiology"
                         },
                         new
                         {
                             SpecializationId = 2,
+                            Description = "Focuses on the treatment of skin, hair, and nail disorders.",
                             IsDeleted = false,
-                            Name = "Oncologists"
+                            Name = "Dermatology"
                         },
                         new
                         {
                             SpecializationId = 3,
+                            Description = "Provides medical care for infants, children, and adolescents.",
                             IsDeleted = false,
-                            Name = "Neurologist"
+                            Name = "Pediatrics"
                         },
                         new
                         {
                             SpecializationId = 4,
+                            Description = "Deals with disorders of the nervous system including the brain and spinal cord.",
                             IsDeleted = false,
-                            Name = "Pediatrician"
-                        },
-                        new
-                        {
-                            SpecializationId = 5,
-                            IsDeleted = false,
-                            Name = "Psychiatrist"
-                        },
-                        new
-                        {
-                            SpecializationId = 6,
-                            IsDeleted = false,
-                            Name = "Chiropractor"
+                            Name = "Neurology"
                         });
                 });
 
@@ -595,18 +735,54 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             UserId = 3,
-                            Email = "doctor@mail.com",
-                            FirstName = "Doctor",
+                            Email = "doctor1@mail.com",
+                            FirstName = "Doctor1",
                             IsDeleted = false,
-                            LastName = "Doctor",
+                            LastName = "Doctor1",
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
-                            PhoneNumber = "000000001",
-                            Username = "doctor"
+                            PhoneNumber = "000000011",
+                            Username = "doctor1"
                         },
                         new
                         {
                             UserId = 4,
+                            Email = "doctor2@mail.com",
+                            FirstName = "Doctor2",
+                            IsDeleted = false,
+                            LastName = "Doctor2",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "000000031",
+                            Username = "doctor2"
+                        },
+                        new
+                        {
+                            UserId = 5,
+                            Email = "doctor3@mail.com",
+                            FirstName = "Doctor3",
+                            IsDeleted = false,
+                            LastName = "Doctor3",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "000000051",
+                            Username = "doctor3"
+                        },
+                        new
+                        {
+                            UserId = 6,
+                            Email = "doctor4@mail.com",
+                            FirstName = "Doctor4",
+                            IsDeleted = false,
+                            LastName = "Doctor4",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "000000061",
+                            Username = "doctor4"
+                        },
+                        new
+                        {
+                            UserId = 7,
                             Email = "assistant@mail.com",
                             FirstName = "Assistant",
                             IsDeleted = false,
@@ -679,8 +855,252 @@ namespace HealthEase.Services.Migrations
                             UserRoleId = 4,
                             ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
-                            RoleId = 3,
+                            RoleId = 2,
                             UserId = 4
+                        },
+                        new
+                        {
+                            UserRoleId = 5,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            UserRoleId = 6,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 6
+                        },
+                        new
+                        {
+                            UserRoleId = 7,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 3,
+                            UserId = 7
+                        });
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.WorkingHours", b =>
+                {
+                    b.Property<int>("WorkingHoursId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WorkingHoursId"));
+
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("WorkingHoursId");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WorkingHours");
+
+                    b.HasData(
+                        new
+                        {
+                            WorkingHoursId = 1,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 3
+                        },
+                        new
+                        {
+                            WorkingHoursId = 2,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 3
+                        },
+                        new
+                        {
+                            WorkingHoursId = 3,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 3
+                        },
+                        new
+                        {
+                            WorkingHoursId = 4,
+                            Day = 4,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 3
+                        },
+                        new
+                        {
+                            WorkingHoursId = 5,
+                            Day = 5,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 3
+                        },
+                        new
+                        {
+                            WorkingHoursId = 6,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 4
+                        },
+                        new
+                        {
+                            WorkingHoursId = 7,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 4
+                        },
+                        new
+                        {
+                            WorkingHoursId = 8,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 4
+                        },
+                        new
+                        {
+                            WorkingHoursId = 9,
+                            Day = 4,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 4
+                        },
+                        new
+                        {
+                            WorkingHoursId = 10,
+                            Day = 5,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 4
+                        },
+                        new
+                        {
+                            WorkingHoursId = 11,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 5
+                        },
+                        new
+                        {
+                            WorkingHoursId = 12,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 5
+                        },
+                        new
+                        {
+                            WorkingHoursId = 13,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 5
+                        },
+                        new
+                        {
+                            WorkingHoursId = 14,
+                            Day = 4,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 5
+                        },
+                        new
+                        {
+                            WorkingHoursId = 15,
+                            Day = 5,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 5
+                        },
+                        new
+                        {
+                            WorkingHoursId = 16,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 6
+                        },
+                        new
+                        {
+                            WorkingHoursId = 17,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 6
+                        },
+                        new
+                        {
+                            WorkingHoursId = 18,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 6
+                        },
+                        new
+                        {
+                            WorkingHoursId = 19,
+                            Day = 4,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 6
+                        },
+                        new
+                        {
+                            WorkingHoursId = 20,
+                            Day = 5,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 6
                         });
                 });
 
@@ -705,6 +1125,36 @@ namespace HealthEase.Services.Migrations
                     b.Navigation("Patient");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.Doctor", b =>
+                {
+                    b.HasOne("HealthEase.Services.Database.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.DoctorSpecialization", b =>
+                {
+                    b.HasOne("HealthEase.Services.Database.Doctor", "Doctor")
+                        .WithMany("DoctorSpecializations")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HealthEase.Services.Database.Specialization", "Specialization")
+                        .WithMany("DoctorSpecializations")
+                        .HasForeignKey("SpecializationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Specialization");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.MedicalRecord", b =>
@@ -809,9 +1259,31 @@ namespace HealthEase.Services.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("HealthEase.Services.Database.WorkingHours", b =>
+                {
+                    b.HasOne("HealthEase.Services.Database.Doctor", null)
+                        .WithMany("WorkingHours")
+                        .HasForeignKey("DoctorId");
+
+                    b.HasOne("HealthEase.Services.Database.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("HealthEase.Services.Database.AppointmentStatus", b =>
                 {
                     b.Navigation("Appointments");
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.Doctor", b =>
+                {
+                    b.Navigation("DoctorSpecializations");
+
+                    b.Navigation("WorkingHours");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.MedicalRecord", b =>
@@ -843,6 +1315,11 @@ namespace HealthEase.Services.Migrations
             modelBuilder.Entity("HealthEase.Services.Database.Role", b =>
                 {
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.Specialization", b =>
+                {
+                    b.Navigation("DoctorSpecializations");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.User", b =>

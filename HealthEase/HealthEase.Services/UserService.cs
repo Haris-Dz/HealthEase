@@ -101,6 +101,18 @@ namespace HealthEase.Services
                 ChangeDate = DateTime.Now,
                 IsDeleted = false
             });
+            var userRole = await Context.Set<Role>()
+    .FirstOrDefaultAsync(x => x.RoleName == "Doctor", cancellationToken);
+            if (userRole != null && userRole.RoleId == request.RoleId)
+            {
+                Context.Doctors.Add(new Doctor
+                {
+                    UserId = entity.UserId,
+                    IsDeleted = false,
+                    StateMachine = "draft"
+                });
+            }
+
             await Context.SaveChangesAsync(cancellationToken);
         }
 
@@ -122,24 +134,7 @@ namespace HealthEase.Services
                     entity.PasswordHash = Helpers.Helper.GenerateHash(entity.PasswordSalt, request.Password);
                 }
         }
-        public override async Task AfterUpdateAsync(int id, UserUpdateRequest request, User entity, CancellationToken cancellationToken = default)
-        {
-            if (request.Edit)
-            {
-                var userRole = await Context.Set<UserRole>()
-                    .FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
-                if (userRole == null)
-                {
-                    throw new UserException("User role not found for the given UserID!");
-                }
-                if (userRole != null)
-                {
-                    userRole.RoleId = request.RoleId.Value;
-                }
-                userRole.ChangeDate = DateTime.Now;
-                await Context.SaveChangesAsync(cancellationToken);
-            }
-        }
+
         public override async Task<UserDTO> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await base.GetByIdAsync(id, cancellationToken);
