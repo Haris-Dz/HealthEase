@@ -12,7 +12,10 @@ namespace HealthEase.Model.DTOs
         public string? Biography { get; set; }
         public string? Title { get; set; }
         public string? StateMachine { get; set; }
+        public UserDTO User { get; set; }
 
-        //public virtual ICollection<DoctorSpecialization> DoctorSpecializations { get; set; } = new List<DoctorSpecialization>();
+        public virtual ICollection<SpecializationDTO> DoctorSpecializations { get; set; } = new List<SpecializationDTO>();
+        public virtual ICollection<WorkingHoursDTO> WorkingHours { get; set; } = new List<WorkingHoursDTO>();
+
     }
 }

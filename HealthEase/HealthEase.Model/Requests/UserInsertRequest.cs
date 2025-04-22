@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace HealthEase.Model.Requests
@@ -15,9 +16,11 @@ namespace HealthEase.Model.Requests
         public string? PhoneNumber { get; set; }
 
         public string Username { get; set; } = null!;
+
+        [Required]
         public int RoleId { get; set; }
 
-        //public string Password { get; set; } = null!;
-        //public string PasswordConfirmation { get; set; } = null!;
+        // public string Password { get; set; } = null!;
+        // public string PasswordConfirmation { get; set; } = null!;
     }
 }

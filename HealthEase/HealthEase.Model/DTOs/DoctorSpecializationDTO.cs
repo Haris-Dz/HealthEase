@@ -4,10 +4,10 @@ using System.Text;
 
 namespace HealthEase.Model.DTOs
 {
-    public class SpecializationDTO
+    public class DoctorSpecializationDTO
     {
+        public int DoctorSpecializationId { get; set; }
         public int SpecializationId { get; set; }
-        public string Name { get; set; } = null!;
-        public string Description { get; set; } = null!;
+        public string? SpecializationName { get; set; }
     }
 }

@@ -16,12 +16,14 @@ builder.Services.AddTransient<IroleService, RoleService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IPatientService, PatientService>();
 builder.Services.AddTransient<IDoctorService, DoctorService>();
+builder.Services.AddTransient<IWorkingHoursService, WorkingHoursService>();
 
 builder.Services.AddTransient<InitialDoctorState>();
 builder.Services.AddTransient<DraftDoctorState>();
 builder.Services.AddTransient<ActiveDoctorState>();
 builder.Services.AddTransient<HiddenDoctorState>();
 
+MappingConfig.RegisterMappings();
 
 builder.Services.AddControllers(x =>
 {

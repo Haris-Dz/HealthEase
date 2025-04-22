@@ -6,6 +6,7 @@ namespace HealthEase.Model.Requests
 {
     public class SpecializationUpsertRequest
     {
-        public string? Name { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; } 
     }
 }
