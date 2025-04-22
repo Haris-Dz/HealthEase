@@ -329,6 +329,30 @@ namespace HealthEase.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WorkingHours",
+                columns: table => new
+                {
+                    WorkingHoursId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Day = table.Column<int>(type: "int", nullable: false),
+                    StartTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    EndTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkingHours", x => x.WorkingHoursId);
+                    table.ForeignKey(
+                        name: "FK_WorkingHours_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Prescriptions",
                 columns: table => new
                 {
@@ -397,36 +421,6 @@ namespace HealthEase.Services.Migrations
                         principalTable: "Specializations",
                         principalColumn: "SpecializationId",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WorkingHours",
-                columns: table => new
-                {
-                    WorkingHoursId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Day = table.Column<int>(type: "int", nullable: false),
-                    StartTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    EndTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    DoctorId = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WorkingHours", x => x.WorkingHoursId);
-                    table.ForeignKey(
-                        name: "FK_WorkingHours_Doctors_DoctorId",
-                        column: x => x.DoctorId,
-                        principalTable: "Doctors",
-                        principalColumn: "DoctorId");
-                    table.ForeignKey(
-                        name: "FK_WorkingHours_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -501,29 +495,29 @@ namespace HealthEase.Services.Migrations
 
             migrationBuilder.InsertData(
                 table: "WorkingHours",
-                columns: new[] { "WorkingHoursId", "Day", "DeletionTime", "DoctorId", "EndTime", "IsDeleted", "StartTime", "UserId" },
+                columns: new[] { "WorkingHoursId", "Day", "DeletionTime", "EndTime", "IsDeleted", "StartTime", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 1, null, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 3 },
-                    { 2, 2, null, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 3 },
-                    { 3, 3, null, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 3 },
-                    { 4, 4, null, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 3 },
-                    { 5, 5, null, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 3 },
-                    { 6, 1, null, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 4 },
-                    { 7, 2, null, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 4 },
-                    { 8, 3, null, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 4 },
-                    { 9, 4, null, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 4 },
-                    { 10, 5, null, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 4 },
-                    { 11, 1, null, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 5 },
-                    { 12, 2, null, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 5 },
-                    { 13, 3, null, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 5 },
-                    { 14, 4, null, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 5 },
-                    { 15, 5, null, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 5 },
-                    { 16, 1, null, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 6 },
-                    { 17, 2, null, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 6 },
-                    { 18, 3, null, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 6 },
-                    { 19, 4, null, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 6 },
-                    { 20, 5, null, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 6 }
+                    { 1, 1, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 3 },
+                    { 2, 2, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 3 },
+                    { 3, 3, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 3 },
+                    { 4, 4, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 3 },
+                    { 5, 5, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 3 },
+                    { 6, 1, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 4 },
+                    { 7, 2, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 4 },
+                    { 8, 3, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 4 },
+                    { 9, 4, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 4 },
+                    { 10, 5, null, new TimeSpan(0, 14, 0, 0, 0), false, new TimeSpan(0, 8, 0, 0, 0), 4 },
+                    { 11, 1, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 5 },
+                    { 12, 2, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 5 },
+                    { 13, 3, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 5 },
+                    { 14, 4, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 5 },
+                    { 15, 5, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 5 },
+                    { 16, 1, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 6 },
+                    { 17, 2, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 6 },
+                    { 18, 3, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 6 },
+                    { 19, 4, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 6 },
+                    { 20, 5, null, new TimeSpan(0, 17, 0, 0, 0), false, new TimeSpan(0, 9, 0, 0, 0), 6 }
                 });
 
             migrationBuilder.InsertData(
@@ -629,11 +623,6 @@ namespace HealthEase.Services.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkingHours_DoctorId",
-                table: "WorkingHours",
-                column: "DoctorId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_WorkingHours_UserId",
                 table: "WorkingHours",
                 column: "UserId");
@@ -670,6 +659,9 @@ namespace HealthEase.Services.Migrations
                 name: "AppointmentStatuses");
 
             migrationBuilder.DropTable(
+                name: "Doctors");
+
+            migrationBuilder.DropTable(
                 name: "Specializations");
 
             migrationBuilder.DropTable(
@@ -685,13 +677,10 @@ namespace HealthEase.Services.Migrations
                 name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "Doctors");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Patients");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }

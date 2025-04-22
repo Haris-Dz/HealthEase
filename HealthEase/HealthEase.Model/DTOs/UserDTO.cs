@@ -16,5 +16,6 @@ namespace HealthEase.Model.DTOs
         public bool IsDeleted { get; set; }
         public int UserRoleId { get; set; }
         public virtual ICollection<UserRoleDTO> UserRoles { get; set; } = new List<UserRoleDTO>();
+
     }
 }

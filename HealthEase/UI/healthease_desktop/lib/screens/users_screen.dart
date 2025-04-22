@@ -38,7 +38,12 @@ class _UsersScreenState extends State<UsersScreen> {
             .get(retrieveAll: true);
         _patients = patientsResult.resultList;
       } catch (e) {
-        print('Error fetching data: $e');
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: "Error",
+        text: "Failed to fetch data",
+      );
       } finally {
         setState(() => _isLoading = false);
       }
@@ -293,14 +298,12 @@ void _confirmDelete(BuildContext context, dynamic user) async {
       } else {
         await Provider.of<PatientsProvider>(context, listen: false).delete(user.patientId);
       }
-
       QuickAlert.show(
         context: context,
         type: QuickAlertType.success,
         title: "Deleted",
         text: "The user has been deleted successfully.",
       );
-
       // Refresh data
       setState(() => _isLoading = true);
       final usersResult = await Provider.of<UsersProvider>(context, listen: false)
@@ -379,17 +382,13 @@ void _showAddOrEditUserDialog(BuildContext context, {User? existingUser}) {
                         controller: phoneNumberController,
                         decoration: const InputDecoration(labelText: "Phone number"),
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "This field is required";
-                          }
                           final phoneRegex = RegExp(r'^\d{9}$');
-                          if (!phoneRegex.hasMatch(value)) {
+                          if (value != null && value.isNotEmpty && !phoneRegex.hasMatch(value)) {
                             return "Enter a valid 9-digit number";
                           }
                           return null;
                         },
                       ),
-
                       const SizedBox(height: 10),
                         Tooltip(
                           message: existingUser != null ? "Email cannot be changed after creation" : "",
@@ -399,11 +398,11 @@ void _showAddOrEditUserDialog(BuildContext context, {User? existingUser}) {
                             decoration: const InputDecoration(labelText: "Email"),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "This field is required";
+                                return "This field is required ";
                               }
                               final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
                               if (!emailRegex.hasMatch(value)) {
-                                return "Enter a valid email address";
+                                return "Enter a valid email address (example@example.com)";
                               }
                               return null;
                             },
@@ -514,7 +513,7 @@ void _showAddOrEditUserDialog(BuildContext context, {User? existingUser}) {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF1565C0),
+                            backgroundColor:  Colors.blue.shade700,
                             padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           ),
@@ -649,7 +648,7 @@ void _showEditPatientDialog(BuildContext context, Patient patient) {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.blue.shade700,
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                 ),
                 child: const Text("Save", style: TextStyle(color: Colors.white)),

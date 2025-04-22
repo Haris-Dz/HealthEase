@@ -28,6 +28,10 @@ namespace HealthEase.Services.DoctorStateMachine
         {
             throw new UserException("Method not allowed");
         }
+        public virtual Task BeforeInsertAsync(DoctorInsertRequest request, Doctor entity, CancellationToken cancellationToken = default)
+        {
+            throw new UserException("Method not allowed");
+        }
 
         public virtual Task<DoctorDTO> UpdateAsync(int id, DoctorUpdateRequest request, CancellationToken cancellation = default)
         {

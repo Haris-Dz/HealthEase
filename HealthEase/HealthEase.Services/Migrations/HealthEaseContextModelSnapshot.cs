@@ -898,9 +898,6 @@ namespace HealthEase.Services.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DoctorId")
-                        .HasColumnType("int");
-
                     b.Property<TimeSpan>("EndTime")
                         .HasColumnType("time");
 
@@ -914,8 +911,6 @@ namespace HealthEase.Services.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("WorkingHoursId");
-
-                    b.HasIndex("DoctorId");
 
                     b.HasIndex("UserId");
 
@@ -1261,12 +1256,8 @@ namespace HealthEase.Services.Migrations
 
             modelBuilder.Entity("HealthEase.Services.Database.WorkingHours", b =>
                 {
-                    b.HasOne("HealthEase.Services.Database.Doctor", null)
-                        .WithMany("WorkingHours")
-                        .HasForeignKey("DoctorId");
-
                     b.HasOne("HealthEase.Services.Database.User", "User")
-                        .WithMany()
+                        .WithMany("WorkingHours")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1282,8 +1273,6 @@ namespace HealthEase.Services.Migrations
             modelBuilder.Entity("HealthEase.Services.Database.Doctor", b =>
                 {
                     b.Navigation("DoctorSpecializations");
-
-                    b.Navigation("WorkingHours");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.MedicalRecord", b =>
@@ -1325,6 +1314,8 @@ namespace HealthEase.Services.Migrations
             modelBuilder.Entity("HealthEase.Services.Database.User", b =>
                 {
                     b.Navigation("UserRoles");
+
+                    b.Navigation("WorkingHours");
                 });
 #pragma warning restore 612, 618
         }

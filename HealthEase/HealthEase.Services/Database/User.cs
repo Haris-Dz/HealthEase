@@ -25,5 +25,7 @@ namespace HealthEase.Services.Database
         public string PasswordSalt { get; set; } = null!;
 
         public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+
+        public virtual ICollection<WorkingHours> WorkingHours { get; set; } = new List<WorkingHours>();
     }
 }

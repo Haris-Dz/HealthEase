@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healthease_desktop/providers/auth_provider.dart';
+import 'package:healthease_desktop/screens/doctors_screen.dart';
 import 'package:healthease_desktop/screens/users_screen.dart';
 import 'package:healthease_desktop/main.dart'; // LoginPage se nalazi u main.dart
 
@@ -109,7 +110,6 @@ void _showProfileMenu(BuildContext context, Offset offset) async {
         ),
       ),
     ],
-    // Ovo je ključno: koristiš theme override za hoverColor
     elevation: 8,
   ).then((value) {
     if (value == 'logout') {
@@ -147,11 +147,11 @@ void _showProfileMenu(BuildContext context, Offset offset) async {
                   ),
                 ),
                 const SizedBox(height: 20),
+                _buildSidebarItem("Doctors", Icons.health_and_safety_outlined, () {
+                  _onSidebarItemTapped("Doctors", DoctorsScreen());
+                }),
                 _buildSidebarItem("Users", Icons.people, () {
                   _onSidebarItemTapped("Users", const UsersScreen());
-                }),
-                _buildSidebarItem("Termini", Icons.event, () {
-                  _onSidebarItemTapped("Termini", const Placeholder());
                 }),
                 _buildSidebarItem("Statistika", Icons.bar_chart, () {
                   _onSidebarItemTapped("Statistika", const Placeholder());
