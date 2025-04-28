@@ -42,7 +42,7 @@ namespace HealthEase.Services.DoctorStateMachine
             {
                 if (request.User.RoleId == 0)
                     request.User.RoleId = 2;
-
+                request.User.SkipDoctorCreation = true;
                 var createdUser = await _userService.InsertAsync(request.User, cancellationToken);
                 entity.UserId = createdUser.UserId;
             }
@@ -56,7 +56,10 @@ namespace HealthEase.Services.DoctorStateMachine
             entity.ProfilePicture = request.ProfilePicture;
             entity.StateMachine = "draft";
             entity.IsDeleted = false;
+
+            // NIŠTA SE NE DODAJE U BAZU OVDE!
         }
+
 
         public override List<string> AllowedActions(Doctor entity)
         {

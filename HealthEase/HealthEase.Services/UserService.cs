@@ -103,7 +103,7 @@ namespace HealthEase.Services
             });
             var userRole = await Context.Set<Role>()
     .FirstOrDefaultAsync(x => x.RoleName == "Doctor", cancellationToken);
-            if (userRole != null && userRole.RoleId == request.RoleId)
+            if (userRole != null && userRole.RoleId == request.RoleId && !request.SkipDoctorCreation)
             {
                 Context.Doctors.Add(new Doctor
                 {
@@ -138,6 +138,17 @@ namespace HealthEase.Services
         public override async Task<UserDTO> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await base.GetByIdAsync(id, cancellationToken);
+        }
+        public override async Task AfterDeleteAsync(User entity, CancellationToken cancellationToken) 
+        {
+            var doctorEntity = await Context.Set<Doctor>()
+    .FirstOrDefaultAsync(x => x.UserId == entity.UserId, cancellationToken);
+            if (doctorEntity != null)
+            {
+                doctorEntity.IsDeleted = true;
+
+                await Context.SaveChangesAsync(cancellationToken);
+            }
         }
         public UserDTO Login(string username, string password)
         {

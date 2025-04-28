@@ -19,6 +19,7 @@ namespace HealthEase.Model.Requests
 
         [Required]
         public int RoleId { get; set; }
+        public bool SkipDoctorCreation { get; set; } = false;
 
         // public string Password { get; set; } = null!;
         // public string PasswordConfirmation { get; set; } = null!;
