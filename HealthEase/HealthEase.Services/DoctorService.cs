@@ -64,18 +64,12 @@ namespace HealthEase.Services
 
         public override async Task<DoctorDTO> InsertAsync(DoctorInsertRequest request, CancellationToken cancellationToken)
         {
-            var entity = new Doctor();
             var state = BaseDoctorState.CreateState("initial", _serviceProvider);
-
-            // Ovdje se samo popunjava Doctor objekat
-            await state.BeforeInsertAsync(request, entity, cancellationToken);
-
-            // Dodaj samo jednom i snimi
-            Context.Doctors.Add(entity);
-            await Context.SaveChangesAsync(cancellationToken);
-
-            return Mapper.Map<DoctorDTO>(entity);
+            return await state.InsertAsync(request, cancellationToken); // Ništa drugo ne radiš ovdje
         }
+
+
+
 
 
 

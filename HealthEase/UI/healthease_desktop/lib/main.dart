@@ -7,7 +7,6 @@ import 'package:healthease_desktop/screens/doctors_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:healthease_desktop/providers/auth_provider.dart';
 import 'package:healthease_desktop/providers/users_provider.dart';
-import 'package:healthease_desktop/screens/users_screen.dart';
 import 'package:quickalert/quickalert.dart';
 
 void main() {
