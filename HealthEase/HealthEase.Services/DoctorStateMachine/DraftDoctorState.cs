@@ -2,6 +2,7 @@
 using HealthEase.Model.Requests;
 using HealthEase.Services.Database;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,14 @@ namespace HealthEase.Services.DoctorStateMachine
         {
             var set = Context.Set<Doctor>();
 
-            var entity = await set.FindAsync(new object[] { id }, cancellationToken);
+            var entity = await Context.Doctors
+                .Include(d => d.User)
+                .Include(d => d.User.WorkingHours)
+                .Include(d => d.DoctorSpecializations)
+                    .ThenInclude(ds => ds.Specialization)
+                .FirstOrDefaultAsync(d => d.DoctorId == id, cancellationToken);
+
+
 
             if (entity == null)
                 throw new Exception("Doctor not found");

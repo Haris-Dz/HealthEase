@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:healthease_desktop/providers/auth_provider.dart';
+import 'package:healthease_desktop/providers/utils.dart';
+import 'package:healthease_desktop/screens/dashboard_screen.dart';
 import 'package:healthease_desktop/screens/doctors_screen.dart';
 import 'package:healthease_desktop/screens/users_screen.dart';
-import 'package:healthease_desktop/main.dart'; // LoginPage se nalazi u main.dart
+import 'package:healthease_desktop/main.dart';
 
 class MasterScreen extends StatefulWidget {
   final String title;
@@ -32,97 +34,77 @@ class _MasterScreenState extends State<MasterScreen> {
     });
   }
 
-  void _logout(BuildContext context) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Confirm Logout"),
-        content: const Text("Are you sure you want to log out?"),
-        actionsAlignment: MainAxisAlignment.center,
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1976D2),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            ),
-            child: Transform.translate(
-              offset: const Offset(0, -2),
-              child: const Text("Cancel", style: TextStyle(color: Colors.white)),
-            ),
-          ),
-          const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            ),
-            child: Transform.translate(
-              offset: const Offset(0, -2),
-              child: const Text("Logout", style: TextStyle(color: Colors.white)),
-            ),
-          ),
-        ],
-      ),
+  Future<void> _logout(BuildContext context) async {
+    final confirm = await showCustomConfirmDialog(
+      context,
+      title: "Confirm Logout",
+      text: "Are you sure you want to log out?",
+      confirmBtnText: "Logout",
+      confirmBtnColor: Colors.red,
     );
 
-    if (confirm == true) {
+    if (confirm) {
       AuthProvider.username = null;
       AuthProvider.password = null;
       AuthProvider.userId = null;
       AuthProvider.userRoles = null;
 
+      if (!mounted) return;
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const LoginPage()),
         (route) => false,
       );
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully logged out'),duration: Duration(milliseconds: 900), ),
+        const SnackBar(
+          content: Text('Successfully logged out'),
+          duration: Duration(milliseconds: 900),
+        ),
       );
     }
   }
 
-void _showProfileMenu(BuildContext context, Offset offset) async {
-  final selected = await showMenu<String>(
-    context: context,
-    position: RelativeRect.fromLTRB(offset.dx, 59, 0, 0),
-    items: [
-      const PopupMenuItem<String>(
-        value: 'profile',
-        child: Row(
-          children: [
-            Icon(Icons.person, color: Colors.black87),
-            SizedBox(width: 10),
-            Text('My Profile'),
-          ],
+  void _showProfileMenu(BuildContext context, Offset offset) async {
+    final selected = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(offset.dx, 59, 0, 0),
+      items: const [
+        PopupMenuItem<String>(
+          value: 'profile',
+          child: Row(
+            children: [
+              Icon(Icons.person, color: Colors.black87),
+              SizedBox(width: 10),
+              Text('My Profile'),
+            ],
+          ),
         ),
-      ),
-      const PopupMenuItem<String>(
-        value: 'logout',
-        child: Row(
-          children: [
-            Icon(Icons.logout, color: Colors.black87),
-            SizedBox(width: 10),
-            Text('Logout'),
-          ],
+        PopupMenuItem<String>(
+          value: 'logout',
+          child: Row(
+            children: [
+              Icon(Icons.logout, color: Colors.black87),
+              SizedBox(width: 10),
+              Text('Logout'),
+            ],
+          ),
         ),
-      ),
-    ],
-    elevation: 8,
-  ).then((value) {
-    if (value == 'logout') {
+      ],
+      elevation: 8,
+    );
+
+    if (selected == 'logout') {
       _logout(context);
-    } else if (value == 'profile') {
+    } else if (selected == 'profile') {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('My profile selected'),duration: Duration(milliseconds: 900), ),
+        const SnackBar(
+          content: Text('My profile selected'),
+          duration: Duration(milliseconds: 900),
+        ),
       );
     }
-  });
-}
-
-
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,14 +129,14 @@ void _showProfileMenu(BuildContext context, Offset offset) async {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildSidebarItem("Doctors", Icons.health_and_safety_outlined, () {
-                  _onSidebarItemTapped("Doctors", DoctorsScreen());
+                _buildSidebarItem("Dashboard", Icons.bar_chart, () {
+                 _onSidebarItemTapped("Dashboard", const DashboardScreen());
                 }),
                 _buildSidebarItem("Users", Icons.people, () {
                   _onSidebarItemTapped("Users", const UsersScreen());
                 }),
-                _buildSidebarItem("Statistika", Icons.bar_chart, () {
-                  _onSidebarItemTapped("Statistika", const Placeholder());
+                _buildSidebarItem("Doctors", Icons.health_and_safety_outlined, () {
+                  _onSidebarItemTapped("Doctors", const DoctorsScreen());
                 }),
                 _buildSidebarItem("Recepti", Icons.receipt, () {
                   _onSidebarItemTapped("Recepti", const Placeholder());
@@ -195,14 +177,13 @@ void _showProfileMenu(BuildContext context, Offset offset) async {
                             icon: const Icon(Icons.notifications, color: Colors.white),
                             onPressed: () {},
                           ),
-                      MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTapDown: (details) => _showProfileMenu(context, details.globalPosition),
-                          child: const Icon(Icons.account_circle, color: Colors.white),
-                        ),
-                      ),
-
+                          MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: GestureDetector(
+                              onTapDown: (details) => _showProfileMenu(context, details.globalPosition),
+                              child: const Icon(Icons.account_circle, color: Colors.white),
+                            ),
+                          ),
                         ],
                       ),
                     ],

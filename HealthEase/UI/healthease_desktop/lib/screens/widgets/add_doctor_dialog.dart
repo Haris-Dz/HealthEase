@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthease_desktop/providers/doctors_provider.dart';
+import 'package:healthease_desktop/providers/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:quickalert/quickalert.dart';
-
 class AddDoctorDialog extends StatefulWidget {
   const AddDoctorDialog({super.key});
 
@@ -128,18 +127,10 @@ Widget build(BuildContext context) {
 
       if (context.mounted) {
         Navigator.of(context).pop(true);
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.success,
-          text: 'Doctor added successfully',
-        );
+        await showSuccessAlert(context, "Doctor added successfully");
       }
     } catch (e) {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: 'Failed to add doctor: \$e',
-      );
+      await showErrorAlert(context, "Failed to add doctor: $e");
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
