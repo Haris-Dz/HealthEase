@@ -1,4 +1,5 @@
 ﻿using HealthEase.Model.DTOs;
+using HealthEase.Model.Exceptions;
 using HealthEase.Model.Requests;
 using HealthEase.Model.SearchObjects;
 using HealthEase.Services.BaseServices;
@@ -61,49 +62,84 @@ namespace HealthEase.Services
                     .ThenInclude(ds => ds.Specialization)
                 .Include(x => x.User.WorkingHours);
         }
+        private async Task<Doctor> LoadDoctorWithIncludesAsync(int id, CancellationToken cancellationToken)
+        {
+            var doctor = await Context.Doctors
+                .Include(d => d.User)
+                .Include(d => d.User.WorkingHours)
+                .Include(d => d.DoctorSpecializations)
+                    .ThenInclude(ds => ds.Specialization)
+                .FirstOrDefaultAsync(d => d.DoctorId == id, cancellationToken);
+
+            if (doctor == null)
+            {
+                throw new UserException("Doctor not found!");
+            }
+
+            return doctor;
+        }
+
 
         public override async Task<DoctorDTO> InsertAsync(DoctorInsertRequest request, CancellationToken cancellationToken)
         {
             var state = BaseDoctorState.CreateState("initial", _serviceProvider);
             return await state.InsertAsync(request, cancellationToken); // Ništa drugo ne radiš ovdje
         }
-
-
-
-
-
-
         public override async Task<DoctorDTO> UpdateAsync(int id, DoctorUpdateRequest request, CancellationToken cancellationToken)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await LoadDoctorWithIncludesAsync(id, cancellationToken);
+
+            if (entity == null)
+                throw new UserException("Doctor not found!");
+
             var state = BaseDoctorState.CreateState(entity.StateMachine, _serviceProvider);
             return await state.UpdateAsync(id, request, cancellationToken);
         }
 
+
         public override async Task DeleteAsync(int id, CancellationToken cancellationToken)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await LoadDoctorWithIncludesAsync(id, cancellationToken);
+
+            if (entity == null)
+                throw new UserException("Doctor not found!");
+
             var state = BaseDoctorState.CreateState(entity.StateMachine, _serviceProvider);
             await state.DeleteAsync(id, cancellationToken);
         }
 
+
         public async Task<DoctorDTO> ActivateAsync(int id, CancellationToken cancellationToken)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await LoadDoctorWithIncludesAsync(id, cancellationToken);
+
+            if (entity == null)
+                throw new UserException("Doctor not found!");
+
             var state = BaseDoctorState.CreateState(entity.StateMachine, _serviceProvider);
             return await state.ActivateAsync(id, cancellationToken);
         }
 
+
         public async Task<DoctorDTO> EditAsync(int id, CancellationToken cancellationToken)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await LoadDoctorWithIncludesAsync(id, cancellationToken);
+
+            if (entity == null)
+                throw new UserException("Doctor not found!");
+
             var state = BaseDoctorState.CreateState(entity.StateMachine, _serviceProvider);
             return await state.EditAsync(id, cancellationToken);
         }
 
+
         public async Task<DoctorDTO> HideAsync(int id, CancellationToken cancellationToken)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await LoadDoctorWithIncludesAsync(id, cancellationToken);
+
+            if (entity == null)
+                throw new UserException("Doctor not found!");
+
             var state = BaseDoctorState.CreateState(entity.StateMachine, _serviceProvider);
             return await state.HideAsync(id, cancellationToken);
         }

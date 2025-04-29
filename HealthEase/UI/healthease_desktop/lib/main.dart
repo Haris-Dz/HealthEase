@@ -3,11 +3,11 @@ import 'package:healthease_desktop/layouts/master_screen.dart';
 import 'package:healthease_desktop/providers/doctors_provider.dart';
 import 'package:healthease_desktop/providers/patients_provider.dart';
 import 'package:healthease_desktop/providers/roles_provider.dart';
-import 'package:healthease_desktop/screens/doctors_screen.dart';
+import 'package:healthease_desktop/providers/utils.dart';
+import 'package:healthease_desktop/screens/dashboard_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:healthease_desktop/providers/auth_provider.dart';
 import 'package:healthease_desktop/providers/users_provider.dart';
-import 'package:quickalert/quickalert.dart';
 
 void main() {
   runApp(
@@ -55,6 +55,15 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
   bool _obscurePassword = true;
+  bool _isLoggingIn = false;
+
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +158,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           onPressed: () async {
                             if (_formKey.currentState?.validate() ?? false) {
+                              setState(() => _isLoggingIn = true);
+
                               var provider = Provider.of<UsersProvider>(context, listen: false);
                               AuthProvider.username = _usernameController.text;
                               AuthProvider.password = _passwordController.text;
@@ -162,29 +173,42 @@ class _LoginPageState extends State<LoginPage> {
                                 AuthProvider.userId = user.userId;
                                 AuthProvider.userRoles = user.userRoles;
 
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => MasterScreen(
-                                      title: "Users",
-                                      child: const DoctorsScreen(),
+                                if (mounted) {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) => MasterScreen(
+                                        title: "Dashboard",
+                                        child: const DashboardScreen(),
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
                               } catch (e) {
-                                QuickAlert.show(
-                                  context: context,
-                                  type: QuickAlertType.error,
-                                  text: "Invalid username or password.",
-                                  title: "Login Failed",
-                                );
+                                if (mounted) {
+                                  await showErrorAlert(context, "Invalid username or password.");
+                                }
+                              } finally {
+                                if (mounted) {
+                                  setState(() => _isLoggingIn = false);
+                                }
                               }
                             }
                           },
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(fontSize: 18),
-                          ),
+                          child: _isLoggingIn
+                              ? const SizedBox(
+                                  width: 25,
+                                  height: 25,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2.5,
+                                  ),
+                                )
+                              : const Text(
+                                  "Login",
+                                  style: TextStyle(fontSize: 18),
+                                ),
                         ),
+
                       ],
                     ),
                   ),

@@ -131,10 +131,16 @@ namespace HealthEase.Services.BaseServices
             {
                 throw new UserException("Unable to find an object with the provided ID!"); 
             }
-
-            var mappedObj = Mapper.Map<TModel>(entity);
-            await CustomMapResponseAsync(mappedObj, cancellationToken); // Custom response mapping if needed
-            return mappedObj;
+            if (entity != null)
+            {
+                var mappedObj = Mapper.Map<TModel>(entity);
+                await CustomMapResponseAsync(mappedObj, cancellationToken);
+                return mappedObj;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         // Placeholder for additional custom mapping on single record response
