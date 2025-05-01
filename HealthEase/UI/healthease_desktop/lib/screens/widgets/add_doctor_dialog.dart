@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:healthease_desktop/providers/doctors_provider.dart';
 import 'package:healthease_desktop/providers/utils.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 class AddDoctorDialog extends StatefulWidget {
   const AddDoctorDialog({super.key});
@@ -18,6 +22,8 @@ class _AddDoctorDialogState extends State<AddDoctorDialog> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController biographyController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
+  Uint8List? _selectedImage;
+  String? _base64Image;
 
   bool _isSubmitting = false;
 
@@ -40,6 +46,8 @@ Widget build(BuildContext context) {
                   children: [
                     const Text("Add Doctor", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 20),
+                    _buildImagePicker(),
+
 
                     _buildTextField(firstNameController, "First Name"),
                     _buildTextField(lastNameController, "Last Name"),
@@ -91,6 +99,37 @@ Widget build(BuildContext context) {
   );
 }
 
+  Future<void> _pickImage() async {
+    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      final imageBytes = await picked.readAsBytes();
+      setState(() {
+        _selectedImage = imageBytes;
+        _base64Image = base64Encode(imageBytes);
+      });
+    }
+  }
+  Widget _buildImagePicker() {
+    return GestureDetector(
+      onTap: _pickImage,
+      child: Container(
+        width: 100,
+        height: 100,
+        margin: const EdgeInsets.only(bottom: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey.shade400),
+          image: _selectedImage != null
+              ? DecorationImage(image: MemoryImage(_selectedImage!), fit: BoxFit.cover)
+              : null,
+          color: Colors.grey.shade100,
+        ),
+        child: _selectedImage == null
+            ? const Center(child: Icon(Icons.add_a_photo, size: 30, color: Colors.grey))
+            : null,
+      ),
+    );
+  }
 
   Widget _buildTextField(TextEditingController controller, String label,
       {int maxLines = 1, bool required = true, String? Function(String?)? validator}) {
@@ -122,7 +161,7 @@ Widget build(BuildContext context) {
         },
         "biography": biographyController.text,
         "title": titleController.text,
-        "profilePicture": null,
+        "profilePicture": _base64Image ?? "AA==",
       });
 
       if (context.mounted) {

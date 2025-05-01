@@ -83,7 +83,7 @@ namespace HealthEase.Services
         public override async Task<DoctorDTO> InsertAsync(DoctorInsertRequest request, CancellationToken cancellationToken)
         {
             var state = BaseDoctorState.CreateState("initial", _serviceProvider);
-            return await state.InsertAsync(request, cancellationToken); // Ništa drugo ne radiš ovdje
+            return await state.InsertAsync(request, cancellationToken);
         }
         public override async Task<DoctorDTO> UpdateAsync(int id, DoctorUpdateRequest request, CancellationToken cancellationToken)
         {
