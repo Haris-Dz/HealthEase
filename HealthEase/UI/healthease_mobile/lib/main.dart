@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
+import 'package:healthease_mobile/providers/doctors_provider.dart';
 import 'package:healthease_mobile/providers/patients_provider.dart';
-import 'package:healthease_mobile/screens/placeholder_list_screen.dart';
+import 'package:healthease_mobile/screens/my_profile_screen.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:provider/provider.dart';
+
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => PatientProvider()),
+      ChangeNotifierProvider(create: (_) => DoctorsProvider()),
+    ],
+    child: const MyApp(),
+  ),
+);
+
 }
 
 class MyApp extends StatelessWidget {
@@ -164,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
 
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => PlaceholderListScreen(),
+                                    builder: (context) => MyProfileScreen(),
                                   ),
                                 );
                               } on Exception catch (_) {

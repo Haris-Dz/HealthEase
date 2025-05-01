@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:healthease_desktop/providers/utils.dart';
 import 'package:healthease_desktop/screens/widgets/add_doctor_dialog.dart';
+import 'package:healthease_desktop/screens/widgets/edit_doctor_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:healthease_desktop/models/doctor.dart';
 import 'package:healthease_desktop/providers/doctors_provider.dart';
@@ -89,12 +90,26 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
           }
           break;
         case 'update':
-          QuickAlert.show(
+          final result = await showDialog(
             context: context,
-            type: QuickAlertType.info,
-            text: 'Update feature coming soon!',
+            builder: (context) => EditDoctorDialog(
+              initialTitle: doctor.title,
+              initialBio: doctor.biography,
+              initialProfilePicture: doctor.profilePicture,
+            ),
           );
+
+          if (result != null && mounted) {
+            try {
+              await _doctorsProvider.update(doctor.doctorId!, result);
+              await _loadDoctors();
+              await showSuccessAlert(context, "Doctor updated successfully!");
+            } catch (e) {
+              await showErrorAlert(context, "Update failed: $e");
+            }
+          }
           break;
+
       }
     } catch (e) {
       if (mounted) {
@@ -219,20 +234,34 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             elevation: 4,
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(15),
               child: Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      width: 60,
-                      height: 60,
-                      color: Colors.grey.shade300,
+                  Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
                       child: (doctor.profilePicture != null && doctor.profilePicture != "AA==")
                           ? Image.memory(base64Decode(doctor.profilePicture!), fit: BoxFit.cover)
-                          : Image.asset('assets/images/placeholder.png', fit: BoxFit.cover),
+                          : Container(
+                              color: Colors.grey.shade100,
+                              child: const Icon(Icons.person, size: 40, color: Colors.grey),
+                            ),
                     ),
                   ),
+
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
