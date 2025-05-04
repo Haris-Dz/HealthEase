@@ -53,6 +53,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   Widget build(BuildContext context) {
     return MasterScreen(
       title: "My Profile",
+      currentRoute: "My Profile",
       child: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -69,8 +70,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                  // Ime i email
                   Text(
                     "${_patient?['firstName'] ?? '-'} ${_patient?['lastName'] ?? '-'}",
                     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

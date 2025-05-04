@@ -130,7 +130,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         alignment: Alignment.center,
         children: [
           CircleAvatar(
-            radius: 60, // povećan
+            radius: 60,
             backgroundImage: _selectedImage != null
                 ? MemoryImage(_selectedImage!)
                 : const AssetImage("assets/images/placeholder.png") as ImageProvider,
@@ -163,6 +163,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return MasterScreen(
       title: "Edit Profile",
+      currentRoute: "Edit Profile",
       showBackButton: true,
       child: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -231,7 +232,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         ),
                         validator: (value) {
-                          if (value == null || value.length < 6) return "Minimum 6 characters";
+                          if (value == null || value.length < 8) return "Minimum 8 characters";
                           return null;
                         },
                       ),

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:healthease_mobile/main.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
 import 'package:healthease_mobile/providers/utils.dart';
+import 'package:healthease_mobile/screens/doctors_screen.dart';
 import 'package:healthease_mobile/screens/my_profile_screen.dart';
-import 'package:healthease_mobile/screens/placeholder_list_screen.dart';
+import 'package:healthease_mobile/screens/placeholder_screen.dart';
 
 class MasterScreen extends StatelessWidget {
   final String title;
@@ -11,54 +12,101 @@ class MasterScreen extends StatelessWidget {
   final Color? backgroundColor;
   final List<Widget>? actions;
   final bool showBackButton;
-
+  final String currentRoute;
   const MasterScreen({
     super.key,
     required this.title,
     required this.child,
+    required this.currentRoute,
     this.backgroundColor,
     this.actions,
     this.showBackButton = false,
   });
 
-  void _navigateTo(BuildContext context, Widget screen) {
+void _navigateTo(BuildContext context, Widget screen) {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => screen),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: showBackButton ? null : _buildDrawer(context),
-      appBar: AppBar(
-  backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
-  foregroundColor: Colors.white,
-  automaticallyImplyLeading: false,
-  leading: Builder(
-    builder: (context) => IconButton(
-      icon: const Icon(Icons.menu),
-      onPressed: () => Scaffold.of(context).openDrawer(),
-    ),
-  ),
-  title: Text(
-    title,
-    style: const TextStyle(fontWeight: FontWeight.bold),
-  ),
-  centerTitle: true,
-  actions: [
-    if (showBackButton)
-      IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () => Navigator.of(context).pop(),
+      MaterialPageRoute(
+        builder: (_) => screen,
+        settings: RouteSettings(name: screen.runtimeType.toString()),
       ),
-    ...?actions,
-  ],
-),
-
-      body: child,
     );
-  }
+ }
+
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    drawer: showBackButton ? null : _buildDrawer(context),
+    appBar: AppBar(
+      backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
+      foregroundColor: Colors.white,
+      automaticallyImplyLeading: false,
+      titleSpacing: 0,
+      title: Row(
+        children: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(showBackButton ? Icons.arrow_back : Icons.menu),
+              onPressed: () {
+                if (showBackButton) {
+                  Navigator.of(context).pop();
+                } else {
+                  Scaffold.of(context).openDrawer();
+                }
+              },
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Text(
+                title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          const SizedBox(width: 48),
+        ],
+      ),
+      actions: actions,
+    ),
+    body: child,
+  );
+}
+Widget _buildDrawerItem(
+  BuildContext context, {
+  required IconData icon,
+  required String title,
+  required String route,
+  required Widget screen,
+  required String currentRoute,
+}) {
+  final isActive = currentRoute == route;
+
+  return ListTile(
+    leading: AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      child: Icon(
+        icon,
+        color: isActive ? Colors.blue : Colors.black,
+        size: isActive ? 28 : 24,
+      ),
+    ),
+    title: Text(title),
+    tileColor: isActive ? Colors.blue.shade100 : null,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+    shape: isActive
+        ? const Border(
+            left: BorderSide(color: Colors.blue, width: 4),
+          )
+        : null,
+    onTap: () {
+      if (!isActive) {
+        Navigator.pop(context);
+        _navigateTo(context, screen);
+      }
+    },
+  );
+}
 
   Drawer _buildDrawer(BuildContext context) {
     return Drawer(
@@ -87,19 +135,74 @@ class MasterScreen extends StatelessWidget {
           Expanded(
             child: ListView(
               children: [
-                ListTile(
-                  leading: const Icon(Icons.nat_sharp),
-                  title: const Text("Placeholder"),
-                  onTap: () => _navigateTo(context, const PlaceholderListScreen()),
+                _buildDrawerItem(
+                  context,
+                  icon: Icons.local_hospital_outlined,
+                  title: "Doctors",
+                  route: "Doctors",
+                  screen: const DoctorsScreen(),
+                  currentRoute: currentRoute,
                 ),
-                ListTile(
-                  leading: const Icon(Icons.person),
-                  title: const Text("My Profile"),
-                  onTap: () => _navigateTo(context, const MyProfileScreen()),
+                _buildDrawerItem(
+                  context,
+                  icon: Icons.account_circle_outlined,
+                  title: "My Profile",
+                  route: "My Profile",
+                  screen: const MyProfileScreen(),
+                  currentRoute: currentRoute,
+                ),
+                _buildDrawerItem(
+                  context,
+                  icon: Icons.favorite_border,
+                  title: "Favourites",
+                  route: "Favourites",
+                  screen: const PlaceholderScreen(),
+                  currentRoute: currentRoute,
+                ),
+                _buildDrawerItem(
+                  context,
+                  icon: Icons.schedule,
+                  title: "Appointments",
+                  route: "Appointments",
+                  screen: const PlaceholderScreen(),
+                  currentRoute: currentRoute,
+                ),
+                _buildDrawerItem(
+                  context,
+                  icon: Icons.medical_information_outlined,
+                  title: "Medical Records",
+                  route: "Medical Records",
+                  screen: const PlaceholderScreen(),
+                  currentRoute: currentRoute,
+                ),
+                _buildDrawerItem(
+                  context,
+                  icon: Icons.sms_outlined,
+                  title: "Messages",
+                  route: "Messages",
+                  screen: const PlaceholderScreen(),
+                  currentRoute: currentRoute,
+                ),
+                _buildDrawerItem(
+                  context,
+                  icon: Icons.payment,
+                  title: "Payments",
+                  route: "Payments",
+                  screen: const PlaceholderScreen(),
+                  currentRoute: currentRoute,
+                ),
+                _buildDrawerItem(
+                  context,
+                  icon: Icons.notifications_none_outlined,
+                  title: "Notifications",
+                  route: "Notifications",
+                  screen: const PlaceholderScreen(),
+                  currentRoute: currentRoute,
                 ),
               ],
             ),
           ),
+
           const Divider(height: 1),
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
@@ -134,3 +237,6 @@ class MasterScreen extends StatelessWidget {
     );
   }
 }
+
+
+

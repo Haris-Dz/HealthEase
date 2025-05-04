@@ -12,6 +12,7 @@ Doctor _$DoctorFromJson(Map<String, dynamic> json) =>
       ..profilePicture = json['profilePicture'] as String?
       ..biography = json['biography'] as String?
       ..title = json['title'] as String?
+      ..stateMachine = json['stateMachine'] as String?
       ..user =
           json['user'] == null
               ? null
@@ -30,6 +31,7 @@ Map<String, dynamic> _$DoctorToJson(Doctor instance) => <String, dynamic>{
   'profilePicture': instance.profilePicture,
   'biography': instance.biography,
   'title': instance.title,
+  'stateMachine': instance.stateMachine,
   'user': instance.user,
   'doctorSpecializations': instance.doctorSpecializations,
   'workingHours': instance.workingHours,

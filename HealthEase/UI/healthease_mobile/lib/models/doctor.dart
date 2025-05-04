@@ -10,6 +10,7 @@ class Doctor {
   String? profilePicture;
   String? biography;
   String? title;
+  String? stateMachine;
   User? user;
   List<Specialization>? doctorSpecializations;
   List<WorkingHours>? workingHours;
