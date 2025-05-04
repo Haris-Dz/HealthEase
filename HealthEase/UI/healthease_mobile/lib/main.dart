@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
 import 'package:healthease_mobile/providers/doctors_provider.dart';
 import 'package:healthease_mobile/providers/patients_provider.dart';
-import 'package:healthease_mobile/screens/my_profile_screen.dart';
+import 'package:healthease_mobile/providers/specializations_provider.dart';
+import 'package:healthease_mobile/screens/doctors_screen.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ void main() {
     providers: [
       ChangeNotifierProvider(create: (_) => PatientProvider()),
       ChangeNotifierProvider(create: (_) => DoctorsProvider()),
+      ChangeNotifierProvider(create: (_) => SpecializationsProvider()),
     ],
     child: const MyApp(),
   ),
@@ -176,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
 
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => MyProfileScreen(),
+                                    builder: (context) => DoctorsScreen(),
                                   ),
                                 );
                               } on Exception catch (_) {
