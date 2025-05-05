@@ -14,18 +14,19 @@ namespace HealthEase.Services.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AppointmentStatuses",
+                name: "AppointmentTypes",
                 columns: table => new
                 {
-                    AppointmentStatusId = table.Column<int>(type: "int", nullable: false)
+                    AppointmentTypeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppointmentStatuses", x => x.AppointmentStatusId);
+                    table.PrimaryKey("PK_AppointmentTypes", x => x.AppointmentTypeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -210,41 +211,6 @@ namespace HealthEase.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Appointments",
-                columns: table => new
-                {
-                    AppointmentId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    PatientId = table.Column<int>(type: "int", nullable: false),
-                    AppointmentStatusId = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Appointments", x => x.AppointmentId);
-                    table.ForeignKey(
-                        name: "FK_Appointments_AppointmentStatuses_AppointmentStatusId",
-                        column: x => x.AppointmentStatusId,
-                        principalTable: "AppointmentStatuses",
-                        principalColumn: "AppointmentStatusId");
-                    table.ForeignKey(
-                        name: "FK_Appointments_Patients_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patients",
-                        principalColumn: "PatientId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Appointments_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Doctors",
                 columns: table => new
                 {
@@ -396,6 +362,48 @@ namespace HealthEase.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Appointments",
+                columns: table => new
+                {
+                    AppointmentId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AppointmentTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StatusMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsPaid = table.Column<bool>(type: "bit", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DoctorId = table.Column<int>(type: "int", nullable: false),
+                    PatientId = table.Column<int>(type: "int", nullable: false),
+                    AppointmentTypeId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appointments", x => x.AppointmentId);
+                    table.ForeignKey(
+                        name: "FK_Appointments_AppointmentTypes_AppointmentTypeId",
+                        column: x => x.AppointmentTypeId,
+                        principalTable: "AppointmentTypes",
+                        principalColumn: "AppointmentTypeId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Appointments_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "DoctorId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Appointments_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DoctorSpecializations",
                 columns: table => new
                 {
@@ -421,6 +429,17 @@ namespace HealthEase.Services.Migrations
                         principalTable: "Specializations",
                         principalColumn: "SpecializationId",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AppointmentTypes",
+                columns: new[] { "AppointmentTypeId", "DeletionTime", "IsDeleted", "Name", "Price" },
+                values: new object[,]
+                {
+                    { 1, null, false, "General Checkup", 50m },
+                    { 2, null, false, "Consultation", 80m },
+                    { 3, null, false, "Examination", 100m },
+                    { 4, null, false, "Follow-up", 40m }
                 });
 
             migrationBuilder.InsertData(
@@ -521,6 +540,18 @@ namespace HealthEase.Services.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Appointments",
+                columns: new[] { "AppointmentId", "AppointmentDate", "AppointmentTime", "AppointmentTypeId", "DeletionTime", "DoctorId", "IsDeleted", "IsPaid", "Note", "PatientId", "PaymentDate", "Status", "StatusMessage" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2025, 7, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 9, 0, 0, 0), 1, null, 1, false, false, "Headache and dizziness", 1, null, "Pending", null },
+                    { 2, new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 11, 30, 0, 0), 2, null, 2, false, false, "Routine check-up", 2, null, "Approved", "See you on time" },
+                    { 3, new DateTime(2025, 7, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 13, 0, 0, 0), 4, null, 3, false, true, "Follow-up for lab results", 3, new DateTime(2025, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Paid", "Confirmed and paid" },
+                    { 4, new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 10, 15, 0, 0), 3, null, 4, false, false, "Skin irritation consultation", 1, null, "Rejected", "Doctor unavailable on selected date" },
+                    { 5, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 14, 0, 0, 0), 2, null, 1, false, false, "Consultation about recurring migraines", 2, null, "Pending", null }
+                });
+
+            migrationBuilder.InsertData(
                 table: "DoctorSpecializations",
                 columns: new[] { "DoctorSpecializationId", "DeletionTime", "DoctorId", "IsDeleted", "SpecializationId" },
                 values: new object[,]
@@ -533,19 +564,19 @@ namespace HealthEase.Services.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appointments_AppointmentStatusId",
+                name: "IX_Appointments_AppointmentTypeId",
                 table: "Appointments",
-                column: "AppointmentStatusId");
+                column: "AppointmentTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_DoctorId",
+                table: "Appointments",
+                column: "DoctorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_PatientId",
                 table: "Appointments",
                 column: "PatientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Appointments_UserId",
-                table: "Appointments",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Doctors_UserId",
@@ -656,7 +687,7 @@ namespace HealthEase.Services.Migrations
                 name: "WorkingHours");
 
             migrationBuilder.DropTable(
-                name: "AppointmentStatuses");
+                name: "AppointmentTypes");
 
             migrationBuilder.DropTable(
                 name: "Doctors");

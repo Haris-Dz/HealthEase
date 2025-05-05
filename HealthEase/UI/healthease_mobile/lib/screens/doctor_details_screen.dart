@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:healthease_mobile/layouts/master_screen.dart';
 import 'package:healthease_mobile/models/doctor.dart';
+import 'package:healthease_mobile/screens/make_appointment_screen.dart';
 
 class DoctorDetailsScreen extends StatelessWidget {
   final Doctor doctor;
@@ -97,8 +98,13 @@ class DoctorDetailsScreen extends StatelessWidget {
 
                   ElevatedButton.icon(
                     onPressed: () {
-                      // TODO: Navigate to appointment scheduling
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => MakeAppointmentScreen(doctor: doctor),
+                        ),
+                      );
                     },
+
                     icon: const Icon(Icons.calendar_today),
                     label: const Text("Book an Appointment"),
 

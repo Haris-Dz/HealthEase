@@ -38,7 +38,7 @@ namespace HealthEase.Services.BaseServices
             {
                 query = ApplyIncludes(query, search.IncludeTables); // Applies related table includes
             }
-
+            query = AddInclude(query);
             query = AddFilter(search, query); // Adds search filters
 
             int count = await query.CountAsync(cancellationToken); // Counts total matching records
@@ -141,6 +141,10 @@ namespace HealthEase.Services.BaseServices
             {
                 return null;
             }
+        }
+        public virtual IQueryable<TDbEntity> AddInclude(IQueryable<TDbEntity> query)
+        {
+            return query;
         }
 
         // Placeholder for additional custom mapping on single record response

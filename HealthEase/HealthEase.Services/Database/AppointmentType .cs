@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace HealthEase.Services.Database
 {
-    public partial class AppointmentStatus : BaseEntity
+    public partial class AppointmentType : BaseEntity
     {
         [Key]
-        public int AppointmentStatusId { get; set; }
-        [MaxLength(100)]
-        public string? Status { get; set; } = null!;
+        public int AppointmentTypeId { get; set; }
+
+        [Required]
+        public string Name { get; set; } = null!;
+        public decimal Price { get; set; }
 
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
