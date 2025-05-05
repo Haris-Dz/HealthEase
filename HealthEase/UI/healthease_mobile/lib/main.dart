@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:healthease_mobile/providers/appointment_types_provider.dart';
+import 'package:healthease_mobile/providers/appointments_provider.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
 import 'package:healthease_mobile/providers/doctors_provider.dart';
 import 'package:healthease_mobile/providers/patients_provider.dart';
@@ -8,19 +10,20 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:provider/provider.dart';
 
-
 void main() {
   runApp(
-  MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => PatientProvider()),
-      ChangeNotifierProvider(create: (_) => DoctorsProvider()),
-      ChangeNotifierProvider(create: (_) => SpecializationsProvider()),
-    ],
-    child: const MyApp(),
-  ),
-);
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PatientProvider()),
+        ChangeNotifierProvider(create: (_) => DoctorsProvider()),
+        ChangeNotifierProvider(create: (_) => SpecializationsProvider()),
+        ChangeNotifierProvider(create: (_) => AppointmentsProvider()),
+        ChangeNotifierProvider(create: (_) => AppointmentTypesProvider()),
+      ],
 
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -105,12 +108,17 @@ class _LoginPageState extends State<LoginPage> {
                           controller: _usernameController,
                           decoration: InputDecoration(
                             labelText: "Username",
-                            prefixIcon: const Icon(Icons.person, color: Colors.blue),
+                            prefixIcon: const Icon(
+                              Icons.person,
+                              color: Colors.blue,
+                            ),
                             filled: true,
                             fillColor: Colors.blue.shade50,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.blue.shade300),
+                              borderSide: BorderSide(
+                                color: Colors.blue.shade300,
+                              ),
                             ),
                           ),
                           validator: (value) {
@@ -126,7 +134,10 @@ class _LoginPageState extends State<LoginPage> {
                           obscureText: _obscurePassword,
                           decoration: InputDecoration(
                             labelText: "Password",
-                            prefixIcon: const Icon(Icons.lock, color: Colors.blue),
+                            prefixIcon: const Icon(
+                              Icons.lock,
+                              color: Colors.blue,
+                            ),
                             suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
@@ -134,7 +145,9 @@ class _LoginPageState extends State<LoginPage> {
                                 });
                               },
                               icon: Icon(
-                                _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                _obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                                 color: Colors.blue,
                               ),
                             ),
@@ -142,7 +155,9 @@ class _LoginPageState extends State<LoginPage> {
                             fillColor: Colors.blue.shade50,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.blue.shade300),
+                              borderSide: BorderSide(
+                                color: Colors.blue.shade300,
+                              ),
                             ),
                           ),
                           validator: (value) {

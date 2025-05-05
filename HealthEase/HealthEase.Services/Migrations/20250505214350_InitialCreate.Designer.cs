@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthEase.Services.Migrations
 {
     [DbContext(typeof(HealthEaseContext))]
-    [Migration("20250421204753_InitialCreate")]
+    [Migration("20250505214350_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,42 +33,132 @@ namespace HealthEase.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentId"));
 
-                    b.Property<DateTime?>("AppointmentDate")
+                    b.Property<DateTime>("AppointmentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("AppointmentStatusId")
+                    b.Property<TimeSpan>("AppointmentTime")
+                        .HasColumnType("time");
+
+                    b.Property<int>("AppointmentTypeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StatusMessage")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AppointmentId");
 
-                    b.HasIndex("AppointmentStatusId");
+                    b.HasIndex("AppointmentTypeId");
+
+                    b.HasIndex("DoctorId");
 
                     b.HasIndex("PatientId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Appointments");
+
+                    b.HasData(
+                        new
+                        {
+                            AppointmentId = 1,
+                            AppointmentDate = new DateTime(2025, 7, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 9, 0, 0, 0),
+                            AppointmentTypeId = 1,
+                            DoctorId = 1,
+                            IsDeleted = false,
+                            IsPaid = false,
+                            Note = "Headache and dizziness",
+                            PatientId = 1,
+                            Status = "Pending"
+                        },
+                        new
+                        {
+                            AppointmentId = 2,
+                            AppointmentDate = new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 11, 30, 0, 0),
+                            AppointmentTypeId = 2,
+                            DoctorId = 2,
+                            IsDeleted = false,
+                            IsPaid = false,
+                            Note = "Routine check-up",
+                            PatientId = 2,
+                            Status = "Approved",
+                            StatusMessage = "See you on time"
+                        },
+                        new
+                        {
+                            AppointmentId = 3,
+                            AppointmentDate = new DateTime(2025, 7, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 13, 0, 0, 0),
+                            AppointmentTypeId = 4,
+                            DoctorId = 3,
+                            IsDeleted = false,
+                            IsPaid = true,
+                            Note = "Follow-up for lab results",
+                            PatientId = 3,
+                            PaymentDate = new DateTime(2025, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Paid",
+                            StatusMessage = "Confirmed and paid"
+                        },
+                        new
+                        {
+                            AppointmentId = 4,
+                            AppointmentDate = new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 10, 15, 0, 0),
+                            AppointmentTypeId = 3,
+                            DoctorId = 4,
+                            IsDeleted = false,
+                            IsPaid = false,
+                            Note = "Skin irritation consultation",
+                            PatientId = 1,
+                            Status = "Rejected",
+                            StatusMessage = "Doctor unavailable on selected date"
+                        },
+                        new
+                        {
+                            AppointmentId = 5,
+                            AppointmentDate = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 14, 0, 0, 0),
+                            AppointmentTypeId = 2,
+                            DoctorId = 1,
+                            IsDeleted = false,
+                            IsPaid = false,
+                            Note = "Consultation about recurring migraines",
+                            PatientId = 2,
+                            Status = "Pending"
+                        });
                 });
 
-            modelBuilder.Entity("HealthEase.Services.Database.AppointmentStatus", b =>
+            modelBuilder.Entity("HealthEase.Services.Database.AppointmentType", b =>
                 {
-                    b.Property<int>("AppointmentStatusId")
+                    b.Property<int>("AppointmentTypeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentStatusId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentTypeId"));
 
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
@@ -76,13 +166,47 @@ namespace HealthEase.Services.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Status")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("AppointmentStatusId");
+                    b.Property<decimal>("Price")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
-                    b.ToTable("AppointmentStatuses");
+                    b.HasKey("AppointmentTypeId");
+
+                    b.ToTable("AppointmentTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            AppointmentTypeId = 1,
+                            IsDeleted = false,
+                            Name = "General Checkup",
+                            Price = 50m
+                        },
+                        new
+                        {
+                            AppointmentTypeId = 2,
+                            IsDeleted = false,
+                            Name = "Consultation",
+                            Price = 80m
+                        },
+                        new
+                        {
+                            AppointmentTypeId = 3,
+                            IsDeleted = false,
+                            Name = "Examination",
+                            Price = 100m
+                        },
+                        new
+                        {
+                            AppointmentTypeId = 4,
+                            IsDeleted = false,
+                            Name = "Follow-up",
+                            Price = 40m
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Doctor", b =>
@@ -1104,9 +1228,17 @@ namespace HealthEase.Services.Migrations
 
             modelBuilder.Entity("HealthEase.Services.Database.Appointment", b =>
                 {
-                    b.HasOne("HealthEase.Services.Database.AppointmentStatus", null)
+                    b.HasOne("HealthEase.Services.Database.AppointmentType", "AppointmentType")
                         .WithMany("Appointments")
-                        .HasForeignKey("AppointmentStatusId");
+                        .HasForeignKey("AppointmentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HealthEase.Services.Database.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HealthEase.Services.Database.Patient", "Patient")
                         .WithMany("Appointments")
@@ -1114,15 +1246,11 @@ namespace HealthEase.Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HealthEase.Services.Database.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("AppointmentType");
+
+                    b.Navigation("Doctor");
 
                     b.Navigation("Patient");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Doctor", b =>
@@ -1268,7 +1396,7 @@ namespace HealthEase.Services.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HealthEase.Services.Database.AppointmentStatus", b =>
+            modelBuilder.Entity("HealthEase.Services.Database.AppointmentType", b =>
                 {
                     b.Navigation("Appointments");
                 });

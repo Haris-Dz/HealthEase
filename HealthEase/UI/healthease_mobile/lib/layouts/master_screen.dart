@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:healthease_mobile/main.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
 import 'package:healthease_mobile/providers/utils.dart';
+import 'package:healthease_mobile/screens/appointments_screen.dart';
 import 'package:healthease_mobile/screens/doctors_screen.dart';
 import 'package:healthease_mobile/screens/my_profile_screen.dart';
 import 'package:healthease_mobile/screens/placeholder_screen.dart';
@@ -23,90 +24,90 @@ class MasterScreen extends StatelessWidget {
     this.showBackButton = false,
   });
 
-void _navigateTo(BuildContext context, Widget screen) {
+  void _navigateTo(BuildContext context, Widget screen) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (_) => screen,
         settings: RouteSettings(name: screen.runtimeType.toString()),
       ),
     );
- }
+  }
 
-
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    drawer: showBackButton ? null : _buildDrawer(context),
-    appBar: AppBar(
-      backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
-      foregroundColor: Colors.white,
-      automaticallyImplyLeading: false,
-      titleSpacing: 0,
-      title: Row(
-        children: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: Icon(showBackButton ? Icons.arrow_back : Icons.menu),
-              onPressed: () {
-                if (showBackButton) {
-                  Navigator.of(context).pop();
-                } else {
-                  Scaffold.of(context).openDrawer();
-                }
-              },
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: showBackButton ? null : _buildDrawer(context),
+      appBar: AppBar(
+        backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        title: Row(
+          children: [
+            Builder(
+              builder:
+                  (context) => IconButton(
+                    icon: Icon(showBackButton ? Icons.arrow_back : Icons.menu),
+                    onPressed: () {
+                      if (showBackButton) {
+                        Navigator.of(context).pop();
+                      } else {
+                        Scaffold.of(context).openDrawer();
+                      }
+                    },
+                  ),
             ),
-          ),
-          Expanded(
-            child: Center(
-              child: Text(
-                title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+            Expanded(
+              child: Center(
+                child: Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 48),
-        ],
+            const SizedBox(width: 48),
+          ],
+        ),
+        actions: actions,
       ),
-      actions: actions,
-    ),
-    body: child,
-  );
-}
-Widget _buildDrawerItem(
-  BuildContext context, {
-  required IconData icon,
-  required String title,
-  required String route,
-  required Widget screen,
-  required String currentRoute,
-}) {
-  final isActive = currentRoute == route;
+      body: child,
+    );
+  }
 
-  return ListTile(
-    leading: AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      child: Icon(
-        icon,
-        color: isActive ? Colors.blue : Colors.black,
-        size: isActive ? 28 : 24,
+  Widget _buildDrawerItem(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String route,
+    required Widget screen,
+    required String currentRoute,
+  }) {
+    final isActive = currentRoute == route;
+
+    return ListTile(
+      leading: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        child: Icon(
+          icon,
+          color: isActive ? Colors.blue : Colors.black,
+          size: isActive ? 28 : 24,
+        ),
       ),
-    ),
-    title: Text(title),
-    tileColor: isActive ? Colors.blue.shade100 : null,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-    shape: isActive
-        ? const Border(
-            left: BorderSide(color: Colors.blue, width: 4),
-          )
-        : null,
-    onTap: () {
-      if (!isActive) {
-        Navigator.pop(context);
-        _navigateTo(context, screen);
-      }
-    },
-  );
-}
+      title: Text(title),
+      tileColor: isActive ? Colors.blue.shade100 : null,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      shape:
+          isActive
+              ? const Border(left: BorderSide(color: Colors.blue, width: 4))
+              : null,
+      onTap: () {
+        if (!isActive) {
+          Navigator.pop(context);
+          _navigateTo(context, screen);
+        }
+      },
+    );
+  }
 
   Drawer _buildDrawer(BuildContext context) {
     return Drawer(
@@ -117,18 +118,15 @@ Widget _buildDrawerItem(
             height: 160,
             width: double.infinity,
             decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.grey, width: 1.0)),
+              border: Border(
+                bottom: BorderSide(color: Colors.grey, width: 1.0),
+              ),
             ),
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Image.asset(
-                  'assets/images/logo.png',
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                  color: Colors.blue.withOpacity(0.3),
-                ),
+                Image.asset('assets/images/logo.png', fit: BoxFit.cover),
+                Container(color: Colors.blue.withOpacity(0.3)),
               ],
             ),
           ),
@@ -164,7 +162,7 @@ Widget _buildDrawerItem(
                   icon: Icons.schedule,
                   title: "Appointments",
                   route: "Appointments",
-                  screen: const PlaceholderScreen(),
+                  screen: const AppointmentsScreen(),
                   currentRoute: currentRoute,
                 ),
                 _buildDrawerItem(
@@ -237,6 +235,3 @@ Widget _buildDrawerItem(
     );
   }
 }
-
-
-

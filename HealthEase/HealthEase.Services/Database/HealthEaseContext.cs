@@ -23,7 +23,7 @@ namespace HealthEase.Services.Database
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<Specialization> Specializations { get; set; }
         public virtual DbSet<Appointment> Appointments { get; set; }
-        public virtual DbSet<AppointmentStatus> AppointmentStatuses { get; set; }
+        public virtual DbSet<AppointmentType> AppointmentTypes { get; set; }
         public virtual DbSet<MedicalRecord> MedicalRecords { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
@@ -59,6 +59,10 @@ namespace HealthEase.Services.Database
                 .WithMany(r => r.DoctorSpecializations)
                 .HasForeignKey(ur => ur.SpecializationId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<AppointmentType>()
+                .Property(x => x.Price)
+                .HasPrecision(10, 2);
+
 
             modelBuilder.Entity<Role>().HasData(
                 new Role { RoleId = 1, RoleName = "Admin", Description= "Administrator with full access to settings, user permissions and platform operations.", IsDeleted = false },
@@ -131,6 +135,21 @@ namespace HealthEase.Services.Database
                 new DoctorSpecialization { DoctorSpecializationId = 4, DoctorId = 3, SpecializationId = 3 },
                 new DoctorSpecialization { DoctorSpecializationId = 5, DoctorId = 4, SpecializationId = 4 }
             );
+            modelBuilder.Entity<AppointmentType>().HasData(
+                new AppointmentType { AppointmentTypeId = 1, Name = "General Checkup", Price = 50 },
+                new AppointmentType { AppointmentTypeId = 2, Name = "Consultation", Price = 80 },
+                new AppointmentType { AppointmentTypeId = 3, Name = "Examination", Price = 100 },
+                new AppointmentType { AppointmentTypeId = 4, Name = "Follow-up", Price = 40 }
+            );
+            modelBuilder.Entity<Appointment>().HasData(
+                new Appointment { AppointmentId = 1, AppointmentDate = new DateTime(2025, 7, 6), AppointmentTime = new TimeSpan(9, 0, 0), Status = "Pending", StatusMessage = null, Note = "Headache and dizziness", IsPaid = false, PaymentDate = null, DoctorId = 1, PatientId = 1, AppointmentTypeId = 1, IsDeleted = false },
+                new Appointment { AppointmentId = 2, AppointmentDate = new DateTime(2025, 7, 7), AppointmentTime = new TimeSpan(11, 30, 0), Status = "Approved", StatusMessage = "See you on time", Note = "Routine check-up", IsPaid = false, PaymentDate = null, DoctorId = 2, PatientId = 2, AppointmentTypeId = 2, IsDeleted = false },
+                new Appointment { AppointmentId = 3, AppointmentDate = new DateTime(2025, 7, 8), AppointmentTime = new TimeSpan(13, 0, 0), Status = "Paid", StatusMessage = "Confirmed and paid", Note = "Follow-up for lab results", IsPaid = true, PaymentDate = new DateTime(2025, 5, 2), DoctorId = 3, PatientId = 3, AppointmentTypeId = 4, IsDeleted = false },
+                new Appointment { AppointmentId = 4, AppointmentDate = new DateTime(2025, 7, 10), AppointmentTime = new TimeSpan(10, 15, 0), Status = "Rejected", StatusMessage = "Doctor unavailable on selected date", Note = "Skin irritation consultation", IsPaid = false, PaymentDate = null, DoctorId = 4, PatientId = 1, AppointmentTypeId = 3, IsDeleted = false },
+                new Appointment { AppointmentId = 5, AppointmentDate = new DateTime(2025, 7, 12), AppointmentTime = new TimeSpan(14, 0, 0), Status = "Pending", StatusMessage = null, Note = "Consultation about recurring migraines", IsPaid = false, PaymentDate = null, DoctorId = 1, PatientId = 2, AppointmentTypeId = 2, IsDeleted = false }
+            );
+
+
         }
 
     }
