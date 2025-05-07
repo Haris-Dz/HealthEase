@@ -6,6 +6,7 @@ import 'package:healthease_mobile/models/workingHours.dart';
 import 'package:healthease_mobile/providers/appointment_types_provider.dart';
 import 'package:healthease_mobile/providers/appointments_provider.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
+import 'package:healthease_mobile/providers/utils.dart';
 import 'package:healthease_mobile/screens/appointments_screen.dart';
 import 'package:intl/intl.dart';
 
@@ -87,9 +88,10 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
           context,
           MaterialPageRoute(builder: (_) => const AppointmentsScreen()),
         );
+        showSuccessAlert(context, "Successfuly booked an appointment");
       }
     } catch (e) {
-      debugPrint("Error booking appointment: $e");
+      showErrorAlert(context, "Error booking appointment: $e");
     }
   }
 

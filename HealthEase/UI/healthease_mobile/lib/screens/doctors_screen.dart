@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:healthease_mobile/screens/doctor_details_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:healthease_mobile/layouts/master_screen.dart';
 import 'package:healthease_mobile/models/doctor.dart';
 import 'package:healthease_mobile/models/specialization.dart';
+import 'package:healthease_mobile/providers/auth_provider.dart';
 import 'package:healthease_mobile/providers/doctors_provider.dart';
+import 'package:healthease_mobile/providers/patient_doctor_favorites_provider.dart';
 import 'package:healthease_mobile/providers/specializations_provider.dart';
+import 'package:healthease_mobile/screens/doctor_details_screen.dart';
 
 class DoctorsScreen extends StatefulWidget {
   const DoctorsScreen({super.key});
@@ -20,31 +22,48 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   List<Doctor> _doctors = [];
   List<Specialization> _specializations = [];
   List<int> _selectedSpecializationIds = [];
+  List<int> _favoriteDoctorIds = [];
   bool _isLoading = true;
   String _searchName = '';
 
   @override
   void initState() {
     super.initState();
-    _fetchFilters();
+    _initData();
+  }
+
+  Future<void> _initData() async {
+    await _fetchFilters();
+    await _fetchFavorites();
+    await _fetchDoctors();
   }
 
   Future<void> _fetchFilters() async {
-    final specProvider = Provider.of<SpecializationsProvider>(context, listen: false);
+    final specProvider = Provider.of<SpecializationsProvider>(
+      context,
+      listen: false,
+    );
     final specs = await specProvider.get(retrieveAll: true);
+    _specializations = specs.resultList;
+  }
 
+  Future<void> _fetchFavorites() async {
+    final favProvider = Provider.of<PatientDoctorFavoritesProvider>(
+      context,
+      listen: false,
+    );
+    final favorites = await favProvider.getByPatientId(AuthProvider.patientId!);
     setState(() {
-      _specializations = specs.resultList;
+      _favoriteDoctorIds = favorites.map((f) => f.doctorId!).toList();
     });
-
-    _fetchDoctors();
   }
 
   Future<void> _fetchDoctors() async {
     final provider = Provider.of<DoctorsProvider>(context, listen: false);
     final filter = {
       if (_searchName.isNotEmpty) 'FirstLastNameGTE': _searchName,
-      if (_selectedSpecializationIds.isNotEmpty) 'SpecializationIds': _selectedSpecializationIds
+      if (_selectedSpecializationIds.isNotEmpty)
+        'SpecializationIds': _selectedSpecializationIds,
     };
     final result = await provider.get(
       retrieveAll: true,
@@ -53,10 +72,28 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     );
 
     setState(() {
-      _doctors = result.resultList
-          .where((doc) => doc.stateMachine?.toLowerCase() == "active")
-          .toList();
+      _doctors =
+          result.resultList
+              .where((doc) => doc.stateMachine?.toLowerCase() == "active")
+              .toList();
       _isLoading = false;
+    });
+  }
+
+  Future<void> _toggleFavorite(int doctorId) async {
+    final favProvider = Provider.of<PatientDoctorFavoritesProvider>(
+      context,
+      listen: false,
+    );
+
+    await favProvider.toggleFavorite(AuthProvider.patientId!, doctorId);
+
+    setState(() {
+      if (_favoriteDoctorIds.contains(doctorId)) {
+        _favoriteDoctorIds.remove(doctorId);
+      } else {
+        _favoriteDoctorIds.add(doctorId);
+      }
     });
   }
 
@@ -67,10 +104,12 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     }
 
     final workingHours = doctor.workingHours;
-    String workingText = "";
-    if (workingHours != null && workingHours.isNotEmpty) {
-      workingText = "Mon-Fri: ${workingHours.first.startTime} - ${workingHours.first.endTime}";
-    }
+    String workingText =
+        workingHours != null && workingHours.isNotEmpty
+            ? "Mon-Fri: ${workingHours.first.startTime} - ${workingHours.first.endTime}"
+            : "";
+
+    final isFavorite = _favoriteDoctorIds.contains(doctor.doctorId);
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -83,9 +122,11 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
           children: [
             CircleAvatar(
               radius: 40,
-              backgroundImage: imageBytes != null
-                  ? MemoryImage(imageBytes)
-                  : const AssetImage('assets/images/placeholder.png') as ImageProvider,
+              backgroundImage:
+                  imageBytes != null
+                      ? MemoryImage(imageBytes)
+                      : const AssetImage('assets/images/placeholder.png')
+                          as ImageProvider,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -94,19 +135,20 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                 children: [
                   Text(
                     "Dr. ${doctor.user?.firstName ?? ''} ${doctor.user?.lastName ?? ''}",
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    doctor.doctorSpecializations != null && doctor.doctorSpecializations!.isNotEmpty
-                        ? doctor.doctorSpecializations!
-                            .map((s) => s.name)
-                            .where((name) => name != null && name!.isNotEmpty)
-                            .join(", ")
-                        : "-",
+                    doctor.doctorSpecializations
+                            ?.where((s) => s.name != null)
+                            .map((s) => s.name!)
+                            .join(", ") ??
+                        "-",
                     style: const TextStyle(fontSize: 13, color: Colors.grey),
                   ),
-
                   const SizedBox(height: 4),
                   Text(
                     workingText,
@@ -121,14 +163,19 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DoctorDetailsScreen(doctor: doctor),
+                              builder:
+                                  (context) =>
+                                      DoctorDetailsScreen(doctor: doctor),
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -136,17 +183,18 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                         child: const Text("Details"),
                       ),
                       IconButton(
-                        onPressed: () {
-                          
-                        },
-                        icon: const Icon(Icons.favorite_border),
+                        icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: isFavorite ? Colors.red : Colors.black,
+                        ),
+                        onPressed: () => _toggleFavorite(doctor.doctorId!),
                         tooltip: "Favorite",
                       ),
                     ],
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -159,60 +207,55 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       builder: (context) {
         List<int> tempSelection = List<int>.from(_selectedSpecializationIds);
 
-        return StatefulBuilder(
-          builder: (context, setState) {
-            final allSelected = tempSelection.length == _specializations.length;
-
-            return AlertDialog(
-              title: const Text("Specializations"),
-              content: SizedBox(
-                width: double.maxFinite,
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    CheckboxListTile(
-                      title: const Text("All"),
-                      value: allSelected,
-                      onChanged: (value) {
-                        setState(() {
-                          if (value == true) {
-                            tempSelection = _specializations
-                                .map((e) => e.specializationId!)
-                                .toList();
-                          } else {
-                            tempSelection.clear();
-                          }
-                        });
-                      },
-                    ),
-                    ..._specializations.map((s) => CheckboxListTile(
-                          title: Text(s.name ?? ''),
-                          value: tempSelection.contains(s.specializationId),
-                          onChanged: (val) {
-                            setState(() {
-                              if (val == true) {
-                                tempSelection.add(s.specializationId!);
-                              } else {
-                                tempSelection.remove(s.specializationId!);
-                              }
-                            });
-                          },
-                        )),
-                  ],
+        return AlertDialog(
+          title: const Text("Specializations"),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                CheckboxListTile(
+                  title: const Text("All"),
+                  value: tempSelection.length == _specializations.length,
+                  onChanged: (value) {
+                    setState(() {
+                      tempSelection =
+                          value == true
+                              ? _specializations
+                                  .map((e) => e.specializationId!)
+                                  .toList()
+                              : [];
+                    });
+                  },
                 ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, null),
-                  child: const Text("Cancel"),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context, tempSelection),
-                  child: const Text("Apply"),
+                ..._specializations.map(
+                  (s) => CheckboxListTile(
+                    title: Text(s.name ?? ''),
+                    value: tempSelection.contains(s.specializationId),
+                    onChanged: (val) {
+                      setState(() {
+                        if (val == true) {
+                          tempSelection.add(s.specializationId!);
+                        } else {
+                          tempSelection.remove(s.specializationId!);
+                        }
+                      });
+                    },
+                  ),
                 ),
               ],
-            );
-          },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, null),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, tempSelection),
+              child: const Text("Apply"),
+            ),
+          ],
         );
       },
     );
@@ -223,55 +266,57 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MasterScreen(
       title: "Doctors",
       currentRoute: "Doctors",
-      child: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 48,
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              labelText: "Search by name",
-                              prefixIcon: Icon(Icons.search),
-                              border: OutlineInputBorder(),
-                              isDense: true,
+      child:
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 48,
+                            child: TextField(
+                              decoration: const InputDecoration(
+                                labelText: "Search by name",
+                                prefixIcon: Icon(Icons.search),
+                                border: OutlineInputBorder(),
+                                isDense: true,
+                              ),
+                              onChanged: (value) {
+                                setState(() => _searchName = value);
+                                _fetchDoctors();
+                              },
                             ),
-                            onChanged: (value) {
-                              setState(() => _searchName = value);
-                              _fetchDoctors();
-                            },
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        onPressed: _openSpecializationFilterDialog,
-                        icon: const Icon(Icons.filter_list),
-                        tooltip: "Filter",
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: _doctors.length,
-                      itemBuilder: (context, index) => _buildDoctorCard(_doctors[index]),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          onPressed: _openSpecializationFilterDialog,
+                          icon: const Icon(Icons.filter_list),
+                          tooltip: "Filter",
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: _doctors.length,
+                        itemBuilder:
+                            (context, index) =>
+                                _buildDoctorCard(_doctors[index]),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
     );
   }
 }

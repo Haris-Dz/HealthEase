@@ -30,5 +30,9 @@ public static class MappingConfig
             .Ignore(dest => dest.User.WorkingHours)
             .Ignore(dest => dest.StateMachine);
 
+        config.NewConfig<PatientDoctorFavorite, PatientDoctorFavoriteDTO>()
+            .Map(dest => dest.Doctor, src => src.Doctor);
+
+
     }
 }

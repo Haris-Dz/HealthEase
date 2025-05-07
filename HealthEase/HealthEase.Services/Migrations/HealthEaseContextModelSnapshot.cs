@@ -510,6 +510,30 @@ namespace HealthEase.Services.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HealthEase.Services.Database.PatientDoctorFavorite", b =>
+                {
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("PatientId", "DoctorId");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("PatientDoctorFavorites");
+                });
+
             modelBuilder.Entity("HealthEase.Services.Database.Payment", b =>
                 {
                     b.Property<int>("PaymentId")
@@ -1298,6 +1322,25 @@ namespace HealthEase.Services.Migrations
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.PatientDoctorFavorite", b =>
+                {
+                    b.HasOne("HealthEase.Services.Database.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HealthEase.Services.Database.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
 
                     b.Navigation("Patient");
                 });

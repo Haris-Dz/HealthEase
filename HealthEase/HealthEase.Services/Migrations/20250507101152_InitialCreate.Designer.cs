@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthEase.Services.Migrations
 {
     [DbContext(typeof(HealthEaseContext))]
-    [Migration("20250505214350_InitialCreate")]
+    [Migration("20250507101152_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -511,6 +511,30 @@ namespace HealthEase.Services.Migrations
                             Username = "patient2",
                             isActive = true
                         });
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.PatientDoctorFavorite", b =>
+                {
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("PatientId", "DoctorId");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("PatientDoctorFavorites");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Payment", b =>
@@ -1301,6 +1325,25 @@ namespace HealthEase.Services.Migrations
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.PatientDoctorFavorite", b =>
+                {
+                    b.HasOne("HealthEase.Services.Database.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HealthEase.Services.Database.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
 
                     b.Navigation("Patient");
                 });
