@@ -123,7 +123,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                             ),
                           const SizedBox(height: 6),
                           Text(
-                            "Date: ${formatDateString(a.appointmentDate?.substring(0, 10)) ?? 'N/A'}",
+                            "Date: ${formatDateString(a.appointmentDate?.substring(0, 10))}",
                           ),
                           Text("Time: ${a.appointmentTime ?? 'N/A'}"),
                           if (a.note != null && a.note!.isNotEmpty)

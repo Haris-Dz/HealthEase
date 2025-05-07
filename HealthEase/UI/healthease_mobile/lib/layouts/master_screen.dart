@@ -4,6 +4,7 @@ import 'package:healthease_mobile/providers/auth_provider.dart';
 import 'package:healthease_mobile/providers/utils.dart';
 import 'package:healthease_mobile/screens/appointments_screen.dart';
 import 'package:healthease_mobile/screens/doctors_screen.dart';
+import 'package:healthease_mobile/screens/favorites_screen.dart';
 import 'package:healthease_mobile/screens/my_profile_screen.dart';
 import 'package:healthease_mobile/screens/placeholder_screen.dart';
 
@@ -152,9 +153,9 @@ class MasterScreen extends StatelessWidget {
                 _buildDrawerItem(
                   context,
                   icon: Icons.favorite_border,
-                  title: "Favourites",
-                  route: "Favourites",
-                  screen: const PlaceholderScreen(),
+                  title: "Favorites",
+                  route: "Favorites",
+                  screen: const FavoritesScreen(),
                   currentRoute: currentRoute,
                 ),
                 _buildDrawerItem(
