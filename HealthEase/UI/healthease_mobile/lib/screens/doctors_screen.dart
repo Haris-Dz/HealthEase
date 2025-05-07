@@ -207,55 +207,59 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       builder: (context) {
         List<int> tempSelection = List<int>.from(_selectedSpecializationIds);
 
-        return AlertDialog(
-          title: const Text("Specializations"),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                CheckboxListTile(
-                  title: const Text("All"),
-                  value: tempSelection.length == _specializations.length,
-                  onChanged: (value) {
-                    setState(() {
-                      tempSelection =
-                          value == true
-                              ? _specializations
-                                  .map((e) => e.specializationId!)
-                                  .toList()
-                              : [];
-                    });
-                  },
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: const Text("Specializations"),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    CheckboxListTile(
+                      title: const Text("All"),
+                      value: tempSelection.length == _specializations.length,
+                      onChanged: (value) {
+                        setStateDialog(() {
+                          tempSelection =
+                              value == true
+                                  ? _specializations
+                                      .map((e) => e.specializationId!)
+                                      .toList()
+                                  : [];
+                        });
+                      },
+                    ),
+                    ..._specializations.map(
+                      (s) => CheckboxListTile(
+                        title: Text(s.name ?? ''),
+                        value: tempSelection.contains(s.specializationId),
+                        onChanged: (val) {
+                          setStateDialog(() {
+                            if (val == true) {
+                              tempSelection.add(s.specializationId!);
+                            } else {
+                              tempSelection.remove(s.specializationId!);
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                ..._specializations.map(
-                  (s) => CheckboxListTile(
-                    title: Text(s.name ?? ''),
-                    value: tempSelection.contains(s.specializationId),
-                    onChanged: (val) {
-                      setState(() {
-                        if (val == true) {
-                          tempSelection.add(s.specializationId!);
-                        } else {
-                          tempSelection.remove(s.specializationId!);
-                        }
-                      });
-                    },
-                  ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, null),
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, tempSelection),
+                  child: const Text("Apply"),
                 ),
               ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, null),
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, tempSelection),
-              child: const Text("Apply"),
-            ),
-          ],
+            );
+          },
         );
       },
     );

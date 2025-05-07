@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healthease_mobile/layouts/master_screen.dart';
+import 'package:healthease_mobile/models/appointment.dart';
 import 'package:healthease_mobile/models/appointment_type.dart';
 import 'package:healthease_mobile/models/doctor.dart';
 import 'package:healthease_mobile/models/workingHours.dart';
@@ -19,12 +20,14 @@ class MakeAppointmentScreen extends StatefulWidget {
 }
 
 class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
-  DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   AppointmentType? _selectedType;
+  bool _isLoading = true;
 
   List<AppointmentType> _types = [];
+  List<Appointment> _appointments = [];
+
   final _typeProvider = AppointmentTypesProvider();
   final _appointmentsProvider = AppointmentsProvider();
   final _noteController = TextEditingController();
@@ -32,7 +35,14 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
   @override
   void initState() {
     super.initState();
-    _loadTypes();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    setState(() => _isLoading = true);
+    await _loadTypes();
+    await _loadAppointments();
+    setState(() => _isLoading = false);
   }
 
   Future<void> _loadTypes() async {
@@ -40,13 +50,20 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
     setState(() => _types = result.resultList);
   }
 
+  Future<void> _loadAppointments() async {
+    final result = await _appointmentsProvider.get(
+      filter: {"doctorId": widget.doctor.doctorId},
+    );
+    setState(() {
+      _appointments = result.resultList;
+    });
+  }
+
   List<int> get workingDays =>
       widget.doctor.workingHours?.map((w) => w.day!).toList() ?? [];
 
-  List<TimeOfDay> getWorkingHoursForSelectedDay() {
-    if (_selectedDate == null) return [];
-
-    final weekday = _selectedDate!.weekday;
+  List<TimeOfDay> getWorkingHoursForDay(DateTime date) {
+    final weekday = date.weekday;
     final hours = widget.doctor.workingHours?.firstWhere(
       (e) => e.day == weekday,
       orElse: () => WorkingHours(),
@@ -63,10 +80,47 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
     return slots;
   }
 
+  bool isDayFullyBooked(DateTime date) {
+    final totalSlots = getWorkingHoursForDay(date).length;
+    final bookedSlots =
+        _appointments
+            .where(
+              (a) =>
+                  DateTime.parse(a.appointmentDate!).year == date.year &&
+                  DateTime.parse(a.appointmentDate!).month == date.month &&
+                  DateTime.parse(a.appointmentDate!).day == date.day &&
+                  (a.status == 'Pending' || a.status == 'Approved'),
+            )
+            .map((a) => a.appointmentTime)
+            .toSet()
+            .length;
+
+    return totalSlots > 0 && bookedSlots >= totalSlots;
+  }
+
   TimeOfDay? _parseTime(String? timeStr) {
     if (timeStr == null) return null;
     final parts = timeStr.split(":");
     return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+  }
+
+  TimeOfDay? parseTimeOfDay(String timeStr) {
+    try {
+      final parts = timeStr.split(":");
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+      return TimeOfDay(hour: hour, minute: minute);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  DateTime getFirstSelectableDate() {
+    DateTime date = DateTime.now();
+    while (!workingDays.contains(date.weekday) || isDayFullyBooked(date)) {
+      date = date.add(const Duration(days: 1));
+    }
+    return date;
   }
 
   Future<void> _submitAppointment() async {
@@ -88,7 +142,7 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
           context,
           MaterialPageRoute(builder: (_) => const AppointmentsScreen()),
         );
-        showSuccessAlert(context, "Successfuly booked an appointment");
+        showSuccessAlert(context, "Successfully booked an appointment");
       }
     } catch (e) {
       showErrorAlert(context, "Error booking appointment: $e");
@@ -101,134 +155,212 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
       title: "Make Appointment",
       currentRoute: "MakeAppointment",
       showBackButton: true,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Appointment Type",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 6),
-            DropdownButton<AppointmentType>(
-              isExpanded: true,
-              value: _selectedType,
-              hint: const Text("Select type"),
-              items:
-                  _types.map((type) {
-                    return DropdownMenuItem(
-                      value: type,
-                      child: Text(
-                        "${type.name} - ${type.price?.toStringAsFixed(2) ?? '0.00'} \$",
-                      ),
-                    );
-                  }).toList(),
-              onChanged: (value) => setState(() => _selectedType = value),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              "Note (optional)",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 6),
-            TextField(
-              controller: _noteController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Write a short note (optional)...",
-              ),
-              maxLines: 2,
-            ),
-
-            const SizedBox(height: 20),
-            const Text(
-              "Select Date",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            CalendarDatePicker(
-              firstDate: DateTime.now(),
-              lastDate: DateTime.now().add(const Duration(days: 360)),
-              initialDate: _focusedDay,
-              onDateChanged: (selected) {
-                setState(() {
-                  _selectedDate = selected;
-                  _selectedTime = null;
-                });
-              },
-              selectableDayPredicate:
-                  (date) => workingDays.contains(date.weekday),
-            ),
-
-            const SizedBox(height: 20),
-            if (_selectedDate != null) ...[
-              const Text(
-                "Select Time",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 6),
-              DropdownButton<TimeOfDay>(
-                isExpanded: true,
-                value:
-                    getWorkingHoursForSelectedDay().contains(_selectedTime)
-                        ? _selectedTime
-                        : null,
-                hint: const Text("Select available time"),
-                items:
-                    getWorkingHoursForSelectedDay().map((time) {
-                      return DropdownMenuItem(
-                        value: time,
-                        child: Text(
-                          DateFormat.Hm().format(
-                            DateTime(0, 0, 0, time.hour, time.minute),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                onChanged: (value) => setState(() => _selectedTime = value),
-              ),
-            ],
-
-            const SizedBox(height: 30),
-            Center(
-              child: Column(
-                children: [
-                  ElevatedButton.icon(
-                    onPressed:
-                        (_selectedDate != null &&
-                                _selectedTime != null &&
-                                _selectedType != null)
-                            ? _submitAppointment
-                            : null,
-                    icon: const Icon(Icons.check_circle_outline),
-                    label: const Text("Book Appointment"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade800,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  if (_selectedDate == null ||
-                      _selectedTime == null ||
-                      _selectedType == null)
+      child:
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     const Text(
-                      "Please select appointment type, date and time",
-                      style: TextStyle(color: Colors.black, fontSize: 12),
+                      "Appointment Type",
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                ],
+                    const SizedBox(height: 6),
+                    DropdownButton<AppointmentType>(
+                      isExpanded: true,
+                      value: _selectedType,
+                      hint: const Text("Select type"),
+                      items:
+                          _types.map((type) {
+                            return DropdownMenuItem(
+                              value: type,
+                              child: Text(
+                                "${type.name} - ${type.price?.toStringAsFixed(2) ?? '0.00'} \$",
+                              ),
+                            );
+                          }).toList(),
+                      onChanged:
+                          (value) => setState(() => _selectedType = value),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Note (optional)",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 6),
+                    TextField(
+                      controller: _noteController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Write a short note (optional)...",
+                      ),
+                      maxLines: 2,
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Select Date",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    CalendarDatePicker(
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.now().add(const Duration(days: 360)),
+                      initialDate: getFirstSelectableDate(),
+                      onDateChanged: (selected) {
+                        setState(() {
+                          _selectedDate = selected;
+                          _selectedTime = null;
+                        });
+                      },
+                      selectableDayPredicate: (date) {
+                        if (!workingDays.contains(date.weekday)) return false;
+                        return !isDayFullyBooked(date);
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    if (_selectedDate != null) ...[
+                      const Text(
+                        "Select Time",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 6),
+                      Builder(
+                        builder: (context) {
+                          final allSlots = getWorkingHoursForDay(
+                            _selectedDate!,
+                          );
+                          final bookedSlots =
+                              _appointments
+                                  .where(
+                                    (a) =>
+                                        DateTime.parse(
+                                              a.appointmentDate!,
+                                            ).year ==
+                                            _selectedDate!.year &&
+                                        DateTime.parse(
+                                              a.appointmentDate!,
+                                            ).month ==
+                                            _selectedDate!.month &&
+                                        DateTime.parse(
+                                              a.appointmentDate!,
+                                            ).day ==
+                                            _selectedDate!.day &&
+                                        (a.status == 'Pending' ||
+                                            a.status == 'Approved'),
+                                  )
+                                  .map(
+                                    (a) => parseTimeOfDay(a.appointmentTime!),
+                                  )
+                                  .whereType<TimeOfDay>()
+                                  .toList();
+
+                          return DropdownButton<TimeOfDay>(
+                            isExpanded: true,
+                            value:
+                                _selectedTime != null &&
+                                        bookedSlots.any(
+                                          (b) =>
+                                              b.hour == _selectedTime!.hour &&
+                                              b.minute == _selectedTime!.minute,
+                                        )
+                                    ? null
+                                    : _selectedTime,
+                            hint: const Text("Select available time"),
+                            items:
+                                allSlots.map((slot) {
+                                  final isBooked = bookedSlots.any(
+                                    (b) =>
+                                        b.hour == slot.hour &&
+                                        b.minute == slot.minute,
+                                  );
+
+                                  final timeLabel = DateFormat.Hm().format(
+                                    DateTime(0, 0, 0, slot.hour, slot.minute),
+                                  );
+
+                                  return DropdownMenuItem<TimeOfDay>(
+                                    value: isBooked ? null : slot,
+                                    enabled: !isBooked,
+                                    child: Tooltip(
+                                      message:
+                                          isBooked
+                                              ? "Already booked"
+                                              : "Available",
+                                      child: Row(
+                                        children: [
+                                          if (isBooked)
+                                            const Icon(
+                                              Icons.block,
+                                              size: 16,
+                                              color: Colors.grey,
+                                            ),
+                                          if (isBooked)
+                                            const SizedBox(width: 6),
+                                          Text(
+                                            timeLabel,
+                                            style: TextStyle(
+                                              color:
+                                                  isBooked
+                                                      ? Colors.grey
+                                                      : Colors.black,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                            onChanged:
+                                (value) =>
+                                    setState(() => _selectedTime = value),
+                          );
+                        },
+                      ),
+                    ],
+                    const SizedBox(height: 30),
+                    Center(
+                      child: Column(
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed:
+                                (_selectedDate != null &&
+                                        _selectedTime != null &&
+                                        _selectedType != null)
+                                    ? _submitAppointment
+                                    : null,
+                            icon: const Icon(Icons.check_circle_outline),
+                            label: const Text("Book Appointment"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue.shade800,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 12,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          if (_selectedDate == null ||
+                              _selectedTime == null ||
+                              _selectedType == null)
+                            const Text(
+                              "Please select appointment type, date and time",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
