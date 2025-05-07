@@ -431,6 +431,33 @@ namespace HealthEase.Services.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PatientDoctorFavorites",
+                columns: table => new
+                {
+                    PatientId = table.Column<int>(type: "int", nullable: false),
+                    DoctorId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PatientDoctorFavorites", x => new { x.PatientId, x.DoctorId });
+                    table.ForeignKey(
+                        name: "FK_PatientDoctorFavorites_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "DoctorId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PatientDoctorFavorites_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "AppointmentTypes",
                 columns: new[] { "AppointmentTypeId", "DeletionTime", "IsDeleted", "Name", "Price" },
@@ -604,6 +631,11 @@ namespace HealthEase.Services.Migrations
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PatientDoctorFavorites_DoctorId",
+                table: "PatientDoctorFavorites",
+                column: "DoctorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Payments_PatientId",
                 table: "Payments",
                 column: "PatientId");
@@ -672,6 +704,9 @@ namespace HealthEase.Services.Migrations
                 name: "Notifications");
 
             migrationBuilder.DropTable(
+                name: "PatientDoctorFavorites");
+
+            migrationBuilder.DropTable(
                 name: "Payments");
 
             migrationBuilder.DropTable(
@@ -690,10 +725,10 @@ namespace HealthEase.Services.Migrations
                 name: "AppointmentTypes");
 
             migrationBuilder.DropTable(
-                name: "Doctors");
+                name: "Specializations");
 
             migrationBuilder.DropTable(
-                name: "Specializations");
+                name: "Doctors");
 
             migrationBuilder.DropTable(
                 name: "PaymentStatuses");

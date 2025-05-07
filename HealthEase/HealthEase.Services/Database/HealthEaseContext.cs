@@ -33,6 +33,7 @@ namespace HealthEase.Services.Database
         public virtual DbSet<DoctorSpecialization> DoctorSpecializations { get; set; }
         public virtual DbSet<WorkingHours> WorkingHours { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
+        public virtual DbSet<PatientDoctorFavorite> PatientDoctorFavorites { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -59,9 +60,25 @@ namespace HealthEase.Services.Database
                 .WithMany(r => r.DoctorSpecializations)
                 .HasForeignKey(ur => ur.SpecializationId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<AppointmentType>()
                 .Property(x => x.Price)
                 .HasPrecision(10, 2);
+
+            modelBuilder.Entity<PatientDoctorFavorite>()
+                .HasKey(x => new { x.PatientId, x.DoctorId });
+
+            modelBuilder.Entity<PatientDoctorFavorite>()
+                .HasOne(x => x.Patient)
+                .WithMany()
+                .HasForeignKey(x => x.PatientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<PatientDoctorFavorite>()
+                .HasOne(x => x.Doctor)
+                .WithMany()
+                .HasForeignKey(x => x.DoctorId)
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             modelBuilder.Entity<Role>().HasData(

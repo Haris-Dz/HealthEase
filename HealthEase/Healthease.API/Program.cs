@@ -19,6 +19,7 @@ builder.Services.AddTransient<IDoctorService, DoctorService>();
 builder.Services.AddTransient<IWorkingHoursService, WorkingHoursService>();
 builder.Services.AddTransient<IAppointmentService, AppointmentService>();
 builder.Services.AddTransient<IAppointmentTypeService, AppointmentTypeService>();
+builder.Services.AddTransient<IPatientDoctorFavoriteService, PatientDoctorFavoriteService>();
 
 builder.Services.AddTransient<InitialDoctorState>();
 builder.Services.AddTransient<DraftDoctorState>();
