@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:healthease_mobile/models/patient.dart';
 import 'package:healthease_mobile/providers/base_provider.dart';
+import 'package:healthease_mobile/providers/utils.dart';
 import 'package:http/http.dart' as http;
 
 class PatientProvider extends BaseProvider<Patient> {
@@ -27,6 +28,20 @@ class PatientProvider extends BaseProvider<Patient> {
       return fromJson(data);
     } else {
       throw new Exception("Unknown error");
+    }
+  }
+
+  Future<Patient> register(Map<String, dynamic> request) async {
+    var url = "${BaseProvider.baseUrl}Patient/Register";
+    var uri = Uri.parse(url);
+    var jsonRequest = jsonEncode(request);
+    var headers = {"Content-Type": "application/json"};
+    var response = await http.post(uri, headers: headers, body: jsonRequest);
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw Exception("Registration failed");
     }
   }
 }

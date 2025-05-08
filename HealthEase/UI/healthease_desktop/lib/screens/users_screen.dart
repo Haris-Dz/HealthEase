@@ -33,10 +33,14 @@ class _UsersScreenState extends State<UsersScreen> {
   Future<void> _refreshData() async {
     setState(() => _isLoading = true);
     try {
-      final usersResult = await Provider.of<UsersProvider>(context, listen: false)
-          .get(filter: {"IsUserRoleIncluded": true}, retrieveAll: true);
-      final patientsResult = await Provider.of<PatientsProvider>(context, listen: false)
-          .get(retrieveAll: true);
+      final usersResult = await Provider.of<UsersProvider>(
+        context,
+        listen: false,
+      ).get(filter: {"IsUserRoleIncluded": true}, retrieveAll: true);
+      final patientsResult = await Provider.of<PatientsProvider>(
+        context,
+        listen: false,
+      ).get(retrieveAll: true);
 
       setState(() {
         _users = usersResult.resultList;
@@ -53,11 +57,30 @@ class _UsersScreenState extends State<UsersScreen> {
     setState(() => searchQuery = query);
   }
 
-  List<dynamic> get _filteredList => isEmployeesSelected
-      ? _users.where((u) => (u.firstName ?? '').toLowerCase().contains(searchQuery.toLowerCase()) ||
-                              (u.lastName ?? '').toLowerCase().contains(searchQuery.toLowerCase())).toList()
-      : _patients.where((p) => (p.firstName ?? '').toLowerCase().contains(searchQuery.toLowerCase()) ||
-                                (p.lastName ?? '').toLowerCase().contains(searchQuery.toLowerCase())).toList();
+  List<dynamic> get _filteredList =>
+      isEmployeesSelected
+          ? _users
+              .where(
+                (u) =>
+                    (u.firstName ?? '').toLowerCase().contains(
+                      searchQuery.toLowerCase(),
+                    ) ||
+                    (u.lastName ?? '').toLowerCase().contains(
+                      searchQuery.toLowerCase(),
+                    ),
+              )
+              .toList()
+          : _patients
+              .where(
+                (p) =>
+                    (p.firstName ?? '').toLowerCase().contains(
+                      searchQuery.toLowerCase(),
+                    ) ||
+                    (p.lastName ?? '').toLowerCase().contains(
+                      searchQuery.toLowerCase(),
+                    ),
+              )
+              .toList();
 
   Future<void> _handleDelete(dynamic user) async {
     final confirmed = await showCustomConfirmDialog(
@@ -69,12 +92,22 @@ class _UsersScreenState extends State<UsersScreen> {
     if (confirmed) {
       try {
         if (isEmployeesSelected) {
-          await Provider.of<UsersProvider>(context, listen: false).delete(user.userId);
+          await Provider.of<UsersProvider>(
+            context,
+            listen: false,
+          ).delete(user.userId);
         } else {
-          await Provider.of<PatientsProvider>(context, listen: false).delete(user.patientId);
+          await Provider.of<PatientsProvider>(
+            context,
+            listen: false,
+          ).delete(user.patientId);
         }
 
-        if (mounted) await showSuccessAlert(context, "The user has been deleted successfully.");
+        if (mounted)
+          await showSuccessAlert(
+            context,
+            "The user has been deleted successfully.",
+          );
         await _refreshData();
       } catch (e) {
         if (mounted) await showErrorAlert(context, "Failed to delete user. $e");
@@ -94,7 +127,9 @@ class _UsersScreenState extends State<UsersScreen> {
           _buildSearchField(),
           const SizedBox(height: 20),
           _isLoading
-              ? const Expanded(child: Center(child: CircularProgressIndicator()))
+              ? const Expanded(
+                child: Center(child: CircularProgressIndicator()),
+              )
               : _buildTableContainer(_filteredList),
           const SizedBox(height: 20),
           if (isEmployeesSelected) _buildAddButton(),
@@ -121,7 +156,8 @@ class _UsersScreenState extends State<UsersScreen> {
     padding: const EdgeInsets.symmetric(horizontal: 20),
     child: TextField(
       decoration: InputDecoration(
-        hintText: isEmployeesSelected ? "Search employees..." : "Search patients...",
+        hintText:
+            isEmployeesSelected ? "Search employees..." : "Search patients...",
         prefixIcon: const Icon(Icons.search),
         filled: true,
         fillColor: Colors.white,
@@ -143,7 +179,12 @@ class _UsersScreenState extends State<UsersScreen> {
               color: Colors.white.withOpacity(0.7),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
-                BoxShadow(color: Colors.grey.withOpacity(0.2), spreadRadius: 4, blurRadius: 10, offset: const Offset(0, 3))
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 4,
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
               ],
             ),
             child: _buildTable(data),
@@ -162,9 +203,18 @@ class _UsersScreenState extends State<UsersScreen> {
         child: DataTable(
           columnSpacing: 100,
           headingRowColor: MaterialStateProperty.all(Colors.blue.shade100),
-          columns: isEmployeesSelected
-              ? const [DataColumn(label: Text("Name")), DataColumn(label: Text("Role")), DataColumn(label: Text("Actions"))]
-              : const [DataColumn(label: Text("Name")), DataColumn(label: Text("Status")), DataColumn(label: Text("Actions"))],
+          columns:
+              isEmployeesSelected
+                  ? const [
+                    DataColumn(label: Text("Name")),
+                    DataColumn(label: Text("Role")),
+                    DataColumn(label: Text("Actions")),
+                  ]
+                  : const [
+                    DataColumn(label: Text("Name")),
+                    DataColumn(label: Text("Status")),
+                    DataColumn(label: Text("Actions")),
+                  ],
           rows: data.map((item) => _buildDataRow(item)).toList(),
         ),
       ),
@@ -172,18 +222,32 @@ class _UsersScreenState extends State<UsersScreen> {
   );
 
   DataRow _buildDataRow(dynamic item) => DataRow(
-    cells: isEmployeesSelected
-        ? [
-            DataCell(Text("${item.firstName} ${item.lastName}")),
-            DataCell(Text(item.userRoles.isNotEmpty ? item.userRoles.first.role?.roleName ?? 'N/A' : 'N/A')),
-            DataCell(_buildActionButtons(item)),
-          ]
-        : [
-            DataCell(Text("${item.firstName ?? ''} ${item.lastName ?? ''}")),
-            DataCell(Text((item.isActive ?? false) ? "Active" : "Deactivated",
-              style: TextStyle(fontWeight: FontWeight.bold, color: (item.isActive ?? false) ? Colors.green : Colors.red))),
-            DataCell(_buildActionButtons(item)),
-          ],
+    cells:
+        isEmployeesSelected
+            ? [
+              DataCell(Text("${item.firstName} ${item.lastName}")),
+              DataCell(
+                Text(
+                  item.userRoles.isNotEmpty
+                      ? item.userRoles.first.role?.roleName ?? 'N/A'
+                      : 'N/A',
+                ),
+              ),
+              DataCell(_buildActionButtons(item)),
+            ]
+            : [
+              DataCell(Text("${item.firstName ?? ''} ${item.lastName ?? ''}")),
+              DataCell(
+                Text(
+                  (item.isActive ?? false) ? "Active" : "Deactivated",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: (item.isActive ?? false) ? Colors.green : Colors.red,
+                  ),
+                ),
+              ),
+              DataCell(_buildActionButtons(item)),
+            ],
   );
 
   Widget _buildActionButtons(dynamic user) => Row(
@@ -200,316 +264,451 @@ class _UsersScreenState extends State<UsersScreen> {
     ],
   );
 
-void _openEditDialog(dynamic user) {
-  if (isEmployeesSelected) {
-    _showAddOrEditUserDialog(context, existingUser: user);
-  } else {
-    _showEditPatientDialog(context, user);
+  void _openEditDialog(dynamic user) {
+    if (isEmployeesSelected) {
+      _showAddOrEditUserDialog(context, existingUser: user);
+    } else {
+      _showEditPatientDialog(context, user);
+    }
   }
-}
-
 
   void _showAddOrEditUserDialog(BuildContext context, {User? existingUser}) {
-  final _formKey = GlobalKey<FormState>();
-  final firstNameController = TextEditingController(text: existingUser?.firstName ?? '');
-  final lastNameController = TextEditingController(text: existingUser?.lastName ?? '');
-  final emailController = TextEditingController(text: existingUser?.email ?? '');
-  final usernameController = TextEditingController(text: existingUser?.username ?? '');
-  final phoneNumberController = TextEditingController(text: existingUser?.phoneNumber ?? '');
-  int? selectedRoleId = existingUser?.userRoles?.isNotEmpty == true ? existingUser?.userRoles!.first.role?.roleId : null;
+    final _formKey = GlobalKey<FormState>();
+    final firstNameController = TextEditingController(
+      text: existingUser?.firstName ?? '',
+    );
+    final lastNameController = TextEditingController(
+      text: existingUser?.lastName ?? '',
+    );
+    final emailController = TextEditingController(
+      text: existingUser?.email ?? '',
+    );
+    final usernameController = TextEditingController(
+      text: existingUser?.username ?? '',
+    );
+    final phoneNumberController = TextEditingController(
+      text: existingUser?.phoneNumber ?? '',
+    );
+    int? selectedRoleId =
+        existingUser?.userRoles?.isNotEmpty == true
+            ? existingUser?.userRoles!.first.role?.roleId
+            : null;
 
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          width: 500,
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 10),
-                      Text(
-                        existingUser != null ? "Edit Employee" : "Add New Employee",
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller: firstNameController,
-                        decoration: const InputDecoration(labelText: "First Name"),
-                        validator: (value) => value == null || value.isEmpty ? "First name is required" : null,
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: lastNameController,
-                        decoration: const InputDecoration(labelText: "Last Name"),
-                        validator: (value) => value == null || value.isEmpty ? "Last name is required" : null,
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: phoneNumberController,
-                        decoration: const InputDecoration(labelText: "Phone Number"),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) return null;
-                          if (!RegExp(r'^\d{9}$').hasMatch(value)) return "Enter a 9-digit number";
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      Tooltip(
-                        message: existingUser != null ? "Email cannot be changed" : "",
-                        child: TextFormField(
-                          controller: emailController,
-                          enabled: existingUser == null,
-                          decoration: const InputDecoration(labelText: "Email"),
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            width: 500,
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 10),
+                        Text(
+                          existingUser != null
+                              ? "Edit Employee"
+                              : "Add New Employee",
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: firstNameController,
+                          decoration: const InputDecoration(
+                            labelText: "First Name",
+                          ),
+                          validator:
+                              (value) =>
+                                  value == null || value.isEmpty
+                                      ? "First name is required"
+                                      : null,
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: lastNameController,
+                          decoration: const InputDecoration(
+                            labelText: "Last Name",
+                          ),
+                          validator:
+                              (value) =>
+                                  value == null || value.isEmpty
+                                      ? "Last name is required"
+                                      : null,
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: phoneNumberController,
+                          decoration: const InputDecoration(
+                            labelText: "Phone Number",
+                          ),
                           validator: (value) {
-                            if (value == null || value.isEmpty) return "Email is required";
-                            final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
-                            if (!emailRegex.hasMatch(value)) return "Enter a valid email";
+                            if (value == null || value.isEmpty) return null;
+                            if (!RegExp(r'^\d{9}$').hasMatch(value))
+                              return "Enter a 9-digit number";
                             return null;
                           },
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Tooltip(
-                        message: existingUser != null ? "Username cannot be changed" : "",
-                        child: TextFormField(
-                          controller: usernameController,
-                          enabled: existingUser == null,
-                          decoration: const InputDecoration(labelText: "Username"),
-                          validator: (value) => value == null || value.isEmpty ? "Username is required" : null,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      if (existingUser == null)
-                      FutureBuilder(
-                        future: Provider.of<RolesProvider>(context, listen: false).get(retrieveAll: true),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return const Text("Failed to load roles");
-                          } else {
-                            final roles = (snapshot.data as SearchResult<Role>).resultList;
-                            return DropdownButtonFormField<int>(
-                              decoration: const InputDecoration(labelText: "Role"),
-                              items: roles.map((role) {
-                                return DropdownMenuItem<int>(
-                                  value: role.roleId,
-                                  child: Text(role.roleName ?? ''),
-                                );
-                              }).toList(),
-                              onChanged: (value) => selectedRoleId = value,
-                              validator: (value) => value == null ? "Please select a role" : null,
-                            );
-                          }
-                        },
-                      ),
-
-                      const SizedBox(height: 30),
-                      ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            try {
-                              if (existingUser == null) {
-                                await Provider.of<UsersProvider>(context, listen: false).insert({
-                                  "firstName": firstNameController.text,
-                                  "lastName": lastNameController.text,
-                                  "email": emailController.text,
-                                  "username": usernameController.text,
-                                  "phoneNumber": phoneNumberController.text,
-                                  "roleId": selectedRoleId,
-                                });
-                              } else {
-                                await Provider.of<UsersProvider>(context, listen: false).update(existingUser.userId!, {
-                                  "firstName": firstNameController.text,
-                                  "lastName": lastNameController.text,
-                                  "phoneNumber": phoneNumberController.text,
-                                });
-                              }
-
-                              if (mounted) {
-                                Navigator.pop(context);
-                                await _refreshData();
-                                await showSuccessAlert(context, existingUser == null ? "User added successfully." : "User updated successfully.");
-                              }
-                            } catch (e) {
-                              if (mounted) await showErrorAlert(context, "Operation failed. $e");
-                            }
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue.shade700,
-                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                        ),
-                        child: Text(existingUser == null ? "Add" : "Save", style: const TextStyle(color: Colors.white)),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
-void _showEditPatientDialog(BuildContext context, Patient patient) {
-  final _formKey = GlobalKey<FormState>();
-  final firstNameController = TextEditingController(text: patient.firstName ?? '');
-  final lastNameController = TextEditingController(text: patient.lastName ?? '');
-  final phoneController = TextEditingController(text: patient.phoneNumber ?? '');
-  bool isActive = patient.isActive ?? true;
-
-  showDialog(
-    context: context,
-    builder: (context) {
-      return StatefulBuilder(
-        builder: (context, setDialogState) {
-          return Dialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              width: 500,
-              child: Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 10),
-                          const Text(
-                            "Edit Patient",
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 20),
-                          TextFormField(
-                            controller: firstNameController,
-                            decoration: const InputDecoration(labelText: "First Name"),
-                            validator: (value) => value == null || value.isEmpty ? "Required" : null,
-                          ),
-                          const SizedBox(height: 10),
-                          TextFormField(
-                            controller: lastNameController,
-                            decoration: const InputDecoration(labelText: "Last Name"),
-                            validator: (value) => value == null || value.isEmpty ? "Required" : null,
-                          ),
-                          const SizedBox(height: 10),
-                          TextFormField(
-                            controller: phoneController,
-                            decoration: const InputDecoration(labelText: "Phone Number"),
+                        const SizedBox(height: 10),
+                        Tooltip(
+                          message:
+                              existingUser != null
+                                  ? "Email cannot be changed"
+                                  : "",
+                          child: TextFormField(
+                            controller: emailController,
+                            enabled: existingUser == null,
+                            decoration: const InputDecoration(
+                              labelText: "Email",
+                            ),
                             validator: (value) {
-                              if (value == null || value.isEmpty) return "Required";
-                              if (!RegExp(r'^\d{9}$').hasMatch(value)) return "Enter a valid 9-digit number";
+                              if (value == null || value.isEmpty)
+                                return "Email is required";
+                              final emailRegex = RegExp(
+                                r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$",
+                              );
+                              if (!emailRegex.hasMatch(value))
+                                return "Enter a valid email";
                               return null;
                             },
                           ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    isActive ? Icons.check_circle : Icons.cancel,
-                                    color: isActive ? Colors.green : Colors.red,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    isActive ? "Active" : "Deactivated",
-                                    style: TextStyle(
-                                      color: isActive ? Colors.green : Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Switch(
-                                value: isActive,
-                                onChanged: (val) => setDialogState(() => isActive = val),
-                              ),
-                            ],
+                        ),
+                        const SizedBox(height: 10),
+                        Tooltip(
+                          message:
+                              existingUser != null
+                                  ? "Username cannot be changed"
+                                  : "",
+                          child: TextFormField(
+                            controller: usernameController,
+                            enabled: existingUser == null,
+                            decoration: const InputDecoration(
+                              labelText: "Username",
+                            ),
+                            validator:
+                                (value) =>
+                                    value == null || value.isEmpty
+                                        ? "Username is required"
+                                        : null,
                           ),
-                          const SizedBox(height: 25),
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  try {
-                                    await Provider.of<PatientsProvider>(context, listen: false).update(patient.patientId!, {
-                                      "firstName": firstNameController.text,
-                                      "lastName": lastNameController.text,
-                                      "phoneNumber": phoneController.text,
-                                      "isActive": isActive,
-                                      "edit": true,
-                                    });
+                        ),
+                        const SizedBox(height: 10),
+                        if (existingUser == null)
+                          FutureBuilder(
+                            future: Provider.of<RolesProvider>(
+                              context,
+                              listen: false,
+                            ).get(retrieveAll: true),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return const Text("Failed to load roles");
+                              } else {
+                                final roles =
+                                    (snapshot.data as SearchResult<Role>)
+                                        .resultList;
+                                return DropdownButtonFormField<int>(
+                                  decoration: const InputDecoration(
+                                    labelText: "Role",
+                                  ),
+                                  items:
+                                      roles.map((role) {
+                                        return DropdownMenuItem<int>(
+                                          value: role.roleId,
+                                          child: Text(role.roleName ?? ''),
+                                        );
+                                      }).toList(),
+                                  onChanged: (value) => selectedRoleId = value,
+                                  validator:
+                                      (value) =>
+                                          value == null
+                                              ? "Please select a role"
+                                              : null,
+                                );
+                              }
+                            },
+                          ),
 
-                                    if (context.mounted) {
-                                      Navigator.pop(context);
-                                      await _refreshData();
-                                      await showSuccessAlert(context, "Patient updated successfully.");
-                                    }
-                                  } catch (e) {
-                                    if (context.mounted) {
-                                      await showErrorAlert(context, "Update failed. $e");
-                                    }
-                                  }
+                        const SizedBox(height: 30),
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              try {
+                                if (existingUser == null) {
+                                  await Provider.of<UsersProvider>(
+                                    context,
+                                    listen: false,
+                                  ).insert({
+                                    "firstName": firstNameController.text,
+                                    "lastName": lastNameController.text,
+                                    "email": emailController.text,
+                                    "username": usernameController.text,
+                                    "phoneNumber": phoneNumberController.text,
+                                    "roleId": selectedRoleId,
+                                  });
+                                } else {
+                                  await Provider.of<UsersProvider>(
+                                    context,
+                                    listen: false,
+                                  ).update(existingUser.userId!, {
+                                    "firstName": firstNameController.text,
+                                    "lastName": lastNameController.text,
+                                    "phoneNumber": phoneNumberController.text,
+                                  });
                                 }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue.shade700,
-                                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                              ),
-                              child: const Text("Save", style: TextStyle(color: Colors.white)),
+
+                                if (mounted) {
+                                  Navigator.pop(context);
+                                  await _refreshData();
+                                  await showSuccessAlert(
+                                    context,
+                                    existingUser == null
+                                        ? "User added successfully."
+                                        : "User updated successfully.",
+                                  );
+                                }
+                              } catch (e) {
+                                if (mounted)
+                                  await showErrorAlert(
+                                    context,
+                                    "Operation failed. $e",
+                                  );
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue.shade700,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 40,
+                              vertical: 12,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                        ],
+                          child: Text(
+                            existingUser == null ? "Add" : "Save",
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showEditPatientDialog(BuildContext context, Patient patient) {
+    final _formKey = GlobalKey<FormState>();
+    final firstNameController = TextEditingController(
+      text: patient.firstName ?? '',
+    );
+    final lastNameController = TextEditingController(
+      text: patient.lastName ?? '',
+    );
+    final phoneController = TextEditingController(
+      text: patient.phoneNumber ?? '',
+    );
+    bool isActive = patient.isActive ?? true;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                width: 500,
+                child: Stack(
+                  children: [
+                    SingleChildScrollView(
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 10),
+                            const Text(
+                              "Edit Patient",
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            TextFormField(
+                              controller: firstNameController,
+                              decoration: const InputDecoration(
+                                labelText: "First Name",
+                              ),
+                              validator:
+                                  (value) =>
+                                      value == null || value.isEmpty
+                                          ? "Required"
+                                          : null,
+                            ),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              controller: lastNameController,
+                              decoration: const InputDecoration(
+                                labelText: "Last Name",
+                              ),
+                              validator:
+                                  (value) =>
+                                      value == null || value.isEmpty
+                                          ? "Required"
+                                          : null,
+                            ),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              controller: phoneController,
+                              decoration: const InputDecoration(
+                                labelText: "Phone Number",
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty)
+                                  return "Required";
+                                if (!RegExp(r'^\d{9}$').hasMatch(value))
+                                  return "Enter a valid 9-digit number";
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      isActive
+                                          ? Icons.check_circle
+                                          : Icons.cancel,
+                                      color:
+                                          isActive ? Colors.green : Colors.red,
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      isActive ? "Active" : "Deactivated",
+                                      style: TextStyle(
+                                        color:
+                                            isActive
+                                                ? Colors.green
+                                                : Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Switch(
+                                  value: isActive,
+                                  onChanged:
+                                      (val) =>
+                                          setDialogState(() => isActive = val),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 25),
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    try {
+                                      await Provider.of<PatientsProvider>(
+                                        context,
+                                        listen: false,
+                                      ).update(patient.patientId!, {
+                                        "firstName": firstNameController.text,
+                                        "lastName": lastNameController.text,
+                                        "phoneNumber": phoneController.text,
+                                        "isActive": isActive,
+                                        "edit": true,
+                                      });
+
+                                      if (context.mounted) {
+                                        Navigator.pop(context);
+                                        await _refreshData();
+                                        await showSuccessAlert(
+                                          context,
+                                          "Patient updated successfully.",
+                                        );
+                                      }
+                                    } catch (e) {
+                                      if (context.mounted) {
+                                        await showErrorAlert(
+                                          context,
+                                          "Update failed. $e",
+                                        );
+                                      }
+                                    }
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue.shade700,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 40,
+                                    vertical: 12,
+                                  ),
+                                ),
+                                child: const Text(
+                                  "Save",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: IconButton(
-                      icon: const Icon(Icons.close, color: Colors.black),
-                      onPressed: () => Navigator.pop(context),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: IconButton(
+                        icon: const Icon(Icons.close, color: Colors.black),
+                        onPressed: () => Navigator.pop(context),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
-
-
-
+            );
+          },
+        );
+      },
+    );
+  }
 
   Widget _buildAddButton() => ElevatedButton(
     onPressed: () => _openEditDialog(null),

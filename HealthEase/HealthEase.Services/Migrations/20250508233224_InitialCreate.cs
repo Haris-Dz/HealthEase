@@ -572,9 +572,9 @@ namespace HealthEase.Services.Migrations
                 values: new object[,]
                 {
                     { 1, new DateTime(2025, 7, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 9, 0, 0, 0), 1, null, 1, false, false, "Headache and dizziness", 1, null, "Pending", null },
-                    { 2, new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 11, 30, 0, 0), 2, null, 2, false, false, "Routine check-up", 2, null, "Approved", "See you on time" },
+                    { 2, new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 11, 0, 0, 0), 2, null, 2, false, false, "Routine check-up", 2, null, "Approved", "See you on time" },
                     { 3, new DateTime(2025, 7, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 13, 0, 0, 0), 4, null, 3, false, true, "Follow-up for lab results", 3, new DateTime(2025, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Paid", "Confirmed and paid" },
-                    { 4, new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 10, 15, 0, 0), 3, null, 4, false, false, "Skin irritation consultation", 1, null, "Rejected", "Doctor unavailable on selected date" },
+                    { 4, new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 10, 0, 0, 0), 3, null, 4, false, false, "Skin irritation consultation", 1, null, "Declined", "Doctor unavailable on selected date" },
                     { 5, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 14, 0, 0, 0), 2, null, 1, false, false, "Consultation about recurring migraines", 2, null, "Pending", null }
                 });
 

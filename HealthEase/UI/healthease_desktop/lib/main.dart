@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthease_desktop/layouts/master_screen.dart';
+import 'package:healthease_desktop/providers/appointment_types_provider.dart';
+import 'package:healthease_desktop/providers/appointments_provider.dart';
 import 'package:healthease_desktop/providers/doctors_provider.dart';
 import 'package:healthease_desktop/providers/patients_provider.dart';
 import 'package:healthease_desktop/providers/roles_provider.dart';
@@ -8,8 +10,15 @@ import 'package:healthease_desktop/screens/dashboard_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:healthease_desktop/providers/auth_provider.dart';
 import 'package:healthease_desktop/providers/users_provider.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+  windowManager.waitUntilReadyToShow().then((_) async {
+    await windowManager.setMinimumSize(const Size(1000, 600));
+    await windowManager.maximize();
+  });
   runApp(
     MultiProvider(
       providers: [
@@ -17,6 +26,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => PatientsProvider()),
         ChangeNotifierProvider(create: (_) => RolesProvider()),
         ChangeNotifierProvider(create: (_) => DoctorsProvider()),
+        ChangeNotifierProvider(create: (_) => AppointmentTypesProvider()),
+        ChangeNotifierProvider(create: (_) => AppointmentsProvider()),
       ],
       child: const MyApp(),
     ),
@@ -56,7 +67,6 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   bool _obscurePassword = true;
   bool _isLoggingIn = false;
-
 
   @override
   void dispose() {
@@ -107,16 +117,24 @@ class _LoginPageState extends State<LoginPage> {
                           controller: _usernameController,
                           decoration: InputDecoration(
                             labelText: "Username",
-                            prefixIcon: const Icon(Icons.person, color: Colors.blue),
+                            prefixIcon: const Icon(
+                              Icons.person,
+                              color: Colors.blue,
+                            ),
                             filled: true,
                             fillColor: Colors.blue.shade50,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.blue.shade300),
+                              borderSide: BorderSide(
+                                color: Colors.blue.shade300,
+                              ),
                             ),
                           ),
-                          validator: (value) =>
-                              value == null || value.isEmpty ? "Username required." : null,
+                          validator:
+                              (value) =>
+                                  value == null || value.isEmpty
+                                      ? "Username required."
+                                      : null,
                         ),
                         const SizedBox(height: 15),
                         TextFormField(
@@ -124,7 +142,10 @@ class _LoginPageState extends State<LoginPage> {
                           obscureText: _obscurePassword,
                           decoration: InputDecoration(
                             labelText: "Password",
-                            prefixIcon: const Icon(Icons.lock, color: Colors.blue),
+                            prefixIcon: const Icon(
+                              Icons.lock,
+                              color: Colors.blue,
+                            ),
                             suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
@@ -132,7 +153,9 @@ class _LoginPageState extends State<LoginPage> {
                                 });
                               },
                               icon: Icon(
-                                _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                _obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                                 color: Colors.blue,
                               ),
                             ),
@@ -140,11 +163,16 @@ class _LoginPageState extends State<LoginPage> {
                             fillColor: Colors.blue.shade50,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.blue.shade300),
+                              borderSide: BorderSide(
+                                color: Colors.blue.shade300,
+                              ),
                             ),
                           ),
-                          validator: (value) =>
-                              value == null || value.isEmpty ? "Enter your password" : null,
+                          validator:
+                              (value) =>
+                                  value == null || value.isEmpty
+                                      ? "Enter your password"
+                                      : null,
                         ),
                         const SizedBox(height: 25),
                         ElevatedButton(
@@ -160,7 +188,10 @@ class _LoginPageState extends State<LoginPage> {
                             if (_formKey.currentState?.validate() ?? false) {
                               setState(() => _isLoggingIn = true);
 
-                              var provider = Provider.of<UsersProvider>(context, listen: false);
+                              var provider = Provider.of<UsersProvider>(
+                                context,
+                                listen: false,
+                              );
                               AuthProvider.username = _usernameController.text;
                               AuthProvider.password = _passwordController.text;
 
@@ -176,16 +207,21 @@ class _LoginPageState extends State<LoginPage> {
                                 if (mounted) {
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
-                                      builder: (context) => MasterScreen(
-                                        title: "Dashboard",
-                                        child: const DashboardScreen(),
-                                      ),
+                                      builder:
+                                          (context) => MasterScreen(
+                                            title: "Dashboard",
+                                            currentRoute: "Dashboard",
+                                            child: const DashboardScreen(),
+                                          ),
                                     ),
                                   );
                                 }
                               } catch (e) {
                                 if (mounted) {
-                                  await showErrorAlert(context, "Invalid username or password.");
+                                  await showErrorAlert(
+                                    context,
+                                    "Invalid username or password.",
+                                  );
                                 }
                               } finally {
                                 if (mounted) {
@@ -194,21 +230,21 @@ class _LoginPageState extends State<LoginPage> {
                               }
                             }
                           },
-                          child: _isLoggingIn
-                              ? const SizedBox(
-                                  width: 25,
-                                  height: 25,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2.5,
+                          child:
+                              _isLoggingIn
+                                  ? const SizedBox(
+                                    width: 25,
+                                    height: 25,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2.5,
+                                    ),
+                                  )
+                                  : const Text(
+                                    "Login",
+                                    style: TextStyle(fontSize: 18),
                                   ),
-                                )
-                              : const Text(
-                                  "Login",
-                                  style: TextStyle(fontSize: 18),
-                                ),
                         ),
-
                       ],
                     ),
                   ),

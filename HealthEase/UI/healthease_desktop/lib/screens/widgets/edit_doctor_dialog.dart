@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 class EditDoctorDialog extends StatefulWidget {
   final String? initialTitle;
   final String? initialBio;
-  final String? initialProfilePicture; // base64 string
+  final String? initialProfilePicture;
 
   const EditDoctorDialog({
     super.key,
@@ -33,7 +33,8 @@ class _EditDoctorDialogState extends State<EditDoctorDialog> {
     super.initState();
     _titleController.text = widget.initialTitle ?? '';
     _bioController.text = widget.initialBio ?? '';
-    if (widget.initialProfilePicture != null && widget.initialProfilePicture != "AA==") {
+    if (widget.initialProfilePicture != null &&
+        widget.initialProfilePicture != "AA==") {
       _base64Image = widget.initialProfilePicture;
       _selectedImage = base64Decode(widget.initialProfilePicture!);
     }
@@ -50,17 +51,6 @@ class _EditDoctorDialogState extends State<EditDoctorDialog> {
     }
   }
 
-  void _submit() {
-    if (!_formKey.currentState!.validate()) return;
-
-    final result = {
-      "title": _titleController.text.trim(),
-      "biography": _bioController.text.trim(),
-      "profilePicture": _base64Image ?? "AA=="
-    };
-
-    Navigator.pop(context, result); // vraća JSON kao rezultat
-  }
   Widget _buildImagePicker() {
     return Stack(
       children: [
@@ -71,9 +61,11 @@ class _EditDoctorDialogState extends State<EditDoctorDialog> {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: Colors.grey.shade400),
             image: DecorationImage(
-              image: _selectedImage != null
-                  ? MemoryImage(_selectedImage!)
-                  : const AssetImage("assets/images/placeholder.png") as ImageProvider,
+              image:
+                  _selectedImage != null
+                      ? MemoryImage(_selectedImage!)
+                      : const AssetImage("assets/images/placeholder.png")
+                          as ImageProvider,
               fit: BoxFit.cover,
             ),
           ),
@@ -89,10 +81,14 @@ class _EditDoctorDialogState extends State<EditDoctorDialog> {
                 color: Colors.black.withOpacity(0.6),
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Icon(Icons.camera_alt, color: Colors.white, size: 18),
+              child: const Icon(
+                Icons.camera_alt,
+                color: Colors.white,
+                size: 18,
+              ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -122,14 +118,24 @@ class _EditDoctorDialogState extends State<EditDoctorDialog> {
                       TextFormField(
                         controller: _titleController,
                         decoration: const InputDecoration(labelText: "Title"),
-                        validator: (value) => value == null || value.isEmpty ? "Enter title" : null,
+                        validator:
+                            (value) =>
+                                value == null || value.isEmpty
+                                    ? "Enter title"
+                                    : null,
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
                         controller: _bioController,
                         maxLines: 4,
-                        decoration: const InputDecoration(labelText: "Biography"),
-                        validator: (value) => value == null || value.isEmpty ? "Enter biography" : null,
+                        decoration: const InputDecoration(
+                          labelText: "Biography",
+                        ),
+                        validator:
+                            (value) =>
+                                value == null || value.isEmpty
+                                    ? "Enter biography"
+                                    : null,
                       ),
                       const SizedBox(height: 20),
                       Row(
@@ -147,13 +153,16 @@ class _EditDoctorDialogState extends State<EditDoctorDialog> {
                               final result = {
                                 "title": _titleController.text.trim(),
                                 "biography": _bioController.text.trim(),
-                                "profilePicture": _base64Image ?? "AA=="
+                                "profilePicture": _base64Image ?? "AA==",
                               };
 
                               try {
                                 Navigator.pop(context, result);
                               } catch (e) {
-                                await showErrorAlert(context, "Update failed: $e");
+                                await showErrorAlert(
+                                  context,
+                                  "Update failed: $e",
+                                );
                               }
                             },
                             child: const Text("Save"),
@@ -178,5 +187,4 @@ class _EditDoctorDialogState extends State<EditDoctorDialog> {
       ),
     );
   }
-
 }

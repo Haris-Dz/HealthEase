@@ -1,4 +1,3 @@
-
 import 'package:healthease_desktop/models/user_role.dart';
 
 class AuthProvider {

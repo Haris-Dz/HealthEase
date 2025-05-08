@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthease_desktop/providers/auth_provider.dart';
 import 'package:healthease_desktop/providers/utils.dart';
+import 'package:healthease_desktop/screens/appointments_screen.dart';
 import 'package:healthease_desktop/screens/dashboard_screen.dart';
 import 'package:healthease_desktop/screens/doctors_screen.dart';
 import 'package:healthease_desktop/screens/users_screen.dart';
@@ -9,8 +10,14 @@ import 'package:healthease_desktop/main.dart';
 class MasterScreen extends StatefulWidget {
   final String title;
   final Widget child;
+  final String currentRoute;
 
-  const MasterScreen({super.key, required this.title, required this.child});
+  const MasterScreen({
+    super.key,
+    required this.title,
+    required this.child,
+    required this.currentRoute,
+  });
 
   @override
   State<MasterScreen> createState() => _MasterScreenState();
@@ -19,18 +26,21 @@ class MasterScreen extends StatefulWidget {
 class _MasterScreenState extends State<MasterScreen> {
   late Widget _currentChild;
   late String _currentTitle;
+  late String _currentRoute;
 
   @override
   void initState() {
     super.initState();
     _currentChild = widget.child;
     _currentTitle = widget.title;
+    _currentRoute = widget.currentRoute;
   }
 
-  void _onSidebarItemTapped(String title, Widget screen) {
+  void _onSidebarItemTapped(String title, Widget screen, String route) {
     setState(() {
       _currentTitle = title;
       _currentChild = screen;
+      _currentRoute = route;
     });
   }
 
@@ -117,7 +127,6 @@ class _MasterScreenState extends State<MasterScreen> {
             color: const Color(0xFF1976D2),
             child: Column(
               children: [
-                const SizedBox(height: 0),
                 Container(
                   height: 130,
                   width: double.infinity,
@@ -129,25 +138,69 @@ class _MasterScreenState extends State<MasterScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildSidebarItem("Dashboard", Icons.bar_chart, () {
-                 _onSidebarItemTapped("Dashboard", const DashboardScreen());
-                }),
-                _buildSidebarItem("Users", Icons.people, () {
-                  _onSidebarItemTapped("Users", const UsersScreen());
-                }),
-                _buildSidebarItem("Doctors", Icons.health_and_safety_outlined, () {
-                  _onSidebarItemTapped("Doctors", const DoctorsScreen());
-                }),
-                _buildSidebarItem("Recepti", Icons.receipt, () {
-                  _onSidebarItemTapped("Recepti", const Placeholder());
-                }),
-                _buildSidebarItem("Obavještenja", Icons.notifications, () {
-                  _onSidebarItemTapped("Obavještenja", const Placeholder());
-                }),
+                _buildSidebarItem(
+                  "Dashboard",
+                  Icons.bar_chart,
+                  const DashboardScreen(),
+                  "Dashboard",
+                ),
+                _buildSidebarItem(
+                  "MyProfile",
+                  Icons.person,
+                  const Placeholder(),
+                  "MyProfile",
+                ),
+                _buildSidebarItem(
+                  "Users",
+                  Icons.people,
+                  const UsersScreen(),
+                  "Users",
+                ),
+                _buildSidebarItem(
+                  "Doctors",
+                  Icons.health_and_safety_outlined,
+                  const DoctorsScreen(),
+                  "Doctors",
+                ),
+                _buildSidebarItem(
+                  "Appointments",
+                  Icons.schedule,
+                  const AppointmentsScreen(),
+                  "Appointments",
+                ),
+                _buildSidebarItem(
+                  "Prescriptions",
+                  Icons.medical_services_outlined,
+                  const Placeholder(), // TODO: implement
+                  "Prescriptions",
+                ),
+                _buildSidebarItem(
+                  "Reports",
+                  Icons.insert_chart_outlined,
+                  const Placeholder(), // TODO: implement
+                  "Reports",
+                ),
+
+                _buildSidebarItem(
+                  "Feedback",
+                  Icons.feedback_outlined,
+                  const Placeholder(), // TODO: implement
+                  "Feedback",
+                ),
+                _buildSidebarItem(
+                  "Notifications",
+                  Icons.notifications,
+                  const Placeholder(),
+                  "Notifications",
+                ),
+
                 const Spacer(),
                 ListTile(
                   leading: const Icon(Icons.logout, color: Colors.white),
-                  title: const Text("Logout", style: TextStyle(color: Colors.white)),
+                  title: const Text(
+                    "Logout",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onTap: () => _logout(context),
                 ),
               ],
@@ -173,15 +226,18 @@ class _MasterScreenState extends State<MasterScreen> {
                       ),
                       Row(
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.notifications, color: Colors.white),
-                            onPressed: () {},
-                          ),
                           MouseRegion(
                             cursor: SystemMouseCursors.click,
                             child: GestureDetector(
-                              onTapDown: (details) => _showProfileMenu(context, details.globalPosition),
-                              child: const Icon(Icons.account_circle, color: Colors.white),
+                              onTapDown:
+                                  (details) => _showProfileMenu(
+                                    context,
+                                    details.globalPosition,
+                                  ),
+                              child: const Icon(
+                                Icons.account_circle,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ],
@@ -204,11 +260,34 @@ class _MasterScreenState extends State<MasterScreen> {
     );
   }
 
-  Widget _buildSidebarItem(String title, IconData icon, VoidCallback onTap) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.white),
-      title: Text(title, style: const TextStyle(color: Colors.white)),
-      onTap: onTap,
+  Widget _buildSidebarItem(
+    String title,
+    IconData icon,
+    Widget screen,
+    String route,
+  ) {
+    final bool isActive = _currentRoute == route;
+
+    return Container(
+      color: isActive ? const Color(0xFF0D47A1) : Colors.transparent,
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: isActive ? Colors.white : Colors.white.withOpacity(0.8),
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: isActive ? Colors.white : Colors.white.withOpacity(0.8),
+            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        shape:
+            isActive
+                ? const Border(left: BorderSide(color: Colors.white, width: 4))
+                : null,
+        onTap: () => _onSidebarItemTapped(title, screen, route),
+      ),
     );
   }
 }

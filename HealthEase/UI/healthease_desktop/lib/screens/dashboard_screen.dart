@@ -13,7 +13,8 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProviderStateMixin {
+class _DashboardScreenState extends State<DashboardScreen>
+    with SingleTickerProviderStateMixin {
   int employeesCount = 0;
   int patientsCount = 0;
   int doctorsCount = 0;
@@ -45,9 +46,12 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
   Future<void> _fetchDashboardData() async {
     setState(() => _isLoading = true);
     try {
-      var employeesResult = await Provider.of<UsersProvider>(context, listen: false).get();
-      var patientsResult = await Provider.of<PatientsProvider>(context, listen: false).get();
-      var doctorsResult = await Provider.of<DoctorsProvider>(context, listen: false).get();
+      var employeesResult =
+          await Provider.of<UsersProvider>(context, listen: false).get();
+      var patientsResult =
+          await Provider.of<PatientsProvider>(context, listen: false).get();
+      var doctorsResult =
+          await Provider.of<DoctorsProvider>(context, listen: false).get();
 
       if (mounted) {
         setState(() {
@@ -76,7 +80,9 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
         int value = (_animation.value * targetValue).toInt();
         return Text(
           "$value",
-          style: style ?? const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          style:
+              style ??
+              const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         );
       },
     );
@@ -104,7 +110,10 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
               const SizedBox(height: 10),
               Text(
                 title,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 5),
               Text(
@@ -141,23 +150,35 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                 PieChartSectionData(
                   color: Colors.indigo,
                   value: employeesCount.toDouble(),
-                  title: '${((employeesCount / total) * 100).toStringAsFixed(1)}%',
+                  title:
+                      '${((employeesCount / total) * 100).toStringAsFixed(1)}%',
                   radius: 80,
-                  titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  titleStyle: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 PieChartSectionData(
                   color: Colors.teal,
                   value: patientsCount.toDouble(),
-                  title: '${((patientsCount / total) * 100).toStringAsFixed(1)}%',
+                  title:
+                      '${((patientsCount / total) * 100).toStringAsFixed(1)}%',
                   radius: 80,
-                  titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  titleStyle: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 PieChartSectionData(
                   color: Colors.deepPurple,
                   value: doctorsCount.toDouble(),
-                  title: '${((doctorsCount / total) * 100).toStringAsFixed(1)}%',
+                  title:
+                      '${((doctorsCount / total) * 100).toStringAsFixed(1)}%',
                   radius: 80,
-                  titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  titleStyle: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -213,7 +234,9 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                     },
                   ),
                 ),
-                leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true)),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: true),
+                ),
               ),
               borderData: FlBorderData(show: false),
               lineBarsData: [
@@ -250,28 +273,49 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
               children: [
                 Column(
                   children: const [
-                    Text("Total", style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text(
+                      "Total",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     SizedBox(height: 5),
                     Text("120"),
                   ],
                 ),
                 Column(
                   children: const [
-                    Text("Approved", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                    Text(
+                      "Approved",
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     SizedBox(height: 5),
                     Text("85"),
                   ],
                 ),
                 Column(
                   children: const [
-                    Text("Pending", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+                    Text(
+                      "Pending",
+                      style: TextStyle(
+                        color: Colors.orange,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     SizedBox(height: 5),
                     Text("25"),
                   ],
                 ),
                 Column(
                   children: const [
-                    Text("Declined", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                    Text(
+                      "Declined",
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     SizedBox(height: 5),
                     Text("10"),
                   ],
@@ -288,62 +332,66 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
   Widget build(BuildContext context) {
     return Container(
       color: const Color(0xFFF5F5F5),
-      child: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Scrollbar(
-              thumbVisibility: true,
-              controller: _scrollController,
-              child: SingleChildScrollView(
+      child:
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Scrollbar(
+                thumbVisibility: true,
                 controller: _scrollController,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Welcome back!",
-                        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 20),
-                      Wrap(
-                        spacing: 20,
-                        runSpacing: 20,
-                        alignment: WrapAlignment.center,
-                        children: [
-                          _buildCard(
-                            icon: Icons.people,
-                            title: "Employees",
-                            subtitle: "Total active employees",
-                            count: employeesCount,
-                            color: Colors.indigo,
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Welcome back!",
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
                           ),
-                          _buildCard(
-                            icon: Icons.person_outline,
-                            title: "Patients",
-                            subtitle: "Total registered patients",
-                            count: patientsCount,
-                            color: Colors.teal,
-                          ),
-                          _buildCard(
-                            icon: Icons.medical_services_outlined,
-                            title: "Doctors",
-                            subtitle: "Total available doctors",
-                            count: doctorsCount,
-                            color: Colors.deepPurple,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 30),
-                      Center(child: _buildPieChart()),
-                      const SizedBox(height: 30),
-                      Center(child: _buildProfitChart()),
-                      const SizedBox(height: 30),
-                      Center(child: _buildAppointmentsOverview()),
-                    ],
+                        ),
+                        const SizedBox(height: 20),
+                        Wrap(
+                          spacing: 20,
+                          runSpacing: 20,
+                          alignment: WrapAlignment.center,
+                          children: [
+                            _buildCard(
+                              icon: Icons.people,
+                              title: "Employees",
+                              subtitle: "Total active employees",
+                              count: employeesCount,
+                              color: Colors.indigo,
+                            ),
+                            _buildCard(
+                              icon: Icons.person_outline,
+                              title: "Patients",
+                              subtitle: "Total registered patients",
+                              count: patientsCount,
+                              color: Colors.teal,
+                            ),
+                            _buildCard(
+                              icon: Icons.medical_services_outlined,
+                              title: "Doctors",
+                              subtitle: "Total available doctors",
+                              count: doctorsCount,
+                              color: Colors.deepPurple,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 30),
+                        Center(child: _buildPieChart()),
+                        const SizedBox(height: 30),
+                        Center(child: _buildProfitChart()),
+                        const SizedBox(height: 30),
+                        Center(child: _buildAppointmentsOverview()),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
     );
   }
 }
