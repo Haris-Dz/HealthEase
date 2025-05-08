@@ -8,7 +8,7 @@ namespace HealthEase.Model.Requests
     {
         public DateTime? AppointmentDate { get; set; }
         public TimeSpan? AppointmentTime { get; set; }
-        public string? Status { get; set; }
+        public bool? Approve { get; set; }
         public string? StatusMessage { get; set; }
         public bool? IsPaid { get; set; }
         public DateTime? PaymentDate { get; set; }

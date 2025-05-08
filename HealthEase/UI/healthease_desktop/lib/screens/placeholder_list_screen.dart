@@ -8,7 +8,9 @@ class PlaceholderListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MasterScreen(
       title: "Users", // Title for the screen
-      child: Container(), // Placeholder or any widget you want to display in the content area
+      currentRoute: "Users",
+      child:
+          Container(), // Placeholder or any widget you want to display in the content area
     );
   }
 }

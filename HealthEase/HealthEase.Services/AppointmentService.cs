@@ -54,6 +54,14 @@ namespace HealthEase.Services
             entity.Status = "Pending";
             entity.IsPaid = false;
         }
+        public override async Task BeforeUpdateAsync(AppointmentUpdateRequest request, Appointment entity, CancellationToken cancellationToken = default)
+        {
+            if (request.Approve.HasValue)
+            {
+                entity.Status = request.Approve.Value ? "Approved" : "Declined";
+            }
+        }
+
 
     }
 }

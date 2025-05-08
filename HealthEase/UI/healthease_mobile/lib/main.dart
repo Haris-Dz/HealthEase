@@ -7,6 +7,7 @@ import 'package:healthease_mobile/providers/patient_doctor_favorites_provider.da
 import 'package:healthease_mobile/providers/patients_provider.dart';
 import 'package:healthease_mobile/providers/specializations_provider.dart';
 import 'package:healthease_mobile/screens/doctors_screen.dart';
+import 'package:healthease_mobile/screens/register_screen.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:provider/provider.dart';
@@ -212,6 +213,34 @@ class _LoginPageState extends State<LoginPage> {
                             "Login",
                             style: TextStyle(fontSize: 18),
                           ),
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Don't have an account?",
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => const RegisterScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                "Register",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

@@ -7,14 +7,14 @@ import 'package:http/http.dart' as http;
 class UsersProvider extends BaseProvider<User> {
   UsersProvider() : super("User");
 
-
   @override
   User fromJson(data) {
     return User.fromJson(data);
   }
 
   Future<User> login(String username, String password) async {
-    var url = "${BaseProvider.baseUrl}User/Login?username=$username&password=$password";
+    var url =
+        "${BaseProvider.baseUrl}User/Login?username=$username&password=$password";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 

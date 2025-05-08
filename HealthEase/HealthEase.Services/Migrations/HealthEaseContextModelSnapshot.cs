@@ -95,7 +95,7 @@ namespace HealthEase.Services.Migrations
                         {
                             AppointmentId = 2,
                             AppointmentDate = new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AppointmentTime = new TimeSpan(0, 11, 30, 0, 0),
+                            AppointmentTime = new TimeSpan(0, 11, 0, 0, 0),
                             AppointmentTypeId = 2,
                             DoctorId = 2,
                             IsDeleted = false,
@@ -124,14 +124,14 @@ namespace HealthEase.Services.Migrations
                         {
                             AppointmentId = 4,
                             AppointmentDate = new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AppointmentTime = new TimeSpan(0, 10, 15, 0, 0),
+                            AppointmentTime = new TimeSpan(0, 10, 0, 0, 0),
                             AppointmentTypeId = 3,
                             DoctorId = 4,
                             IsDeleted = false,
                             IsPaid = false,
                             Note = "Skin irritation consultation",
                             PatientId = 1,
-                            Status = "Rejected",
+                            Status = "Declined",
                             StatusMessage = "Doctor unavailable on selected date"
                         },
                         new
