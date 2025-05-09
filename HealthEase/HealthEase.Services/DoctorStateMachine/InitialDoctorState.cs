@@ -53,11 +53,8 @@ namespace HealthEase.Services.DoctorStateMachine
 
             entity.Biography = request.Biography;
             entity.Title = request.Title;
-            entity.ProfilePicture = request.ProfilePicture;
             entity.StateMachine = "draft";
             entity.IsDeleted = false;
-
-            // NIŠTA SE NE DODAJE U BAZU OVDE!
         }
 
 

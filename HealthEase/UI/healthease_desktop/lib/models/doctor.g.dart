@@ -10,7 +10,6 @@ Doctor _$DoctorFromJson(Map<String, dynamic> json) =>
     Doctor()
       ..doctorId = (json['doctorId'] as num?)?.toInt()
       ..userId = (json['userId'] as num?)?.toInt()
-      ..profilePicture = json['profilePicture'] as String?
       ..biography = json['biography'] as String?
       ..title = json['title'] as String?
       ..stateMachine = json['stateMachine'] as String?
@@ -30,7 +29,6 @@ Doctor _$DoctorFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$DoctorToJson(Doctor instance) => <String, dynamic>{
   'doctorId': instance.doctorId,
   'userId': instance.userId,
-  'profilePicture': instance.profilePicture,
   'biography': instance.biography,
   'title': instance.title,
   'stateMachine': instance.stateMachine,

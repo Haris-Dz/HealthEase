@@ -42,6 +42,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       listen: false,
     );
     final options = await appointmentsProvider.getStatusOptions();
+    if (!mounted) return;
     setState(() {
       _statusOptions = options;
     });
@@ -59,7 +60,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
     final appointmentsResponse = await appointmentsProvider.get();
     final doctorsResponse = await doctorsProvider.get();
-
+    if (!mounted) return;
     setState(() {
       _appointments = appointmentsResponse.resultList;
       _filteredAppointments = _appointments;
@@ -106,7 +107,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       firstDate: DateTime(2020),
       lastDate: DateTime(2030),
     );
-    if (picked != null) {
+    if (picked != null && mounted) {
       setState(() {
         if (isStart) {
           _startDate = picked;

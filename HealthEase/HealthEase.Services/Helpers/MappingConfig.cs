@@ -23,7 +23,6 @@ public static class MappingConfig
         config.NewConfig<DoctorInsertRequest, Doctor>()
             .Map(dest => dest.Biography, src => src.Biography)
             .Map(dest => dest.Title, src => src.Title)
-            .Map(dest => dest.ProfilePicture, src => src.ProfilePicture)
             .Ignore(dest => dest.DoctorId)
             .Ignore(dest => dest.User)
             .Ignore(dest => dest.DoctorSpecializations)

@@ -16,8 +16,6 @@ namespace HealthEase.Services.Database
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public virtual User User { get; set; } = null!;
-
-        public byte[]? ProfilePicture { get; set; }
         public string? Biography { get; set; }
         public string? Title { get; set; }
         public string? StateMachine { get; set; }
