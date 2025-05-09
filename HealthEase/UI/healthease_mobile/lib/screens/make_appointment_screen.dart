@@ -39,14 +39,17 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
   }
 
   Future<void> _loadData() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
     await _loadTypes();
     await _loadAppointments();
+    if (!mounted) return;
     setState(() => _isLoading = false);
   }
 
   Future<void> _loadTypes() async {
     final result = await _typeProvider.get();
+    if (!mounted) return;
     setState(() => _types = result.resultList);
   }
 
@@ -54,6 +57,7 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
     final result = await _appointmentsProvider.get(
       filter: {"doctorId": widget.doctor.doctorId},
     );
+    if (!mounted) return;
     setState(() {
       _appointments = result.resultList;
     });
@@ -136,15 +140,17 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
       };
 
       await _appointmentsProvider.insert(request);
-
+      if (!mounted) return;
       if (context.mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const AppointmentsScreen()),
         );
+        if (!mounted) return;
         showSuccessAlert(context, "Successfully booked an appointment");
       }
     } catch (e) {
+      if (!mounted) return;
       showErrorAlert(context, "Error booking appointment: $e");
     }
   }

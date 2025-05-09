@@ -299,11 +299,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
           "profilePicture": _base64Image ?? "",
         };
         await _patientProvider.register(request);
+        if (!mounted) return;
         Navigator.of(
           context,
         ).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
         showSuccessAlert(context, "Registration successful");
       } catch (e) {
+        if (!mounted) return;
         showErrorAlert(
           context,
           "Failed to register: Username or e-mail already exists.",

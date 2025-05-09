@@ -7,7 +7,6 @@ part 'doctor.g.dart';
 @JsonSerializable()
 class Doctor {
   int? doctorId;
-  String? profilePicture;
   String? biography;
   String? title;
   String? stateMachine;
@@ -15,11 +14,9 @@ class Doctor {
   List<Specialization>? doctorSpecializations;
   List<WorkingHours>? workingHours;
 
-
   Doctor();
 
-  factory Doctor.fromJson(Map<String, dynamic> json) =>
-      _$DoctorFromJson(json);
+  factory Doctor.fromJson(Map<String, dynamic> json) => _$DoctorFromJson(json);
 
   /// Connect the generated [_$PersonToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$DoctorToJson(this);

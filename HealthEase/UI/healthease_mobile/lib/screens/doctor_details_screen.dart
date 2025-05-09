@@ -13,8 +13,9 @@ class DoctorDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Uint8List? imageBytes;
-    if (doctor.profilePicture != null && doctor.profilePicture != "AA==") {
-      imageBytes = base64Decode(doctor.profilePicture!);
+    if (doctor.user?.profilePicture != null &&
+        doctor.user?.profilePicture != "AA==") {
+      imageBytes = base64Decode(doctor.user!.profilePicture!);
     }
 
     final workingHours = doctor.workingHours;
@@ -125,7 +126,14 @@ class DoctorDetailsScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 20),
-            _Section(title: "Details", content: doctor.biography ?? lorem),
+            _Section(
+              title: "Details",
+              content:
+                  doctor.biography?.trim().isNotEmpty == true
+                      ? doctor.biography!
+                      : "No biography available.",
+            ),
+
             _SectionWithList(
               title: "Specializations",
               items: doctor.doctorSpecializations ?? [],

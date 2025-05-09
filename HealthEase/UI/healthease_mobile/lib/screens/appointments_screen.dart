@@ -29,11 +29,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         filter: {'PatientId': AuthProvider.patientId},
         includeTables: 'Doctor.User,Patient,AppointmentType', // 👈 Dodano
       );
+      if (!mounted) return;
       setState(() {
         _appointments = result.resultList;
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoading = false);
     }
   }
@@ -44,7 +46,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       case 'approved':
         badgeColor = Colors.green.shade600;
         break;
-      case 'rejected':
+      case 'declined':
         badgeColor = Colors.red.shade700;
         break;
       case 'paid':

@@ -6,10 +6,9 @@ import 'package:healthease_mobile/providers/doctors_provider.dart';
 import 'package:healthease_mobile/providers/patient_doctor_favorites_provider.dart';
 import 'package:healthease_mobile/providers/patients_provider.dart';
 import 'package:healthease_mobile/providers/specializations_provider.dart';
+import 'package:healthease_mobile/providers/utils.dart';
 import 'package:healthease_mobile/screens/doctors_screen.dart';
 import 'package:healthease_mobile/screens/register_screen.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -191,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                                   AuthProvider.username!,
                                   AuthProvider.password!,
                                 );
-
+                                if (!mounted) return;
                                 AuthProvider.patientId = patient.patientId;
 
                                 Navigator.of(context).push(
@@ -200,11 +199,10 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 );
                               } on Exception catch (_) {
-                                QuickAlert.show(
-                                  context: context,
-                                  type: QuickAlertType.warning,
-                                  text: "Invalid username or password.",
-                                  title: "Error",
+                                if (!mounted) return;
+                                showErrorAlert(
+                                  context,
+                                  "Invalid username or password.",
                                 );
                               }
                             }

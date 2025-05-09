@@ -53,6 +53,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       listen: false,
     );
     final favorites = await favProvider.getByPatientId(AuthProvider.patientId!);
+    if (!mounted) return;
     setState(() {
       _favoriteDoctorIds = favorites.map((f) => f.doctorId!).toList();
     });
@@ -70,7 +71,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       includeTables: "User,DoctorSpecializations,User.WorkingHours",
       filter: filter,
     );
-
+    if (!mounted) return;
     setState(() {
       _doctors =
           result.resultList
@@ -87,7 +88,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     );
 
     await favProvider.toggleFavorite(AuthProvider.patientId!, doctorId);
-
+    if (!mounted) return;
     setState(() {
       if (_favoriteDoctorIds.contains(doctorId)) {
         _favoriteDoctorIds.remove(doctorId);
@@ -99,8 +100,9 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
 
   Widget _buildDoctorCard(Doctor doctor) {
     Uint8List? imageBytes;
-    if (doctor.profilePicture != null && doctor.profilePicture != "AA==") {
-      imageBytes = base64Decode(doctor.profilePicture!);
+    if (doctor.user?.profilePicture != null &&
+        doctor.user?.profilePicture != "AA==") {
+      imageBytes = base64Decode(doctor.user!.profilePicture!);
     }
 
     final workingHours = doctor.workingHours;

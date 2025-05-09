@@ -30,6 +30,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   Future<void> _loadFavorites() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
 
     final favProvider = Provider.of<PatientDoctorFavoritesProvider>(
@@ -39,9 +40,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     final doctorProvider = Provider.of<DoctorsProvider>(context, listen: false);
 
     final favorites = await favProvider.getByPatientId(AuthProvider.patientId!);
+    if (!mounted) return;
     _favoriteDoctorIds = favorites.map((f) => f.doctorId!).toList();
 
     if (_favoriteDoctorIds.isEmpty) {
+      if (!mounted) return;
       setState(() {
         _favoriteDoctors = [];
         _isLoading = false;
@@ -53,7 +56,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       retrieveAll: true,
       includeTables: "User,DoctorSpecializations,User.WorkingHours",
     );
-
+    if (!mounted) return;
     setState(() {
       _favoriteDoctors =
           allDoctors.resultList
@@ -82,14 +85,16 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       context,
       listen: false,
     );
+    showSuccessAlert(context, "Removed from favorites");
     await favProvider.toggleFavorite(AuthProvider.patientId!, doctorId);
     await _loadFavorites();
   }
 
   Widget _buildDoctorCard(Doctor doctor) {
     Uint8List? imageBytes;
-    if (doctor.profilePicture != null && doctor.profilePicture != "AA==") {
-      imageBytes = base64Decode(doctor.profilePicture!);
+    if (doctor.user?.profilePicture != null &&
+        doctor.user?.profilePicture != "AA==") {
+      imageBytes = base64Decode(doctor.user!.profilePicture!);
     }
 
     final workingHours = doctor.workingHours;

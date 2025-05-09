@@ -26,11 +26,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   bool _obscureNew = true;
   bool _obscureConfirm = true;
 
-  final TextEditingController _currentPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController =
+      TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-
-
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   Uint8List? _selectedImage;
   String? _base64Image;
@@ -41,7 +41,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
     _loadPatient();
   }
-    @override
+
+  @override
   void dispose() {
     _currentPasswordController.dispose();
     _newPasswordController.dispose();
@@ -49,31 +50,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.dispose();
   }
 
-
   Future<void> _loadPatient() async {
     final provider = Provider.of<PatientProvider>(context, listen: false);
     final Patient result = await provider.getById(AuthProvider.patientId!);
-
+    if (!mounted) return;
 
     setState(() {
-    _firstNameController.text = result.firstName ?? '';
-    _lastNameController.text = result.lastName ?? '';
-    _phoneController.text = result.phoneNumber ?? '';
-    _base64Image = result.profilePicture;
+      _firstNameController.text = result.firstName ?? '';
+      _lastNameController.text = result.lastName ?? '';
+      _phoneController.text = result.phoneNumber ?? '';
+      _base64Image = result.profilePicture;
 
-    if (_base64Image != null && _base64Image != "AA==") {
-      _selectedImage = base64Decode(_base64Image!);
-    }
+      if (_base64Image != null && _base64Image != "AA==") {
+        _selectedImage = base64Decode(_base64Image!);
+      }
 
-    _isLoading = false;
-  });
-
+      _isLoading = false;
+    });
   }
 
   Future<void> _pickImage() async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked != null) {
       final bytes = await picked.readAsBytes();
+      if (!mounted) return;
       setState(() {
         _selectedImage = bytes;
         _base64Image = base64Encode(bytes);
@@ -84,42 +84,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _saveChanges() async {
     if (!_formKey.currentState!.validate()) return;
     final request = {
-    "firstName": _firstNameController.text.trim(),
-    "lastName": _lastNameController.text.trim(),
-    "phoneNumber": _phoneController.text.trim(),
-    "profilePicture": _base64Image ?? "AA==",
-    "edit": true,
-    "isActive": true,
-  };
+      "firstName": _firstNameController.text.trim(),
+      "lastName": _lastNameController.text.trim(),
+      "phoneNumber": _phoneController.text.trim(),
+      "profilePicture": _base64Image ?? "AA==",
+      "edit": true,
+      "isActive": true,
+    };
 
-  if (_changePassword) {
-    request.addAll({
-      "currentPassword": _currentPasswordController.text.trim(),
-      "password": _newPasswordController.text.trim(),
-      "passwordConfirmation": _confirmPasswordController.text.trim(),
-    });
-  }
+    if (_changePassword) {
+      request.addAll({
+        "currentPassword": _currentPasswordController.text.trim(),
+        "password": _newPasswordController.text.trim(),
+        "passwordConfirmation": _confirmPasswordController.text.trim(),
+      });
+    }
     final provider = Provider.of<PatientProvider>(context, listen: false);
 
     try {
-      await provider.update(AuthProvider.patientId!,request);
+      await provider.update(AuthProvider.patientId!, request);
 
       if (mounted) {
-      if (_changePassword) {
-        AuthProvider.username = null;
-        AuthProvider.password = null;
-        AuthProvider.userId = null;
-        AuthProvider.patientId = null;
-        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-        showSuccessAlert(context, "Password changed. Please login again.");
-      } else {
-        Navigator.pop(context, true);
-        showSuccessAlert(context, "Profile updated successfully");
+        if (_changePassword) {
+          AuthProvider.username = null;
+          AuthProvider.password = null;
+          AuthProvider.userId = null;
+          AuthProvider.patientId = null;
+          Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+          showSuccessAlert(context, "Password changed. Please login again.");
+        } else {
+          Navigator.pop(context, true);
+          showSuccessAlert(context, "Profile updated successfully");
+        }
       }
-    }
     } catch (e) {
-      
-      showErrorAlert(context,"Update failed: current password incorrect");
+      showErrorAlert(context, "Update failed: current password incorrect");
     }
   }
 
@@ -131,9 +130,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         children: [
           CircleAvatar(
             radius: 60,
-            backgroundImage: _selectedImage != null
-                ? MemoryImage(_selectedImage!)
-                : const AssetImage("assets/images/placeholder.png") as ImageProvider,
+            backgroundImage:
+                _selectedImage != null
+                    ? MemoryImage(_selectedImage!)
+                    : const AssetImage("assets/images/placeholder.png")
+                        as ImageProvider,
           ),
           Positioned(
             bottom: 0,
@@ -150,7 +151,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ],
               ),
-              child: const Icon(Icons.camera_alt, size: 22, color: Colors.white),
+              child: const Icon(
+                Icons.camera_alt,
+                size: 22,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
@@ -158,118 +163,158 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MasterScreen(
       title: "Edit Profile",
       currentRoute: "Edit Profile",
       showBackButton: true,
-      child: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    _buildImagePicker(),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      controller: _firstNameController,
-                      decoration: const InputDecoration(labelText: "First Name"),
-                      validator: (value) =>
-                          value == null || value.isEmpty ? "Required" : null,
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _lastNameController,
-                      decoration: const InputDecoration(labelText: "Last Name"),
-                      validator: (value) =>
-                          value == null || value.isEmpty ? "Required" : null,
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _phoneController,
-                      decoration: const InputDecoration(labelText: "Phone Number"),
-                      validator: (value) {
-                          if (value == null || value.isEmpty) return null;
-                          if (!RegExp(r'^\d{9}$').hasMatch(value)) return "Enter a 9-digit number";
-                          return null;
-                        },
-                    ),
-                    const SizedBox(height: 20),
-                    CheckboxListTile(
-                      value: _changePassword,
-                      onChanged: (value) => setState(() => _changePassword = value!),
-                      title: const Text("Change Password"),
-                    ),
-
-                    if (_changePassword) ...[
-                      TextFormField(
-                        controller: _currentPasswordController,
-                        obscureText: _obscureCurrent,
-                        decoration: InputDecoration(
-                          labelText: "Current Password",
-                          suffixIcon: IconButton(
-                            icon: Icon(_obscureCurrent ? Icons.visibility : Icons.visibility_off),
-                            onPressed: () => setState(() => _obscureCurrent = !_obscureCurrent),
+      child:
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SafeArea(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        _buildImagePicker(),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: _firstNameController,
+                          decoration: const InputDecoration(
+                            labelText: "First Name",
                           ),
+                          validator:
+                              (value) =>
+                                  value == null || value.isEmpty
+                                      ? "Required"
+                                      : null,
                         ),
-                        validator: (value) =>
-                            value == null || value.isEmpty ? "Required" : null,
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _newPasswordController,
-                        obscureText: _obscureNew,
-                        decoration: InputDecoration(
-                          labelText: "New Password",
-                          suffixIcon: IconButton(
-                            icon: Icon(_obscureNew ? Icons.visibility : Icons.visibility_off),
-                            onPressed: () => setState(() => _obscureNew = !_obscureNew),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _lastNameController,
+                          decoration: const InputDecoration(
+                            labelText: "Last Name",
                           ),
+                          validator:
+                              (value) =>
+                                  value == null || value.isEmpty
+                                      ? "Required"
+                                      : null,
                         ),
-                        validator: (value) {
-                          if (value == null || value.length < 8) return "Minimum 8 characters";
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _confirmPasswordController,
-                        obscureText: _obscureConfirm,
-                        decoration: InputDecoration(
-                          labelText: "Confirm Password",
-                          suffixIcon: IconButton(
-                            icon: Icon(_obscureConfirm ? Icons.visibility : Icons.visibility_off),
-                            onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _phoneController,
+                          decoration: const InputDecoration(
+                            labelText: "Phone Number",
                           ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) return null;
+                            if (!RegExp(r'^\d{9}$').hasMatch(value))
+                              return "Enter a 9-digit number";
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value != _newPasswordController.text) return "Passwords do not match";
-                          return null;
-                        },
-                      ),
-                    ],
+                        const SizedBox(height: 20),
+                        CheckboxListTile(
+                          value: _changePassword,
+                          onChanged:
+                              (value) =>
+                                  setState(() => _changePassword = value!),
+                          title: const Text("Change Password"),
+                        ),
 
+                        if (_changePassword) ...[
+                          TextFormField(
+                            controller: _currentPasswordController,
+                            obscureText: _obscureCurrent,
+                            decoration: InputDecoration(
+                              labelText: "Current Password",
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureCurrent
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed:
+                                    () => setState(
+                                      () => _obscureCurrent = !_obscureCurrent,
+                                    ),
+                              ),
+                            ),
+                            validator:
+                                (value) =>
+                                    value == null || value.isEmpty
+                                        ? "Required"
+                                        : null,
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _newPasswordController,
+                            obscureText: _obscureNew,
+                            decoration: InputDecoration(
+                              labelText: "New Password",
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureNew
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed:
+                                    () => setState(
+                                      () => _obscureNew = !_obscureNew,
+                                    ),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.length < 8)
+                                return "Minimum 8 characters";
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _confirmPasswordController,
+                            obscureText: _obscureConfirm,
+                            decoration: InputDecoration(
+                              labelText: "Confirm Password",
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureConfirm
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed:
+                                    () => setState(
+                                      () => _obscureConfirm = !_obscureConfirm,
+                                    ),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value != _newPasswordController.text)
+                                return "Passwords do not match";
+                              return null;
+                            },
+                          ),
+                        ],
 
-                    SizedBox(height: 20,),
-                    ElevatedButton(
-                      onPressed: _saveChanges,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade700,
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size.fromHeight(50),
-                      ),
-                      child: const Text("Save Changes"),
-                    )
-                  ],
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _saveChanges,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue.shade700,
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size.fromHeight(50),
+                          ),
+                          child: const Text("Save Changes"),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-            ),
     );
   }
 }
