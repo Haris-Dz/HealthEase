@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:healthease_mobile/models/patient.dart';
 import 'package:healthease_mobile/providers/base_provider.dart';
-import 'package:healthease_mobile/providers/utils.dart';
 import 'package:http/http.dart' as http;
 
 class PatientProvider extends BaseProvider<Patient> {
