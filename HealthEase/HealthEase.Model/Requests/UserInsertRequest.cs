@@ -15,6 +15,7 @@ namespace HealthEase.Model.Requests
 
         public string? PhoneNumber { get; set; }
 
+        public byte[]? ProfilePicture { get; set; }
         public string Username { get; set; } = null!;
 
         [Required]

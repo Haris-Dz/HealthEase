@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:healthease_desktop/models/role.dart';
@@ -30,7 +31,17 @@ class _UsersScreenState extends State<UsersScreen> {
     Future.delayed(Duration.zero, () async => await _refreshData());
   }
 
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _disposed = true;
+    super.dispose();
+  }
+
   Future<void> _refreshData() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
     try {
       final usersResult = await Provider.of<UsersProvider>(
@@ -42,19 +53,32 @@ class _UsersScreenState extends State<UsersScreen> {
         listen: false,
       ).get(retrieveAll: true);
 
-      setState(() {
-        _users = usersResult.resultList;
-        _patients = patientsResult.resultList;
-      });
+      if (!_disposed) {
+        setState(() {
+          _users = usersResult.resultList;
+          _patients = patientsResult.resultList;
+        });
+      }
     } catch (e) {
-      await showErrorAlert(context, "Failed to fetch data. $e");
+      if (!_disposed) {
+        await showErrorAlert(context, "Failed to fetch data. $e");
+      }
     } finally {
-      setState(() => _isLoading = false);
+      if (!_disposed) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
+  Timer? _debounce;
+
   void _filterSearch(String query) {
-    setState(() => searchQuery = query);
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      if (mounted) {
+        setState(() => searchQuery = query);
+      }
+    });
   }
 
   List<dynamic> get _filteredList =>

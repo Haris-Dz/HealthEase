@@ -4,6 +4,7 @@ import 'package:healthease_desktop/providers/utils.dart';
 import 'package:healthease_desktop/screens/appointments_screen.dart';
 import 'package:healthease_desktop/screens/dashboard_screen.dart';
 import 'package:healthease_desktop/screens/doctors_screen.dart';
+import 'package:healthease_desktop/screens/my_profile_screen.dart';
 import 'package:healthease_desktop/screens/users_screen.dart';
 import 'package:healthease_desktop/main.dart';
 
@@ -27,6 +28,12 @@ class _MasterScreenState extends State<MasterScreen> {
   late Widget _currentChild;
   late String _currentTitle;
   late String _currentRoute;
+  bool get isAdmin {
+    return AuthProvider.userRoles?.any(
+          (role) => role.role?.roleName?.toLowerCase() == 'admin',
+        ) ??
+        false;
+  }
 
   @override
   void initState() {
@@ -37,6 +44,7 @@ class _MasterScreenState extends State<MasterScreen> {
   }
 
   void _onSidebarItemTapped(String title, Widget screen, String route) {
+    if (!mounted) return;
     setState(() {
       _currentTitle = title;
       _currentChild = screen;
@@ -127,74 +135,83 @@ class _MasterScreenState extends State<MasterScreen> {
             color: const Color(0xFF1976D2),
             child: Column(
               children: [
-                Container(
-                  height: 130,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/logo.png'),
-                      fit: BoxFit.cover,
-                    ),
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      Container(
+                        height: 130,
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/logo.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      _buildSidebarItem(
+                        "Dashboard",
+                        Icons.bar_chart,
+                        const DashboardScreen(),
+                        "Dashboard",
+                      ),
+                      _buildSidebarItem(
+                        "MyProfile",
+                        Icons.person,
+                        const MyProfileScreen(),
+                        "MyProfile",
+                      ),
+
+                      if (isAdmin) ...[
+                        _buildSidebarItem(
+                          "Users",
+                          Icons.people,
+                          const UsersScreen(),
+                          "Users",
+                        ),
+                        _buildSidebarItem(
+                          "Doctors",
+                          Icons.health_and_safety_outlined,
+                          const DoctorsScreen(),
+                          "Doctors",
+                        ),
+                        _buildSidebarItem(
+                          "Reports",
+                          Icons.insert_chart_outlined,
+                          const Placeholder(),
+                          "Reports",
+                        ),
+                      ],
+
+                      _buildSidebarItem(
+                        "Appointments",
+                        Icons.schedule,
+                        const AppointmentsScreen(),
+                        "Appointments",
+                      ),
+                      _buildSidebarItem(
+                        "Prescriptions",
+                        Icons.medical_services_outlined,
+                        const Placeholder(),
+                        "Prescriptions",
+                      ),
+                      _buildSidebarItem(
+                        "Feedback",
+                        Icons.feedback_outlined,
+                        const Placeholder(),
+                        "Feedback",
+                      ),
+                      _buildSidebarItem(
+                        "Notifications",
+                        Icons.notifications,
+                        const Placeholder(),
+                        "Notifications",
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 20),
-                _buildSidebarItem(
-                  "Dashboard",
-                  Icons.bar_chart,
-                  const DashboardScreen(),
-                  "Dashboard",
-                ),
-                _buildSidebarItem(
-                  "MyProfile",
-                  Icons.person,
-                  const Placeholder(),
-                  "MyProfile",
-                ),
-                _buildSidebarItem(
-                  "Users",
-                  Icons.people,
-                  const UsersScreen(),
-                  "Users",
-                ),
-                _buildSidebarItem(
-                  "Doctors",
-                  Icons.health_and_safety_outlined,
-                  const DoctorsScreen(),
-                  "Doctors",
-                ),
-                _buildSidebarItem(
-                  "Appointments",
-                  Icons.schedule,
-                  const AppointmentsScreen(),
-                  "Appointments",
-                ),
-                _buildSidebarItem(
-                  "Prescriptions",
-                  Icons.medical_services_outlined,
-                  const Placeholder(), // TODO: implement
-                  "Prescriptions",
-                ),
-                _buildSidebarItem(
-                  "Reports",
-                  Icons.insert_chart_outlined,
-                  const Placeholder(), // TODO: implement
-                  "Reports",
-                ),
-
-                _buildSidebarItem(
-                  "Feedback",
-                  Icons.feedback_outlined,
-                  const Placeholder(), // TODO: implement
-                  "Feedback",
-                ),
-                _buildSidebarItem(
-                  "Notifications",
-                  Icons.notifications,
-                  const Placeholder(),
-                  "Notifications",
-                ),
-
-                const Spacer(),
+                const Divider(color: Colors.white70),
                 ListTile(
                   leading: const Icon(Icons.logout, color: Colors.white),
                   title: const Text(
@@ -206,6 +223,7 @@ class _MasterScreenState extends State<MasterScreen> {
               ],
             ),
           ),
+
           Expanded(
             child: Column(
               children: [

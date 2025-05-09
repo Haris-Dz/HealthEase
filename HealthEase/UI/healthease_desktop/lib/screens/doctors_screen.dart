@@ -67,35 +67,44 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       switch (action) {
         case 'hide':
           await _doctorsProvider.ChangeState(doctor.doctorId!, "hide");
+          if (!mounted) return;
           await _loadDoctors();
-          if (mounted)
-            await showSuccessAlert(context, "Doctor successfully hidden!");
+          if (!mounted) return;
+          await showSuccessAlert(context, "Doctor successfully hidden!");
           break;
+
         case 'activate':
           await _doctorsProvider.ChangeState(doctor.doctorId!, "activate");
+          if (!mounted) return;
           await _loadDoctors();
-          if (mounted)
-            await showSuccessAlert(context, "Doctor successfully activated!");
+          if (!mounted) return;
+          await showSuccessAlert(context, "Doctor successfully activated!");
           break;
+
         case 'restore':
           await _doctorsProvider.ChangeState(doctor.doctorId!, "edit");
+          if (!mounted) return;
           await _loadDoctors();
-          if (mounted)
-            await showSuccessAlert(context, "Doctor successfully restored!");
+          if (!mounted) return;
+          await showSuccessAlert(context, "Doctor successfully restored!");
           break;
+
         case 'delete':
           final confirmed = await showCustomConfirmDialog(
             context,
             title: "Are you sure?",
             text: "Do you want to delete this doctor?",
           );
+          if (!mounted) return;
           if (confirmed) {
             await _doctorsProvider.delete(doctor.doctorId!);
+            if (!mounted) return;
             await _loadDoctors();
-            if (mounted)
-              await showSuccessAlert(context, "Doctor successfully deleted!");
+            if (!mounted) return;
+            await showSuccessAlert(context, "Doctor successfully deleted!");
           }
           break;
+
         case 'update':
           final result = await showDialog(
             context: context,
@@ -103,25 +112,27 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                 (context) => EditDoctorDialog(
                   initialTitle: doctor.title,
                   initialBio: doctor.biography,
-                  initialProfilePicture: doctor.profilePicture,
                 ),
           );
+          if (!mounted) return;
 
-          if (result != null && mounted) {
+          if (result != null) {
             try {
               await _doctorsProvider.update(doctor.doctorId!, result);
+              if (!mounted) return;
               await _loadDoctors();
+              if (!mounted) return;
               await showSuccessAlert(context, "Doctor updated successfully!");
             } catch (e) {
+              if (!mounted) return;
               await showErrorAlert(context, "Update failed: $e");
             }
           }
           break;
       }
     } catch (e) {
-      if (mounted) {
-        await showErrorAlert(context, "Action failed: $e");
-      }
+      if (!mounted) return;
+      await showErrorAlert(context, "Action failed: $e");
     }
   }
 
@@ -255,139 +266,132 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 elevation: 4,
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 90,
-                        height: 90,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.grey.shade300),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child:
-                              (doctor.profilePicture != null &&
-                                      doctor.profilePicture != "AA==")
-                                  ? Image.memory(
-                                    base64Decode(doctor.profilePicture!),
-                                    fit: BoxFit.cover,
-                                  )
-                                  : Container(
-                                    color: Colors.grey.shade100,
-                                    child: const Icon(
-                                      Icons.person,
-                                      size: 40,
-                                      color: Colors.grey,
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 90,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
                                     ),
                                   ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            return SingleChildScrollView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  minHeight: constraints.maxHeight,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child:
+                                        (doctor.user?.profilePicture != null &&
+                                                doctor.user!.profilePicture !=
+                                                    "AA==")
+                                            ? Image.memory(
+                                              base64Decode(
+                                                doctor.user!.profilePicture!,
+                                              ),
+                                              fit: BoxFit.cover,
+                                            )
+                                            : Image.asset(
+                                              'assets/images/placeholder.png',
+                                              fit: BoxFit.cover,
+                                            ),
+                                  ),
                                 ),
-                                child: IntrinsicHeight(
+                                const SizedBox(width: 16),
+                                Expanded(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  fullName.isEmpty
-                                                      ? "Unknown Doctor"
-                                                      : fullName,
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 4),
-                                                Text(
-                                                  (doctor.title
-                                                              ?.trim()
-                                                              .isEmpty ??
-                                                          true)
-                                                      ? "N/A"
-                                                      : doctor.title!,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 12,
-                                              vertical: 6,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: _getStateColor(
-                                                doctor.stateMachine,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: Text(
-                                              doctor.stateMachine
-                                                      ?.toUpperCase() ??
-                                                  "UNKNOWN",
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                      Text(
+                                        fullName.isEmpty
+                                            ? "Unknown Doctor"
+                                            : fullName,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                      const Spacer(),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: PopupMenuButton<String>(
-                                          onSelected:
-                                              (value) => _handlePopupAction(
-                                                value,
-                                                doctor,
-                                              ),
-                                          itemBuilder:
-                                              (context) =>
-                                                  _buildPopupItems(state),
-                                          icon: const Icon(
-                                            Icons.more_vert,
-                                            color: Colors.grey,
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        (doctor.title?.trim().isEmpty ?? true)
+                                            ? "N/A"
+                                            : doctor.title!,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 6,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: _getStateColor(
+                                            doctor.stateMachine,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          doctor.stateMachine?.toUpperCase() ??
+                                              "UNKNOWN",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            if (doctor.biography != null &&
+                                doctor.biography!.trim().isNotEmpty) ...[
+                              const Text(
+                                "Biography",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
                               ),
-                            );
-                          },
+                              const SizedBox(height: 4),
+                              Text(
+                                doctor.biography!,
+                                style: const TextStyle(fontSize: 13),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                            const SizedBox(height: 40), // prostor za meni
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: PopupMenuButton<String>(
+                        onSelected:
+                            (value) => _handlePopupAction(value, doctor),
+                        itemBuilder: (context) => _buildPopupItems(state),
+                        icon: const Icon(Icons.more_vert, color: Colors.grey),
+                      ),
+                    ),
+                  ],
                 ),
               );
             },

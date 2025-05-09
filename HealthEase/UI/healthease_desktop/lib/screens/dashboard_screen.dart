@@ -48,18 +48,21 @@ class _DashboardScreenState extends State<DashboardScreen>
     try {
       var employeesResult =
           await Provider.of<UsersProvider>(context, listen: false).get();
+      if (!mounted) return;
+
       var patientsResult =
           await Provider.of<PatientsProvider>(context, listen: false).get();
+      if (!mounted) return;
+
       var doctorsResult =
           await Provider.of<DoctorsProvider>(context, listen: false).get();
+      if (!mounted) return;
 
-      if (mounted) {
-        setState(() {
-          employeesCount = employeesResult.resultList.length;
-          patientsCount = patientsResult.resultList.length;
-          doctorsCount = doctorsResult.resultList.length;
-        });
-      }
+      setState(() {
+        employeesCount = employeesResult.resultList.length;
+        patientsCount = patientsResult.resultList.length;
+        doctorsCount = doctorsResult.resultList.length;
+      });
 
       _controller.forward();
     } catch (e) {

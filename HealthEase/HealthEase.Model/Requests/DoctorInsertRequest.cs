@@ -10,6 +10,5 @@ namespace HealthEase.Model.Requests
         public UserInsertRequest? User { get; set; } = null!;
         public string? Biography { get; set; }
         public string? Title { get; set; }
-        public byte[]? ProfilePicture { get; set; }
     }
 }

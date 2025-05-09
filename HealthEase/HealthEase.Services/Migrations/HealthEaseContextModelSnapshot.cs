@@ -223,9 +223,6 @@ namespace HealthEase.Services.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("StateMachine")
                         .HasColumnType("nvarchar(max)");
 
@@ -247,7 +244,6 @@ namespace HealthEase.Services.Migrations
                             DoctorId = 1,
                             Biography = "Dr. Doctor1 is an experienced specialist in internal medicine. He has dedicated over 10 years to diagnosing and treating a wide range of chronic diseases, with a focus on patient-centered care and health education.",
                             IsDeleted = false,
-                            ProfilePicture = new byte[] { 0 },
                             StateMachine = "draft",
                             Title = "Dr. med.",
                             UserId = 3
@@ -257,7 +253,6 @@ namespace HealthEase.Services.Migrations
                             DoctorId = 2,
                             Biography = "Dr. Doctor2 is a double specialist in cardiology and neurology. With a strong academic background and clinical expertise, she combines knowledge from both fields to provide comprehensive diagnostic and treatment solutions.",
                             IsDeleted = false,
-                            ProfilePicture = new byte[] { 0 },
                             StateMachine = "active",
                             Title = "Dr. sci. med.",
                             UserId = 4
@@ -267,7 +262,6 @@ namespace HealthEase.Services.Migrations
                             DoctorId = 3,
                             Biography = "Dr. Doctor3 is a pediatrician with more than 7 years of experience in treating children of all ages. Known for a compassionate approach and excellent communication with both kids and parents.",
                             IsDeleted = false,
-                            ProfilePicture = new byte[] { 0 },
                             StateMachine = "active",
                             Title = "Mr. sci. med.",
                             UserId = 5
@@ -277,7 +271,6 @@ namespace HealthEase.Services.Migrations
                             DoctorId = 4,
                             Biography = "Dr. Doctor4 is a skilled dermatologist who has worked extensively with skin conditions ranging from acne to rare autoimmune diseases. She emphasizes early diagnosis and personalized treatment plans.",
                             IsDeleted = false,
-                            ProfilePicture = new byte[] { 0 },
                             StateMachine = "active",
                             Title = "Dr. med.",
                             UserId = 6
@@ -492,7 +485,7 @@ namespace HealthEase.Services.Migrations
                             PhoneNumber = "000000004",
                             RegistrationDate = new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified),
                             Username = "patient1",
-                            isActive = false
+                            isActive = true
                         },
                         new
                         {
@@ -846,6 +839,9 @@ namespace HealthEase.Services.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -866,6 +862,7 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "XVDI7NKoOCtMiSrKR1uSSGWvA7o=",
                             PasswordSalt = "NHVv+8KhAiQqFlz7k1P53Q==",
                             PhoneNumber = "1",
+                            ProfilePicture = new byte[] { 0 },
                             Username = "1"
                         },
                         new
@@ -878,6 +875,7 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "wSG+yBth9HCj0O1AdRBL+CJjtR4=",
                             PasswordSalt = "c0MJh5XS8DYQtkJavp5lsA==",
                             PhoneNumber = "000000000",
+                            ProfilePicture = new byte[] { 0 },
                             Username = "admin"
                         },
                         new
@@ -890,6 +888,7 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "000000011",
+                            ProfilePicture = new byte[] { 0 },
                             Username = "doctor1"
                         },
                         new
@@ -902,6 +901,7 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "000000031",
+                            ProfilePicture = new byte[] { 0 },
                             Username = "doctor2"
                         },
                         new
@@ -914,6 +914,7 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "000000051",
+                            ProfilePicture = new byte[] { 0 },
                             Username = "doctor3"
                         },
                         new
@@ -926,6 +927,7 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "000000061",
+                            ProfilePicture = new byte[] { 0 },
                             Username = "doctor4"
                         },
                         new
@@ -938,6 +940,7 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "3JVNj98T0GrBkWatJPLYoaIqBEA=",
                             PasswordSalt = "/gLAN9q37ktD4sUpWLjN1g==",
                             PhoneNumber = "000000002",
+                            ProfilePicture = new byte[] { 0 },
                             Username = "assistant"
                         });
                 });

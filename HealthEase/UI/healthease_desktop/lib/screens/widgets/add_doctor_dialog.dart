@@ -213,10 +213,10 @@ class _AddDoctorDialogState extends State<AddDoctorDialog> {
           "phoneNumber": phoneNumberController.text,
           "username": usernameController.text,
           "roleId": 2,
+          "profilePicture": _base64Image ?? "AA==",
         },
         "biography": biographyController.text,
         "title": titleController.text,
-        "profilePicture": _base64Image ?? "AA==",
       });
 
       if (context.mounted) {

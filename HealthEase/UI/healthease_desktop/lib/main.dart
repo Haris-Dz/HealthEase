@@ -115,6 +115,8 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 20),
                         TextFormField(
                           controller: _usernameController,
+                          textInputAction: TextInputAction.next,
+                          autofocus: true,
                           decoration: InputDecoration(
                             labelText: "Username",
                             prefixIcon: const Icon(
@@ -139,6 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 15),
                         TextFormField(
                           controller: _passwordController,
+                          textInputAction: TextInputAction.done,
                           obscureText: _obscurePassword,
                           decoration: InputDecoration(
                             labelText: "Password",
@@ -186,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           onPressed: () async {
                             if (_formKey.currentState?.validate() ?? false) {
-                              setState(() => _isLoggingIn = true);
+                              if (mounted) setState(() => _isLoggingIn = true);
 
                               var provider = Provider.of<UsersProvider>(
                                 context,

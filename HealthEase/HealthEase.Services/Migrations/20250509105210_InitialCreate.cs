@@ -125,6 +125,7 @@ namespace HealthEase.Services.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -217,7 +218,6 @@ namespace HealthEase.Services.Migrations
                     DoctorId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     Biography = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StateMachine = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -475,7 +475,7 @@ namespace HealthEase.Services.Migrations
                 values: new object[,]
                 {
                     { 1, null, "patient@mail.com", "Patient", false, "Patient", "O44iKOh/G//phQTcSDoD6bvVYJA=", "xJWRSHLNdETt+kIqCoBJFg==", "000000003", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "patient", true },
-                    { 2, null, "patient1@mail.com", "Patient1", false, "Patient1", "Y5PY6ThpfFSmRPQxSSgEEUfSMDc=", "0gXuSZgjHZnAhePy8gl7RQ==", "000000004", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "patient1", false },
+                    { 2, null, "patient1@mail.com", "Patient1", false, "Patient1", "Y5PY6ThpfFSmRPQxSSgEEUfSMDc=", "0gXuSZgjHZnAhePy8gl7RQ==", "000000004", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "patient1", true },
                     { 3, null, "patient2@mail.com", "Patient2", false, "Patient2", "qIpSzM06en3MCcODqz5q0JhtBJQ=", "+tA31RiJ9vyUd2Lgu5jgNQ==", "000000005", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "patient2", true }
                 });
 
@@ -502,27 +502,27 @@ namespace HealthEase.Services.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "UserId", "DeletionTime", "Email", "FirstName", "IsDeleted", "LastName", "PasswordHash", "PasswordSalt", "PhoneNumber", "Username" },
+                columns: new[] { "UserId", "DeletionTime", "Email", "FirstName", "IsDeleted", "LastName", "PasswordHash", "PasswordSalt", "PhoneNumber", "ProfilePicture", "Username" },
                 values: new object[,]
                 {
-                    { 1, null, "1", "1", false, "1", "XVDI7NKoOCtMiSrKR1uSSGWvA7o=", "NHVv+8KhAiQqFlz7k1P53Q==", "1", "1" },
-                    { 2, null, "admin@mail.com", "Admin", false, "Admin", "wSG+yBth9HCj0O1AdRBL+CJjtR4=", "c0MJh5XS8DYQtkJavp5lsA==", "000000000", "admin" },
-                    { 3, null, "doctor1@mail.com", "Doctor1", false, "Doctor1", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000011", "doctor1" },
-                    { 4, null, "doctor2@mail.com", "Doctor2", false, "Doctor2", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000031", "doctor2" },
-                    { 5, null, "doctor3@mail.com", "Doctor3", false, "Doctor3", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000051", "doctor3" },
-                    { 6, null, "doctor4@mail.com", "Doctor4", false, "Doctor4", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000061", "doctor4" },
-                    { 7, null, "assistant@mail.com", "Assistant", false, "Assistant", "3JVNj98T0GrBkWatJPLYoaIqBEA=", "/gLAN9q37ktD4sUpWLjN1g==", "000000002", "assistant" }
+                    { 1, null, "1", "1", false, "1", "XVDI7NKoOCtMiSrKR1uSSGWvA7o=", "NHVv+8KhAiQqFlz7k1P53Q==", "1", new byte[] { 0 }, "1" },
+                    { 2, null, "admin@mail.com", "Admin", false, "Admin", "wSG+yBth9HCj0O1AdRBL+CJjtR4=", "c0MJh5XS8DYQtkJavp5lsA==", "000000000", new byte[] { 0 }, "admin" },
+                    { 3, null, "doctor1@mail.com", "Doctor1", false, "Doctor1", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000011", new byte[] { 0 }, "doctor1" },
+                    { 4, null, "doctor2@mail.com", "Doctor2", false, "Doctor2", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000031", new byte[] { 0 }, "doctor2" },
+                    { 5, null, "doctor3@mail.com", "Doctor3", false, "Doctor3", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000051", new byte[] { 0 }, "doctor3" },
+                    { 6, null, "doctor4@mail.com", "Doctor4", false, "Doctor4", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000061", new byte[] { 0 }, "doctor4" },
+                    { 7, null, "assistant@mail.com", "Assistant", false, "Assistant", "3JVNj98T0GrBkWatJPLYoaIqBEA=", "/gLAN9q37ktD4sUpWLjN1g==", "000000002", new byte[] { 0 }, "assistant" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Doctors",
-                columns: new[] { "DoctorId", "Biography", "DeletionTime", "IsDeleted", "ProfilePicture", "StateMachine", "Title", "UserId" },
+                columns: new[] { "DoctorId", "Biography", "DeletionTime", "IsDeleted", "StateMachine", "Title", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "Dr. Doctor1 is an experienced specialist in internal medicine. He has dedicated over 10 years to diagnosing and treating a wide range of chronic diseases, with a focus on patient-centered care and health education.", null, false, new byte[] { 0 }, "draft", "Dr. med.", 3 },
-                    { 2, "Dr. Doctor2 is a double specialist in cardiology and neurology. With a strong academic background and clinical expertise, she combines knowledge from both fields to provide comprehensive diagnostic and treatment solutions.", null, false, new byte[] { 0 }, "active", "Dr. sci. med.", 4 },
-                    { 3, "Dr. Doctor3 is a pediatrician with more than 7 years of experience in treating children of all ages. Known for a compassionate approach and excellent communication with both kids and parents.", null, false, new byte[] { 0 }, "active", "Mr. sci. med.", 5 },
-                    { 4, "Dr. Doctor4 is a skilled dermatologist who has worked extensively with skin conditions ranging from acne to rare autoimmune diseases. She emphasizes early diagnosis and personalized treatment plans.", null, false, new byte[] { 0 }, "active", "Dr. med.", 6 }
+                    { 1, "Dr. Doctor1 is an experienced specialist in internal medicine. He has dedicated over 10 years to diagnosing and treating a wide range of chronic diseases, with a focus on patient-centered care and health education.", null, false, "draft", "Dr. med.", 3 },
+                    { 2, "Dr. Doctor2 is a double specialist in cardiology and neurology. With a strong academic background and clinical expertise, she combines knowledge from both fields to provide comprehensive diagnostic and treatment solutions.", null, false, "active", "Dr. sci. med.", 4 },
+                    { 3, "Dr. Doctor3 is a pediatrician with more than 7 years of experience in treating children of all ages. Known for a compassionate approach and excellent communication with both kids and parents.", null, false, "active", "Mr. sci. med.", 5 },
+                    { 4, "Dr. Doctor4 is a skilled dermatologist who has worked extensively with skin conditions ranging from acne to rare autoimmune diseases. She emphasizes early diagnosis and personalized treatment plans.", null, false, "active", "Dr. med.", 6 }
                 });
 
             migrationBuilder.InsertData(

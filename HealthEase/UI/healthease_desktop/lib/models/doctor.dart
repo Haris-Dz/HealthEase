@@ -8,7 +8,6 @@ part 'doctor.g.dart';
 class Doctor {
   int? doctorId;
   int? userId;
-  String? profilePicture;
   String? biography;
   String? title;
   String? stateMachine;
@@ -18,8 +17,7 @@ class Doctor {
 
   Doctor();
 
-  factory Doctor.fromJson(Map<String, dynamic> json) =>
-      _$DoctorFromJson(json);
+  factory Doctor.fromJson(Map<String, dynamic> json) => _$DoctorFromJson(json);
 
-      Map<String, dynamic> toJson() => _$DoctorToJson(this);
+  Map<String, dynamic> toJson() => _$DoctorToJson(this);
 }
