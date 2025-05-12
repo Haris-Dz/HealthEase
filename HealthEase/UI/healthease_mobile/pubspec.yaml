@@ -40,6 +40,8 @@ dependencies:
   intl: ^0.20.2
   provider: ^6.1.5
   image_picker: ^1.1.2
+  flutter_paypal_payment: ^1.0.8
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:

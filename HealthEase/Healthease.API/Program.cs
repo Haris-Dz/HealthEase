@@ -55,7 +55,6 @@ builder.Services.AddSwaggerGen(c =>
 
 });
 Env.Load();
-
 var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 builder.Services.AddDbContext<HealthEaseContext>(options => options.UseSqlServer(connectionString));
 

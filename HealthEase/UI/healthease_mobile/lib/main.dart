@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:healthease_mobile/providers/appointment_types_provider.dart';
 import 'package:healthease_mobile/providers/appointments_provider.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
@@ -11,7 +14,9 @@ import 'package:healthease_mobile/screens/doctors_screen.dart';
 import 'package:healthease_mobile/screens/register_screen.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //await dotenv.load(fileName: ".env");
   runApp(
     MultiProvider(
       providers: [
