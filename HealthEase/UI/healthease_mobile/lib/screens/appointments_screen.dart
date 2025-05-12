@@ -4,6 +4,8 @@ import 'package:healthease_mobile/models/appointment.dart';
 import 'package:healthease_mobile/providers/appointments_provider.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
 import 'package:healthease_mobile/providers/utils.dart';
+import 'package:flutter_paypal_payment/flutter_paypal_payment.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({super.key});
@@ -150,9 +152,99 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 12),
                               child: ElevatedButton.icon(
-                                onPressed: () {
-                                  // TODO: Payment screen
+                                onPressed: () async {
+                                  var clientId =
+                                      "AURtCEWnvA03YzChyXThPXeyY2beJP1RFJlUAzpjk1tBD8Xu166eActAUmwQmf_moWiVAzmxVVCMPdFp";
+                                  var secret =
+                                      "ECC5-TP5yuNrOYTOXPUvGg6m49UdvPmKOKb3yhG2_r-R-5rdHr7Ryj0NuFWkA6zGKIXWzvk2bmCcpxaw";
+
+                                  if (clientId == null || secret == null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          "PayPal credentials missing",
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  final appointment = a;
+                                  final price =
+                                      appointment.appointmentType?.price
+                                          ?.toStringAsFixed(2) ??
+                                      "0.00";
+
+                                  final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => PaypalCheckoutView(
+                                            sandboxMode: true,
+                                            clientId: clientId,
+                                            secretKey: secret,
+                                            transactions: [
+                                              {
+                                                "amount": {
+                                                  "total": price,
+                                                  "currency": "USD",
+                                                  "details": {
+                                                    "subtotal": price,
+                                                    "shipping": '0',
+                                                    "shipping_discount": 0,
+                                                  },
+                                                },
+                                                "description":
+                                                    "Appointment payment",
+                                                "item_list": {
+                                                  "items": [
+                                                    {
+                                                      "name":
+                                                          appointment
+                                                              .appointmentType
+                                                              ?.name ??
+                                                          "Appointment",
+                                                      "quantity": 1,
+                                                      "price": price,
+                                                      "currency": "USD",
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                            note: "Thank you for your payment",
+                                            onSuccess: (Map params) async {
+                                              // TODO: call API to mark appointment as paid
+                                              Navigator.pop(context, true);
+                                              showSuccessAlert(
+                                                context,
+                                                "Payment successful",
+                                              );
+                                            },
+                                            onError: (error) {
+                                              Navigator.pop(context);
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    "Payment error: $error",
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            onCancel: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                    ),
+                                  );
+
+                                  if (result == true) {
+                                    _fetchAppointments(); // refresh data
+                                  }
                                 },
+
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue.shade800,
                                   foregroundColor: Colors.white,
