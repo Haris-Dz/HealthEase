@@ -9,7 +9,7 @@ namespace HealthEase.Model.Requests
 
         public int UserId { get; set; }
         public DayOfWeek Day { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public TimeSpan? StartTime { get; set; }
+        public TimeSpan? EndTime { get; set; }
     }
 }

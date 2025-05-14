@@ -17,7 +17,6 @@ class AppointmentsProvider extends BaseProvider<Appointment> {
       Uri.parse("${BaseProvider.baseUrl}Appointment/status-options"),
       headers: createHeaders(),
     );
-    print(response);
     if (response.statusCode == 200) {
       final List<dynamic> body = jsonDecode(response.body);
       return body.map((e) => e.toString()).toList();

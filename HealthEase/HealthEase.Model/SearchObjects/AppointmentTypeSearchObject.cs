@@ -6,5 +6,6 @@ namespace HealthEase.Model.SearchObjects
 {
     public class AppointmentTypeSearchObject:BaseSearchObject
     {
+        public string? NameGTE { get; set; }
     }
 }

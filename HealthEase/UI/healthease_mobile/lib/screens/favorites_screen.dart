@@ -53,7 +53,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     }
 
     final allDoctors = await doctorProvider.get(
-      retrieveAll: true,
       includeTables: "User,DoctorSpecializations,User.WorkingHours",
     );
     if (!mounted) return;

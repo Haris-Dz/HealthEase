@@ -19,6 +19,16 @@ namespace HealthEase.Services
         {
 
         }
+        public override IQueryable<AppointmentType> AddFilter(AppointmentTypeSearchObject search, IQueryable<AppointmentType> query)
+        {
+            if (!string.IsNullOrEmpty(search?.NameGTE))
+            {
+                query = query.Where(x => x.Name.ToLower().StartsWith(search.NameGTE));
+            }
+
+            query = query.Where(x => !x.IsDeleted);
+            return query;
+        }
 
     }
 }

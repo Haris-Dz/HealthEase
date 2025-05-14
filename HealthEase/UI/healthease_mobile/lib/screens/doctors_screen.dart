@@ -43,7 +43,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       context,
       listen: false,
     );
-    final specs = await specProvider.get(retrieveAll: true);
+    final specs = await specProvider.get();
     _specializations = specs.resultList;
   }
 
@@ -67,7 +67,6 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
         'SpecializationIds': _selectedSpecializationIds,
     };
     final result = await provider.get(
-      retrieveAll: true,
       includeTables: "User,DoctorSpecializations,User.WorkingHours",
       filter: filter,
     );
@@ -108,7 +107,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     final workingHours = doctor.workingHours;
     String workingText =
         workingHours != null && workingHours.isNotEmpty
-            ? "Mon-Fri: ${workingHours.first.startTime} - ${workingHours.first.endTime}"
+            ? "${workingHours.first.startTime} - ${workingHours.first.endTime}"
             : "";
 
     final isFavorite = _favoriteDoctorIds.contains(doctor.doctorId);

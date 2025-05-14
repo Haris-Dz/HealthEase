@@ -32,7 +32,6 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     try {
       final result = await provider.get(
         filter: {"patientId": AuthProvider.patientId.toString()},
-        retrieveAll: true,
       );
 
       if (!mounted) return;

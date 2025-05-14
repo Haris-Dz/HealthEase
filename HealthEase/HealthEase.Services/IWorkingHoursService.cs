@@ -12,5 +12,6 @@ namespace HealthEase.Services
 {
     public interface IWorkingHoursService : ICRUDServiceAsync<WorkingHoursDTO, WorkingHoursSearchObject, WorkingHoursUpsertRequest, WorkingHoursUpsertRequest>
     {
+        Task<List<WorkingHoursDTO>> BulkUpsertAsync(List<WorkingHoursUpsertRequest> requestList);
     }
 }

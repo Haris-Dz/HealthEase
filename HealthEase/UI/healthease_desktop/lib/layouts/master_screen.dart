@@ -4,6 +4,7 @@ import 'package:healthease_desktop/providers/utils.dart';
 import 'package:healthease_desktop/screens/appointments_screen.dart';
 import 'package:healthease_desktop/screens/dashboard_screen.dart';
 import 'package:healthease_desktop/screens/doctors_screen.dart';
+import 'package:healthease_desktop/screens/management_screen.dart';
 import 'package:healthease_desktop/screens/my_profile_screen.dart';
 import 'package:healthease_desktop/screens/users_screen.dart';
 import 'package:healthease_desktop/main.dart';
@@ -175,6 +176,12 @@ class _MasterScreenState extends State<MasterScreen> {
                           Icons.health_and_safety_outlined,
                           const DoctorsScreen(),
                           "Doctors",
+                        ),
+                        _buildSidebarItem(
+                          "Management",
+                          Icons.settings,
+                          const ManagementScreen(),
+                          "Management",
                         ),
                         _buildSidebarItem(
                           "Reports",
