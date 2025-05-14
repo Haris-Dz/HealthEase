@@ -123,7 +123,10 @@ namespace HealthEase.Services.BaseServices
         {
             return query;
         }
-
+        public virtual Task ValidateEntityAccessAsync(TDbEntity entity, CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
         public virtual async Task<TModel> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var entity = await Context.Set<TDbEntity>().FindAsync(id, cancellationToken);
@@ -133,6 +136,7 @@ namespace HealthEase.Services.BaseServices
             }
             if (entity != null)
             {
+                await ValidateEntityAccessAsync(entity, cancellationToken);
                 var mappedObj = Mapper.Map<TModel>(entity);
                 await CustomMapResponseAsync(mappedObj, cancellationToken);
                 return mappedObj;

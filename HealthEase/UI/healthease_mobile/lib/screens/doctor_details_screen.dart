@@ -21,7 +21,7 @@ class DoctorDetailsScreen extends StatelessWidget {
     final workingHours = doctor.workingHours;
     String workingText =
         workingHours != null && workingHours.isNotEmpty
-            ? "Mon–Fri / ${workingHours.first.startTime} - ${workingHours.first.endTime}"
+            ? "${workingHours.first.startTime} - ${workingHours.first.endTime}"
             : "Not specified";
 
     final specializations =

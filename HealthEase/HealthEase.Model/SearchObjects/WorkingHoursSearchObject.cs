@@ -6,5 +6,6 @@ namespace HealthEase.Model.SearchObjects
 {
     public class WorkingHoursSearchObject : BaseSearchObject
     {
+        public int? UserId { get; set; }
     }
 }

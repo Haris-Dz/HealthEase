@@ -258,8 +258,8 @@ namespace HealthEase.Services.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
-                    StartTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    EndTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    StartTime = table.Column<TimeSpan>(type: "time", nullable: true),
+                    EndTime = table.Column<TimeSpan>(type: "time", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },

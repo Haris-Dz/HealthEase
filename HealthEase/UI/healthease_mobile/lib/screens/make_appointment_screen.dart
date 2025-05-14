@@ -63,18 +63,30 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
     });
   }
 
-  List<int> get workingDays =>
-      widget.doctor.workingHours?.map((w) => w.day!).toList() ?? [];
+  List<int> get workingDays {
+    final raw = widget.doctor.workingHours;
+    if (raw == null) return [];
+    return raw
+        .where((w) => w.day != null && w.startTime != null && w.endTime != null)
+        .map((w) => w.day!)
+        .toSet()
+        .toList();
+  }
 
   List<TimeOfDay> getWorkingHoursForDay(DateTime date) {
     final weekday = date.weekday;
+
     final hours = widget.doctor.workingHours?.firstWhere(
-      (e) => e.day == weekday,
+      (e) => e.day == weekday && e.startTime != null && e.endTime != null,
       orElse: () => WorkingHours(),
     );
 
-    final start = _parseTime(hours?.startTime);
-    final end = _parseTime(hours?.endTime);
+    if (hours == null || hours.startTime == null || hours.endTime == null) {
+      return [];
+    }
+
+    final start = _parseTime(hours.startTime);
+    final end = _parseTime(hours.endTime);
     if (start == null || end == null) return [];
 
     List<TimeOfDay> slots = [];
@@ -120,10 +132,19 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
   }
 
   DateTime getFirstSelectableDate() {
+    if (workingDays.isEmpty) {
+      return DateTime.now();
+    }
+
     DateTime date = DateTime.now();
+    int attempts = 0;
+
     while (!workingDays.contains(date.weekday) || isDayFullyBooked(date)) {
       date = date.add(const Duration(days: 1));
+      attempts++;
+      if (attempts > 30) break; // fallback
     }
+
     return date;
   }
 
@@ -141,14 +162,12 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
 
       await _appointmentsProvider.insert(request);
       if (!mounted) return;
-      if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const AppointmentsScreen()),
-        );
-        if (!mounted) return;
-        showSuccessAlert(context, "Successfully booked an appointment");
-      }
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const AppointmentsScreen()),
+      );
+      if (!mounted) return;
+      showSuccessAlert(context, "Successfully booked an appointment");
     } catch (e) {
       if (!mounted) return;
       showErrorAlert(context, "Error booking appointment: $e");
@@ -164,6 +183,31 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
       child:
           _isLoading
               ? const Center(child: CircularProgressIndicator())
+              : (widget.doctor.workingHours == null ||
+                  widget.doctor.workingHours!.isEmpty)
+              ? const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.block, size: 60, color: Colors.redAccent),
+                        const SizedBox(height: 16),
+                        const Text(
+                          "This doctor has no available working hours at the moment.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
               : SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -179,14 +223,16 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
                       value: _selectedType,
                       hint: const Text("Select type"),
                       items:
-                          _types.map((type) {
-                            return DropdownMenuItem(
-                              value: type,
-                              child: Text(
-                                "${type.name} - ${type.price?.toStringAsFixed(2) ?? '0.00'} \$",
-                              ),
-                            );
-                          }).toList(),
+                          _types
+                              .map(
+                                (type) => DropdownMenuItem(
+                                  value: type,
+                                  child: Text(
+                                    "${type.name} - ${type.price?.toStringAsFixed(2) ?? '0.00'} \$",
+                                  ),
+                                ),
+                              )
+                              .toList(),
                       onChanged:
                           (value) => setState(() => _selectedType = value),
                     ),

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthEase.Services.Migrations
 {
     [DbContext(typeof(HealthEaseContext))]
-    [Migration("20250513205415_InitialCreate")]
+    [Migration("20250514215601_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -1039,13 +1039,13 @@ namespace HealthEase.Services.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan>("EndTime")
+                    b.Property<TimeSpan?>("EndTime")
                         .HasColumnType("time");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<TimeSpan>("StartTime")
+                    b.Property<TimeSpan?>("StartTime")
                         .HasColumnType("time");
 
                     b.Property<int>("UserId")

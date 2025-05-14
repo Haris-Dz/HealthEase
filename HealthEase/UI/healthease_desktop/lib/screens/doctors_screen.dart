@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:healthease_desktop/providers/utils.dart';
 import 'package:healthease_desktop/screens/widgets/add_doctor_dialog.dart';
 import 'package:healthease_desktop/screens/widgets/edit_doctor_dialog.dart';
+import 'package:healthease_desktop/screens/widgets/edit_working_hours_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:healthease_desktop/models/doctor.dart';
 import 'package:healthease_desktop/providers/doctors_provider.dart';
@@ -88,6 +89,16 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
           if (!mounted) return;
           await showSuccessAlert(context, "Doctor successfully restored!");
           break;
+        case 'working_hours':
+          final result = await showDialog(
+            context: context,
+            builder:
+                (context) => EditWorkingHoursDialog(userId: doctor.userId!),
+          );
+          if (result == true) {
+            await showSuccessAlert(context, "Working hours updated.");
+          }
+          break;
 
         case 'delete':
           final confirmed = await showCustomConfirmDialog(
@@ -144,6 +155,12 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
         _popupItem('activate', Icons.check_circle, Colors.green, 'Activate'),
         _popupItem('update', Icons.edit, Colors.orange, 'Update'),
         _popupItem('delete', Icons.delete, Colors.red, 'Delete'),
+        _popupItem(
+          'working_hours',
+          Icons.schedule,
+          Colors.indigo,
+          'Edit Working Hours',
+        ),
       ],
       if (state == 'hidden')
         _popupItem('restore', Icons.restore, Colors.blue, 'Restore'),
