@@ -74,8 +74,6 @@ class DoctorDetailsScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
-
-                  // Radno vrijeme
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -84,8 +82,6 @@ class DoctorDetailsScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 12),
-
-                  // Ocjene i komentari
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [

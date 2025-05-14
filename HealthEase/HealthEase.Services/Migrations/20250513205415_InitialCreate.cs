@@ -54,21 +54,6 @@ namespace HealthEase.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentStatuses",
-                columns: table => new
-                {
-                    PaymentStatusId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PaymentStatuses", x => x.PaymentStatusId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PrescriptionStatuses",
                 columns: table => new
                 {
@@ -180,35 +165,6 @@ namespace HealthEase.Services.Migrations
                         principalTable: "Patients",
                         principalColumn: "PatientId",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Payments",
-                columns: table => new
-                {
-                    PaymentId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<double>(type: "float", nullable: true),
-                    PatientId = table.Column<int>(type: "int", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    PaymentStatusId = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payments", x => x.PaymentId);
-                    table.ForeignKey(
-                        name: "FK_Payments_Patients_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patients",
-                        principalColumn: "PatientId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Payments_PaymentStatuses_PaymentStatusId",
-                        column: x => x.PaymentStatusId,
-                        principalTable: "PaymentStatuses",
-                        principalColumn: "PaymentStatusId");
                 });
 
             migrationBuilder.CreateTable(
@@ -458,6 +414,39 @@ namespace HealthEase.Services.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Transactions",
+                columns: table => new
+                {
+                    TransactionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Amount = table.Column<double>(type: "float", nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PaymentId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PayerId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PatientId = table.Column<int>(type: "int", nullable: false),
+                    AppointmentId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transactions", x => x.TransactionId);
+                    table.ForeignKey(
+                        name: "FK_Transactions_Appointments_AppointmentId",
+                        column: x => x.AppointmentId,
+                        principalTable: "Appointments",
+                        principalColumn: "AppointmentId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Transactions_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "AppointmentTypes",
                 columns: new[] { "AppointmentTypeId", "DeletionTime", "IsDeleted", "Name", "Price" },
@@ -474,9 +463,9 @@ namespace HealthEase.Services.Migrations
                 columns: new[] { "PatientId", "DeletionTime", "Email", "FirstName", "IsDeleted", "LastName", "PasswordHash", "PasswordSalt", "PhoneNumber", "ProfilePicture", "RegistrationDate", "Username", "isActive" },
                 values: new object[,]
                 {
-                    { 1, null, "patient@mail.com", "Patient", false, "Patient", "O44iKOh/G//phQTcSDoD6bvVYJA=", "xJWRSHLNdETt+kIqCoBJFg==", "000000003", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "patient", true },
-                    { 2, null, "patient1@mail.com", "Patient1", false, "Patient1", "Y5PY6ThpfFSmRPQxSSgEEUfSMDc=", "0gXuSZgjHZnAhePy8gl7RQ==", "000000004", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "patient1", true },
-                    { 3, null, "patient2@mail.com", "Patient2", false, "Patient2", "qIpSzM06en3MCcODqz5q0JhtBJQ=", "+tA31RiJ9vyUd2Lgu5jgNQ==", "000000005", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "patient2", true }
+                    { 1, null, "mark.b@mail.com", "Mark", false, "Brown", "O44iKOh/G//phQTcSDoD6bvVYJA=", "xJWRSHLNdETt+kIqCoBJFg==", "062123456", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "mobile", true },
+                    { 2, null, "lena.b@mail.com", "Lena", false, "Burgess", "Y5PY6ThpfFSmRPQxSSgEEUfSMDc=", "0gXuSZgjHZnAhePy8gl7RQ==", "062111222", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "lenab", true },
+                    { 3, null, "donald.f@mail.com", "Donald", false, "Foster", "qIpSzM06en3MCcODqz5q0JhtBJQ=", "+tA31RiJ9vyUd2Lgu5jgNQ==", "062345678", null, new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified), "donaldf", true }
                 });
 
             migrationBuilder.InsertData(
@@ -506,12 +495,12 @@ namespace HealthEase.Services.Migrations
                 values: new object[,]
                 {
                     { 1, null, "1", "1", false, "1", "XVDI7NKoOCtMiSrKR1uSSGWvA7o=", "NHVv+8KhAiQqFlz7k1P53Q==", "1", new byte[] { 0 }, "1" },
-                    { 2, null, "admin@mail.com", "Admin", false, "Admin", "wSG+yBth9HCj0O1AdRBL+CJjtR4=", "c0MJh5XS8DYQtkJavp5lsA==", "000000000", new byte[] { 0 }, "admin" },
-                    { 3, null, "doctor1@mail.com", "Doctor1", false, "Doctor1", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000011", new byte[] { 0 }, "doctor1" },
-                    { 4, null, "doctor2@mail.com", "Doctor2", false, "Doctor2", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000031", new byte[] { 0 }, "doctor2" },
-                    { 5, null, "doctor3@mail.com", "Doctor3", false, "Doctor3", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000051", new byte[] { 0 }, "doctor3" },
-                    { 6, null, "doctor4@mail.com", "Doctor4", false, "Doctor4", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "000000061", new byte[] { 0 }, "doctor4" },
-                    { 7, null, "assistant@mail.com", "Assistant", false, "Assistant", "3JVNj98T0GrBkWatJPLYoaIqBEA=", "/gLAN9q37ktD4sUpWLjN1g==", "000000002", new byte[] { 0 }, "assistant" }
+                    { 2, null, "admin@mail.com", "Admin", false, "Test", "wSG+yBth9HCj0O1AdRBL+CJjtR4=", "c0MJh5XS8DYQtkJavp5lsA==", "000000000", new byte[] { 0 }, "desktop" },
+                    { 3, null, "robert.t@mail.com", "Robert", false, "Trahan", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "062543234", new byte[] { 0 }, "doctor" },
+                    { 4, null, "paul.u@mail.com", "Paul", false, "Ulrey", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "062222333", new byte[] { 0 }, "doctor1" },
+                    { 5, null, "james.l@mail.com", "James", false, "Lozano", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "062958342", new byte[] { 0 }, "doctor2" },
+                    { 6, null, "helen.e@mail.com", "Helen", false, "Evans", "uAQkJu5IuKT3FArAvq4E5KbBzRI=", "ppASfJlw8D6P+mNsl7bqMA==", "062332123", new byte[] { 0 }, "doctor3" },
+                    { 7, null, "sabrina.g@mail.com", "Sabrina", false, "Gallagher", "3JVNj98T0GrBkWatJPLYoaIqBEA=", "/gLAN9q37ktD4sUpWLjN1g==", "062532195", new byte[] { 0 }, "assistant" }
                 });
 
             migrationBuilder.InsertData(
@@ -636,16 +625,6 @@ namespace HealthEase.Services.Migrations
                 column: "DoctorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_PatientId",
-                table: "Payments",
-                column: "PatientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payments_PaymentStatusId",
-                table: "Payments",
-                column: "PaymentStatusId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Prescriptions_MedicalRecordId",
                 table: "Prescriptions",
                 column: "MedicalRecordId");
@@ -676,6 +655,17 @@ namespace HealthEase.Services.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Transactions_AppointmentId",
+                table: "Transactions",
+                column: "AppointmentId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_PatientId",
+                table: "Transactions",
+                column: "PatientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleId",
                 table: "UserRoles",
                 column: "RoleId");
@@ -695,9 +685,6 @@ namespace HealthEase.Services.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Appointments");
-
-            migrationBuilder.DropTable(
                 name: "DoctorSpecializations");
 
             migrationBuilder.DropTable(
@@ -707,13 +694,13 @@ namespace HealthEase.Services.Migrations
                 name: "PatientDoctorFavorites");
 
             migrationBuilder.DropTable(
-                name: "Payments");
-
-            migrationBuilder.DropTable(
                 name: "Prescriptions");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "Transactions");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");
@@ -722,16 +709,7 @@ namespace HealthEase.Services.Migrations
                 name: "WorkingHours");
 
             migrationBuilder.DropTable(
-                name: "AppointmentTypes");
-
-            migrationBuilder.DropTable(
                 name: "Specializations");
-
-            migrationBuilder.DropTable(
-                name: "Doctors");
-
-            migrationBuilder.DropTable(
-                name: "PaymentStatuses");
 
             migrationBuilder.DropTable(
                 name: "MedicalRecords");
@@ -740,13 +718,22 @@ namespace HealthEase.Services.Migrations
                 name: "PrescriptionStatuses");
 
             migrationBuilder.DropTable(
+                name: "Appointments");
+
+            migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "AppointmentTypes");
+
+            migrationBuilder.DropTable(
+                name: "Doctors");
 
             migrationBuilder.DropTable(
                 name: "Patients");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

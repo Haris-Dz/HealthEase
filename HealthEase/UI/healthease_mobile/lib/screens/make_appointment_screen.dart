@@ -200,7 +200,7 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
                       controller: _noteController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: "Write a short note (optional)...",
+                        hintText: "Write a short note ...",
                       ),
                       maxLines: 2,
                     ),

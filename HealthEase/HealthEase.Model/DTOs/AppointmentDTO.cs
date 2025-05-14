@@ -18,11 +18,11 @@ namespace HealthEase.Model.DTOs
         public DateTime? PaymentDate { get; set; }
 
         public int DoctorId { get; set; }
-        public DoctorDTO Doctor { get; set; } = null!;
+        public DoctorDTO? Doctor { get; set; }
 
         public int PatientId { get; set; }
-        public PatientDTO Patient { get; set; } = null!;
+        public PatientDTO? Patient { get; set; }
         public int AppointmentTypeId { get; set; }
-        public virtual AppointmentTypeDTO AppointmentType { get; set; } = null!;
+        public virtual AppointmentTypeDTO? AppointmentType { get; set; } 
     }
 }

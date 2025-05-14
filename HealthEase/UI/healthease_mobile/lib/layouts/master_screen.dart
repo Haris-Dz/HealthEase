@@ -6,6 +6,7 @@ import 'package:healthease_mobile/screens/appointments_screen.dart';
 import 'package:healthease_mobile/screens/doctors_screen.dart';
 import 'package:healthease_mobile/screens/favorites_screen.dart';
 import 'package:healthease_mobile/screens/my_profile_screen.dart';
+import 'package:healthease_mobile/screens/payments_screen.dart';
 import 'package:healthease_mobile/screens/placeholder_screen.dart';
 
 class MasterScreen extends StatelessWidget {
@@ -142,14 +143,7 @@ class MasterScreen extends StatelessWidget {
                   screen: const DoctorsScreen(),
                   currentRoute: currentRoute,
                 ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.account_circle_outlined,
-                  title: "My Profile",
-                  route: "My Profile",
-                  screen: const MyProfileScreen(),
-                  currentRoute: currentRoute,
-                ),
+
                 _buildDrawerItem(
                   context,
                   icon: Icons.favorite_border,
@@ -168,6 +162,14 @@ class MasterScreen extends StatelessWidget {
                 ),
                 _buildDrawerItem(
                   context,
+                  icon: Icons.payment,
+                  title: "Payments",
+                  route: "Payments",
+                  screen: const PaymentsScreen(),
+                  currentRoute: currentRoute,
+                ),
+                _buildDrawerItem(
+                  context,
                   icon: Icons.medical_information_outlined,
                   title: "Medical Records",
                   route: "Medical Records",
@@ -182,20 +184,21 @@ class MasterScreen extends StatelessWidget {
                   screen: const PlaceholderScreen(),
                   currentRoute: currentRoute,
                 ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.payment,
-                  title: "Payments",
-                  route: "Payments",
-                  screen: const PlaceholderScreen(),
-                  currentRoute: currentRoute,
-                ),
+
                 _buildDrawerItem(
                   context,
                   icon: Icons.notifications_none_outlined,
                   title: "Notifications",
                   route: "Notifications",
                   screen: const PlaceholderScreen(),
+                  currentRoute: currentRoute,
+                ),
+                _buildDrawerItem(
+                  context,
+                  icon: Icons.account_circle_outlined,
+                  title: "My Profile",
+                  route: "My Profile",
+                  screen: const MyProfileScreen(),
                   currentRoute: currentRoute,
                 ),
               ],

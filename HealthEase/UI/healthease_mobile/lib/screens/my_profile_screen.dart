@@ -38,13 +38,21 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     }
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(String label, String value, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("$label: ", style: const TextStyle(fontWeight: FontWeight.bold)),
+          Icon(icon, size: 18, color: Colors.blueAccent),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 100,
+            child: Text(
+              "$label:",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
           Expanded(
             child: Text(value, maxLines: 2, overflow: TextOverflow.ellipsis),
           ),
@@ -64,7 +72,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               : SingleChildScrollView(
                 padding: const EdgeInsets.all(20),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
                       child: CircleAvatar(
@@ -82,54 +90,67 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Text(
-                      "${_patient?['firstName'] ?? '-'} ${_patient?['lastName'] ?? '-'}",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            "${_patient?['firstName'] ?? '-'} ${_patient?['lastName'] ?? '-'}",
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _patient?['email'] ?? '-',
+                            style: const TextStyle(color: Colors.grey),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _patient?['email'] ?? '-',
-                      style: const TextStyle(color: Colors.grey),
-                      textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
-
                     const Divider(thickness: 1),
-                    _buildInfoRow("Username", _patient?['username'] ?? "-"),
-                    _buildInfoRow("Phone", _patient?['phoneNumber'] ?? "-"),
+                    const SizedBox(height: 10),
+                    _buildInfoRow(
+                      "Username",
+                      _patient?['username'] ?? "-",
+                      Icons.person,
+                    ),
+                    _buildInfoRow(
+                      "Phone",
+                      _patient?['phoneNumber'] ?? "-",
+                      Icons.phone,
+                    ),
                     _buildInfoRow(
                       "Registered",
                       (_patient?['registrationDate'] as String)
                           .split('T')
                           .first,
+                      Icons.calendar_month,
                     ),
 
                     const SizedBox(height: 30),
-
-                    ElevatedButton.icon(
-                      onPressed: () async {
-                        final result = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const EditProfileScreen(),
+                    Center(
+                      child: ElevatedButton.icon(
+                        onPressed: () async {
+                          final result = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const EditProfileScreen(),
+                            ),
+                          );
+                          if (result == true) await _loadPatient();
+                        },
+                        icon: const Icon(Icons.edit),
+                        label: const Text("Edit Profile"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade700,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 14,
                           ),
-                        );
-
-                        if (result == true) {
-                          await _loadPatient();
-                        }
-                      },
-                      icon: const Icon(Icons.edit),
-                      label: const Text("Edit Profile"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade700,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 14,
                         ),
                       ),
                     ),

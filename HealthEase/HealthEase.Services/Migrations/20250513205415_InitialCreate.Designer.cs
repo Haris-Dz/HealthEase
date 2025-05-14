@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthEase.Services.Migrations
 {
     [DbContext(typeof(HealthEaseContext))]
-    [Migration("20250509105210_InitialCreate")]
+    [Migration("20250513205415_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -465,43 +465,43 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             PatientId = 1,
-                            Email = "patient@mail.com",
-                            FirstName = "Patient",
+                            Email = "mark.b@mail.com",
+                            FirstName = "Mark",
                             IsDeleted = false,
-                            LastName = "Patient",
+                            LastName = "Brown",
                             PasswordHash = "O44iKOh/G//phQTcSDoD6bvVYJA=",
                             PasswordSalt = "xJWRSHLNdETt+kIqCoBJFg==",
-                            PhoneNumber = "000000003",
+                            PhoneNumber = "062123456",
                             RegistrationDate = new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified),
-                            Username = "patient",
+                            Username = "mobile",
                             isActive = true
                         },
                         new
                         {
                             PatientId = 2,
-                            Email = "patient1@mail.com",
-                            FirstName = "Patient1",
+                            Email = "lena.b@mail.com",
+                            FirstName = "Lena",
                             IsDeleted = false,
-                            LastName = "Patient1",
+                            LastName = "Burgess",
                             PasswordHash = "Y5PY6ThpfFSmRPQxSSgEEUfSMDc=",
                             PasswordSalt = "0gXuSZgjHZnAhePy8gl7RQ==",
-                            PhoneNumber = "000000004",
+                            PhoneNumber = "062111222",
                             RegistrationDate = new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified),
-                            Username = "patient1",
+                            Username = "lenab",
                             isActive = true
                         },
                         new
                         {
                             PatientId = 3,
-                            Email = "patient2@mail.com",
-                            FirstName = "Patient2",
+                            Email = "donald.f@mail.com",
+                            FirstName = "Donald",
                             IsDeleted = false,
-                            LastName = "Patient2",
+                            LastName = "Foster",
                             PasswordHash = "qIpSzM06en3MCcODqz5q0JhtBJQ=",
                             PasswordSalt = "+tA31RiJ9vyUd2Lgu5jgNQ==",
-                            PhoneNumber = "000000005",
+                            PhoneNumber = "062345678",
                             RegistrationDate = new DateTime(2025, 4, 14, 22, 13, 13, 0, DateTimeKind.Unspecified),
-                            Username = "patient2",
+                            Username = "donaldf",
                             isActive = true
                         });
                 });
@@ -528,64 +528,6 @@ namespace HealthEase.Services.Migrations
                     b.HasIndex("DoctorId");
 
                     b.ToTable("PatientDoctorFavorites");
-                });
-
-            modelBuilder.Entity("HealthEase.Services.Database.Payment", b =>
-                {
-                    b.Property<int>("PaymentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
-
-                    b.Property<double?>("Amount")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("PaymentStatusId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PaymentId");
-
-                    b.HasIndex("PatientId");
-
-                    b.HasIndex("PaymentStatusId");
-
-                    b.ToTable("Payments");
-                });
-
-            modelBuilder.Entity("HealthEase.Services.Database.PaymentStatus", b =>
-                {
-                    b.Property<int>("PaymentStatusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentStatusId"));
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PaymentStatusId");
-
-                    b.ToTable("PaymentStatuses");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Prescription", b =>
@@ -803,6 +745,51 @@ namespace HealthEase.Services.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HealthEase.Services.Database.Transaction", b =>
+                {
+                    b.Property<int>("TransactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionId"));
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<int>("AppointmentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PayerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("TransactionId");
+
+                    b.HasIndex("AppointmentId")
+                        .IsUnique();
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("HealthEase.Services.Database.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -874,75 +861,75 @@ namespace HealthEase.Services.Migrations
                             Email = "admin@mail.com",
                             FirstName = "Admin",
                             IsDeleted = false,
-                            LastName = "Admin",
+                            LastName = "Test",
                             PasswordHash = "wSG+yBth9HCj0O1AdRBL+CJjtR4=",
                             PasswordSalt = "c0MJh5XS8DYQtkJavp5lsA==",
                             PhoneNumber = "000000000",
                             ProfilePicture = new byte[] { 0 },
-                            Username = "admin"
+                            Username = "desktop"
                         },
                         new
                         {
                             UserId = 3,
-                            Email = "doctor1@mail.com",
-                            FirstName = "Doctor1",
+                            Email = "robert.t@mail.com",
+                            FirstName = "Robert",
                             IsDeleted = false,
-                            LastName = "Doctor1",
+                            LastName = "Trahan",
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
-                            PhoneNumber = "000000011",
+                            PhoneNumber = "062543234",
+                            ProfilePicture = new byte[] { 0 },
+                            Username = "doctor"
+                        },
+                        new
+                        {
+                            UserId = 4,
+                            Email = "paul.u@mail.com",
+                            FirstName = "Paul",
+                            IsDeleted = false,
+                            LastName = "Ulrey",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "062222333",
                             ProfilePicture = new byte[] { 0 },
                             Username = "doctor1"
                         },
                         new
                         {
-                            UserId = 4,
-                            Email = "doctor2@mail.com",
-                            FirstName = "Doctor2",
+                            UserId = 5,
+                            Email = "james.l@mail.com",
+                            FirstName = "James",
                             IsDeleted = false,
-                            LastName = "Doctor2",
+                            LastName = "Lozano",
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
-                            PhoneNumber = "000000031",
+                            PhoneNumber = "062958342",
                             ProfilePicture = new byte[] { 0 },
                             Username = "doctor2"
                         },
                         new
                         {
-                            UserId = 5,
-                            Email = "doctor3@mail.com",
-                            FirstName = "Doctor3",
+                            UserId = 6,
+                            Email = "helen.e@mail.com",
+                            FirstName = "Helen",
                             IsDeleted = false,
-                            LastName = "Doctor3",
+                            LastName = "Evans",
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
-                            PhoneNumber = "000000051",
+                            PhoneNumber = "062332123",
                             ProfilePicture = new byte[] { 0 },
                             Username = "doctor3"
                         },
                         new
                         {
-                            UserId = 6,
-                            Email = "doctor4@mail.com",
-                            FirstName = "Doctor4",
-                            IsDeleted = false,
-                            LastName = "Doctor4",
-                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
-                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
-                            PhoneNumber = "000000061",
-                            ProfilePicture = new byte[] { 0 },
-                            Username = "doctor4"
-                        },
-                        new
-                        {
                             UserId = 7,
-                            Email = "assistant@mail.com",
-                            FirstName = "Assistant",
+                            Email = "sabrina.g@mail.com",
+                            FirstName = "Sabrina",
                             IsDeleted = false,
-                            LastName = "Assistant",
+                            LastName = "Gallagher",
                             PasswordHash = "3JVNj98T0GrBkWatJPLYoaIqBEA=",
                             PasswordSalt = "/gLAN9q37ktD4sUpWLjN1g==",
-                            PhoneNumber = "000000002",
+                            PhoneNumber = "062532195",
                             ProfilePicture = new byte[] { 0 },
                             Username = "assistant"
                         });
@@ -1351,21 +1338,6 @@ namespace HealthEase.Services.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("HealthEase.Services.Database.Payment", b =>
-                {
-                    b.HasOne("HealthEase.Services.Database.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HealthEase.Services.Database.PaymentStatus", null)
-                        .WithMany("Payments")
-                        .HasForeignKey("PaymentStatusId");
-
-                    b.Navigation("Patient");
-                });
-
             modelBuilder.Entity("HealthEase.Services.Database.Prescription", b =>
                 {
                     b.HasOne("HealthEase.Services.Database.MedicalRecord", null)
@@ -1410,6 +1382,25 @@ namespace HealthEase.Services.Migrations
                     b.Navigation("Patient");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HealthEase.Services.Database.Transaction", b =>
+                {
+                    b.HasOne("HealthEase.Services.Database.Appointment", "Appointment")
+                        .WithOne()
+                        .HasForeignKey("HealthEase.Services.Database.Transaction", "AppointmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HealthEase.Services.Database.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.UserRole", b =>
@@ -1466,11 +1457,6 @@ namespace HealthEase.Services.Migrations
                     b.Navigation("Prescriptions");
 
                     b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("HealthEase.Services.Database.PaymentStatus", b =>
-                {
-                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.PrescriptionStatus", b =>

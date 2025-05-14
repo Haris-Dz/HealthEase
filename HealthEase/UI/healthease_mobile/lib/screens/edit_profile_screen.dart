@@ -69,15 +69,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
+  bool _isPickingImage = false;
+
   Future<void> _pickImage() async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      final bytes = await picked.readAsBytes();
-      if (!mounted) return;
-      setState(() {
-        _selectedImage = bytes;
-        _base64Image = base64Encode(bytes);
-      });
+    if (_isPickingImage || !mounted) return;
+
+    setState(() {
+      _isPickingImage = true;
+    });
+
+    try {
+      final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (picked != null) {
+        final bytes = await picked.readAsBytes();
+        if (!mounted) return;
+        setState(() {
+          _selectedImage = bytes;
+          _base64Image = base64Encode(bytes);
+        });
+      }
+    } catch (e) {
+      debugPrint("Image picker error: $e");
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPickingImage = false;
+        });
+      }
     }
   }
 

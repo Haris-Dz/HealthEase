@@ -10,6 +10,9 @@ public static class MappingConfig
     {
         var config = TypeAdapterConfig.GlobalSettings;
 
+        config.Default.IgnoreNullValues(true);
+
+
         config.NewConfig<Doctor, DoctorDTO>()
             .Map(dest => dest.DoctorSpecializations, src => src.DoctorSpecializations.Select(ds => ds.Specialization))
             .Map(dest => dest.WorkingHours, src => src.User.WorkingHours)
@@ -19,6 +22,15 @@ public static class MappingConfig
             .Map(dest => dest.SpecializationId, src => src.SpecializationId)
             .Map(dest => dest.Name, src => src.Specialization.Name)
             .Map(dest => dest.Description, src => src.Specialization.Description);
+
+        config.NewConfig<Appointment, AppointmentDTO>()
+            .Map(dest => dest.Doctor, src => src.Doctor)
+            .Map(dest => dest.Patient, src => src.Patient)
+            .Map(dest => dest.AppointmentType, src => src.AppointmentType);
+
+        config.NewConfig<Transaction, TransactionDTO>()
+            .Map(dest => dest.Patient, src => src.Patient)
+            .Map(dest => dest.Appointment, src => src.Appointment);
 
         config.NewConfig<DoctorInsertRequest, Doctor>()
             .Map(dest => dest.Biography, src => src.Biography)
@@ -31,6 +43,17 @@ public static class MappingConfig
 
         config.NewConfig<PatientDoctorFavorite, PatientDoctorFavoriteDTO>()
             .Map(dest => dest.Doctor, src => src.Doctor);
+
+        config.NewConfig<TransactionInsertRequest, Transaction>()
+            .Map(dest => dest.AppointmentId, src => src.AppointmentId)
+            .Map(dest => dest.PatientId, src => src.PatientId)
+            .Map(dest => dest.Amount, src => src.Amount)
+            .Map(dest => dest.PaymentMethod, src => src.PaymentMethod)
+            .Map(dest => dest.PaymentId, src => src.PaymentId)
+            .Map(dest => dest.PayerId, src => src.PayerId)
+            .Ignore(dest => dest.Appointment)
+            .Ignore(dest => dest.Patient);
+
 
 
     }
