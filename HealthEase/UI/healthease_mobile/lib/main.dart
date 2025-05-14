@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:healthease_mobile/providers/appointment_types_provider.dart';
 import 'package:healthease_mobile/providers/appointments_provider.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
@@ -9,6 +6,7 @@ import 'package:healthease_mobile/providers/doctors_provider.dart';
 import 'package:healthease_mobile/providers/patient_doctor_favorites_provider.dart';
 import 'package:healthease_mobile/providers/patients_provider.dart';
 import 'package:healthease_mobile/providers/specializations_provider.dart';
+import 'package:healthease_mobile/providers/transactions_provider.dart';
 import 'package:healthease_mobile/providers/utils.dart';
 import 'package:healthease_mobile/screens/doctors_screen.dart';
 import 'package:healthease_mobile/screens/register_screen.dart';
@@ -26,6 +24,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AppointmentsProvider()),
         ChangeNotifierProvider(create: (_) => AppointmentTypesProvider()),
         ChangeNotifierProvider(create: (_) => PatientDoctorFavoritesProvider()),
+        ChangeNotifierProvider(create: (_) => TransactionsProvider()),
       ],
 
       child: const MyApp(),

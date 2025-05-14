@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:healthease_mobile/layouts/master_screen.dart';
 import 'package:healthease_mobile/models/appointment.dart';
@@ -5,7 +7,6 @@ import 'package:healthease_mobile/providers/appointments_provider.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
 import 'package:healthease_mobile/providers/utils.dart';
 import 'package:flutter_paypal_payment/flutter_paypal_payment.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({super.key});
@@ -29,7 +30,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     try {
       final result = await _appointmentsProvider.get(
         filter: {'PatientId': AuthProvider.patientId},
-        includeTables: 'Doctor.User,Patient,AppointmentType', // 👈 Dodano
+        includeTables: 'Doctor.User,Patient,AppointmentType',
       );
       if (!mounted) return;
       setState(() {
@@ -214,13 +215,52 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                             ],
                                             note: "Thank you for your payment",
                                             onSuccess: (Map params) async {
-                                              // TODO: call API to mark appointment as paid
+                                              if (!context.mounted) return;
+
+                                              print(
+                                                "👉 Full PayPal Params: ${jsonEncode(params)}",
+                                              );
+
+                                              final data = params['data'];
+
+                                              final transaction = {
+                                                "amount": double.parse(
+                                                  data['transactions'][0]['amount']['total'],
+                                                ),
+                                                "paymentMethod":
+                                                    data['payer']['payment_method'],
+                                                "paymentId": data['id'],
+                                                "payerId":
+                                                    data['payer']['payer_info']['payer_id'],
+                                                "patientId":
+                                                    appointment.patientId,
+                                                "appointmentId":
+                                                    appointment.appointmentId,
+                                              };
+
                                               Navigator.pop(context, true);
+                                              final updatedAppointment = {
+                                                ...appointment.toJson(),
+                                                "isPaid": true,
+                                                "status": "paid",
+                                                "transactionInsert":
+                                                    transaction,
+                                              };
+                                              await _appointmentsProvider
+                                                  .update(
+                                                    appointment.appointmentId!,
+                                                    updatedAppointment,
+                                                  );
                                               showSuccessAlert(
                                                 context,
                                                 "Payment successful",
                                               );
+                                              if (!mounted) return;
+                                              setState(() {
+                                                _fetchAppointments();
+                                              });
                                             },
+
                                             onError: (error) {
                                               Navigator.pop(context);
                                               ScaffoldMessenger.of(
@@ -241,7 +281,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                   );
 
                                   if (result == true) {
-                                    _fetchAppointments(); // refresh data
+                                    _fetchAppointments();
                                   }
                                 },
 

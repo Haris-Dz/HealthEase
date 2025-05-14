@@ -12,5 +12,6 @@ namespace HealthEase.Model.Requests
         public string? StatusMessage { get; set; }
         public bool? IsPaid { get; set; }
         public DateTime? PaymentDate { get; set; }
+        public TransactionInsertRequest? TransactionInsert{ get; set; }
     }
 }

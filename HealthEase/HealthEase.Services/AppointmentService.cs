@@ -16,9 +16,10 @@ namespace HealthEase.Services
 
     public class AppointmentService : BaseCRUDServiceAsync<AppointmentDTO, AppointmentSearchObject, Appointment, AppointmentInsertRequest, AppointmentUpdateRequest>, IAppointmentService
     {
-        public AppointmentService(HealthEaseContext context, IMapper mapper) : base(context, mapper)
+        private readonly ITransactionService _transactionService;
+        public AppointmentService(HealthEaseContext context, IMapper mapper, ITransactionService transactionService) : base(context, mapper)
         {
-
+            _transactionService = transactionService;
         }
         public override IQueryable<Appointment> AddFilter(AppointmentSearchObject search, IQueryable<Appointment> query)
         {
@@ -60,8 +61,21 @@ namespace HealthEase.Services
             {
                 entity.Status = request.Approve.Value ? "Approved" : "Declined";
             }
-        }
+            if (request.IsPaid == true)
+            {
+                entity.Status = "Paid";
+            }
+            if (request.TransactionInsert != null)
+            {
+                var existingTransaction = await Context.Transactions
+                    .FirstOrDefaultAsync(t => t.AppointmentId == request.TransactionInsert.AppointmentId, cancellationToken);
 
+                if (existingTransaction == null)
+                {
+                    await _transactionService.InsertAsync(request.TransactionInsert, cancellationToken);
+                }
+            }
+        }
 
     }
 }
