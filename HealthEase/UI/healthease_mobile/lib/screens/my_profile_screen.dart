@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:healthease_mobile/providers/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:healthease_mobile/layouts/master_screen.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
@@ -125,9 +126,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                     _buildInfoRow(
                       "Registered",
-                      (_patient?['registrationDate'] as String)
-                          .split('T')
-                          .first,
+                      formatDateString(_patient?['registrationDate']),
                       Icons.calendar_month,
                     ),
 

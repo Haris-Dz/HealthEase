@@ -8,25 +8,27 @@ namespace HealthEase.Services.DoctorStateMachine
     public class InitialDoctorState : BaseDoctorState
     {
         private readonly IUserService _userService;
+        private readonly IDoctorSpecializationService _doctorSpecializationService;
 
         public InitialDoctorState(
             HealthEaseContext context,
             IMapper mapper,
             IServiceProvider serviceProvider,
-            IUserService userService
+            IUserService userService,
+            IDoctorSpecializationService doctorSpecializationService
         ) : base(context, mapper, serviceProvider)
         {
             _userService = userService;
+            _doctorSpecializationService = doctorSpecializationService;
         }
 
         public override async Task<DoctorDTO> InsertAsync(DoctorInsertRequest request, CancellationToken cancellationToken)
         {
             var entity = new Doctor();
             await BeforeInsertAsync(request, entity, cancellationToken);
-
             Context.Doctors.Add(entity);
             await Context.SaveChangesAsync(cancellationToken);
-
+            await AfterInsertAsync(request, entity, cancellationToken);
             return Mapper.Map<DoctorDTO>(entity);
         }
         public override async Task BeforeInsertAsync(DoctorInsertRequest request, Doctor entity, CancellationToken cancellationToken = default)
@@ -56,8 +58,17 @@ namespace HealthEase.Services.DoctorStateMachine
             entity.StateMachine = "draft";
             entity.IsDeleted = false;
         }
-
-
+        public override async Task AfterInsertAsync(DoctorInsertRequest request, Doctor entity, CancellationToken cancellation = default)
+        {
+            if (request.SpecializationIds != null && request.SpecializationIds.Any())
+            {
+                await _doctorSpecializationService.SyncDoctorSpecializations(
+                    request.SpecializationIds,
+                    entity.DoctorId,
+                    cancellation
+                );
+            }
+        }
         public override List<string> AllowedActions(Doctor entity)
         {
             return new List<string> { nameof(InsertAsync) };

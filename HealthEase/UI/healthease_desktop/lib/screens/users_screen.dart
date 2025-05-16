@@ -127,11 +127,12 @@ class _UsersScreenState extends State<UsersScreen> {
           ).delete(user.patientId);
         }
 
-        if (mounted)
+        if (mounted) {
           await showSuccessAlert(
             context,
             "The user has been deleted successfully.",
           );
+        }
         await _refreshData();
       } catch (e) {
         if (mounted) await showErrorAlert(context, "Failed to delete user. $e");

@@ -8,5 +8,6 @@ namespace HealthEase.Model.Requests
     {
         public string? Biography { get; set; }
         public string? Title { get; set; }
+        public List<int> SpecializationIds { get; set; } = new List<int>();
     }
 }

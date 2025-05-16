@@ -123,8 +123,14 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                 (context) => EditDoctorDialog(
                   initialTitle: doctor.title,
                   initialBio: doctor.biography,
+                  initialSpecializationIds:
+                      doctor.doctorSpecializations
+                          ?.map((s) => s.specializationId!)
+                          .toList() ??
+                      [],
                 ),
           );
+
           if (!mounted) return;
 
           if (result != null) {
@@ -393,7 +399,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
-                            const SizedBox(height: 40), // prostor za meni
+                            const SizedBox(height: 40),
                           ],
                         ),
                       ),
