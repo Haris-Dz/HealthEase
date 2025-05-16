@@ -66,9 +66,10 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
   List<int> get workingDays {
     final raw = widget.doctor.workingHours;
     if (raw == null) return [];
+
     return raw
         .where((w) => w.day != null && w.startTime != null && w.endTime != null)
-        .map((w) => w.day!)
+        .map((w) => w.day == 0 ? 7 : w.day!)
         .toSet()
         .toList();
   }
@@ -77,7 +78,10 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
     final weekday = date.weekday;
 
     final hours = widget.doctor.workingHours?.firstWhere(
-      (e) => e.day == weekday && e.startTime != null && e.endTime != null,
+      (e) =>
+          (e.day == 0 ? 7 : e.day) == weekday &&
+          e.startTime != null &&
+          e.endTime != null,
       orElse: () => WorkingHours(),
     );
 
@@ -132,17 +136,13 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
   }
 
   DateTime getFirstSelectableDate() {
-    if (workingDays.isEmpty) {
-      return DateTime.now();
-    }
-
     DateTime date = DateTime.now();
     int attempts = 0;
 
     while (!workingDays.contains(date.weekday) || isDayFullyBooked(date)) {
       date = date.add(const Duration(days: 1));
       attempts++;
-      if (attempts > 30) break; // fallback
+      if (attempts > 365) break;
     }
 
     return date;
@@ -176,6 +176,10 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final validInitialDate = getFirstSelectableDate();
+    final bool isInitialValid =
+        workingDays.contains(validInitialDate.weekday) &&
+        !isDayFullyBooked(validInitialDate);
     return MasterScreen(
       title: "Make Appointment",
       currentRoute: "MakeAppointment",
@@ -256,21 +260,28 @@ class _MakeAppointmentScreenState extends State<MakeAppointmentScreen> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-                    CalendarDatePicker(
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 360)),
-                      initialDate: getFirstSelectableDate(),
-                      onDateChanged: (selected) {
-                        setState(() {
-                          _selectedDate = selected;
-                          _selectedTime = null;
-                        });
-                      },
-                      selectableDayPredicate: (date) {
-                        if (!workingDays.contains(date.weekday)) return false;
-                        return !isDayFullyBooked(date);
-                      },
-                    ),
+                    if (!isInitialValid)
+                      const Text(
+                        "No available dates for appointment.",
+                        style: TextStyle(color: Colors.redAccent),
+                      )
+                    else
+                      CalendarDatePicker(
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime.now().add(const Duration(days: 360)),
+                        initialDate: validInitialDate,
+                        onDateChanged: (selected) {
+                          setState(() {
+                            _selectedDate = selected;
+                            _selectedTime = null;
+                          });
+                        },
+                        selectableDayPredicate: (date) {
+                          if (!workingDays.contains(date.weekday)) return false;
+                          return !isDayFullyBooked(date);
+                        },
+                      ),
+
                     const SizedBox(height: 20),
                     if (_selectedDate != null) ...[
                       const Text(

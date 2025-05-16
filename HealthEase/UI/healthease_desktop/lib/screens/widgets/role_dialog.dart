@@ -51,8 +51,6 @@ class _RoleDialogState extends State<RoleDialog> {
                       ),
                     ),
                     const SizedBox(height: 20),
-
-                    // Role Name (editable or display only)
                     const Text(
                       "Role Name",
                       style: TextStyle(fontWeight: FontWeight.w500),
@@ -87,8 +85,6 @@ class _RoleDialogState extends State<RoleDialog> {
                                       : null,
                         ),
                     const SizedBox(height: 16),
-
-                    // Description
                     const Text(
                       "Description",
                       style: TextStyle(fontWeight: FontWeight.w500),
@@ -102,8 +98,6 @@ class _RoleDialogState extends State<RoleDialog> {
                       ),
                     ),
                     const SizedBox(height: 24),
-
-                    // Buttons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -114,8 +108,8 @@ class _RoleDialogState extends State<RoleDialog> {
                         const SizedBox(width: 12),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue, // boja pozadine
-                            foregroundColor: Colors.white, // boja teksta
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 20,
                               vertical: 12,
@@ -144,8 +138,6 @@ class _RoleDialogState extends State<RoleDialog> {
                 ),
               ),
             ),
-
-            // X dugme
             Positioned(
               top: 12,
               right: 12,

@@ -14,14 +14,26 @@ namespace HealthEase.Services.DoctorStateMachine
 {
     public class DraftDoctorState : BaseDoctorState
     {
-        public DraftDoctorState(HealthEaseContext context, IMapper mapper, IServiceProvider serviceProvider) : base(context, mapper, serviceProvider)
+        private readonly IDoctorSpecializationService _doctorSpecializationService;
+        public DraftDoctorState(HealthEaseContext context, IMapper mapper, IServiceProvider serviceProvider, IDoctorSpecializationService doctorSpecializationService) : base(context, mapper, serviceProvider)
         {
+            _doctorSpecializationService = doctorSpecializationService;
         }
         public override async Task<DoctorDTO> UpdateAsync(int id, DoctorUpdateRequest request, CancellationToken cancellationToken)
         {
             var set = Context.Set<Doctor>();
             var entity = set.Find(id);
             Mapper.Map(request, entity);
+            if (request.SpecializationIds != null && request.SpecializationIds.Any())
+            {
+                await _doctorSpecializationService.SyncDoctorSpecializations(
+                    request.SpecializationIds,
+                    entity.DoctorId,
+                    cancellationToken
+                );
+            }
+
+
             await Context.SaveChangesAsync(cancellationToken);
             return Mapper.Map<DoctorDTO>(entity);
         }

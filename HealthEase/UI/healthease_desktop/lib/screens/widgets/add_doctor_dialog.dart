@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
+import 'package:healthease_desktop/models/search_result.dart';
+import 'package:healthease_desktop/models/specialization.dart';
 import 'package:healthease_desktop/providers/doctors_provider.dart';
+import 'package:healthease_desktop/providers/specializations_provider.dart';
 import 'package:healthease_desktop/providers/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -25,8 +27,9 @@ class _AddDoctorDialogState extends State<AddDoctorDialog> {
   final TextEditingController titleController = TextEditingController();
   Uint8List? _selectedImage;
   String? _base64Image;
-
   bool _isSubmitting = false;
+
+  List<int> selectedSpecializationIds = [];
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +57,6 @@ class _AddDoctorDialogState extends State<AddDoctorDialog> {
                       ),
                       const SizedBox(height: 20),
                       _buildImagePicker(),
-
                       _buildTextField(firstNameController, "First Name"),
                       _buildTextField(lastNameController, "Last Name"),
                       _buildTextField(
@@ -63,8 +65,9 @@ class _AddDoctorDialogState extends State<AddDoctorDialog> {
                         validator: (value) {
                           final phoneRegex = RegExp(r'^\d{9}$');
                           if (value == null || value.isEmpty) return null;
-                          if (!phoneRegex.hasMatch(value))
+                          if (!phoneRegex.hasMatch(value)) {
                             return "Enter valid 9-digit number";
+                          }
                           return null;
                         },
                       ),
@@ -94,8 +97,63 @@ class _AddDoctorDialogState extends State<AddDoctorDialog> {
                         required: false,
                       ),
 
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 16),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Specializations",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      FutureBuilder(
+                        future:
+                            Provider.of<SpecializationsProvider>(
+                              context,
+                              listen: false,
+                            ).get(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return const Text("Failed to load specializations");
+                          } else {
+                            final specializations =
+                                (snapshot.data as SearchResult<Specialization>)
+                                    .resultList;
 
+                            return Column(
+                              children:
+                                  specializations.map((spec) {
+                                    return CheckboxListTile(
+                                      value: selectedSpecializationIds.contains(
+                                        spec.specializationId,
+                                      ),
+                                      title: Text(spec.name ?? ''),
+                                      controlAffinity:
+                                          ListTileControlAffinity.leading,
+                                      onChanged: (selected) {
+                                        setState(() {
+                                          if (selected == true) {
+                                            selectedSpecializationIds.add(
+                                              spec.specializationId!,
+                                            );
+                                          } else {
+                                            selectedSpecializationIds.remove(
+                                              spec.specializationId,
+                                            );
+                                          }
+                                        });
+                                      },
+                                    );
+                                  }).toList(),
+                            );
+                          }
+                        },
+                      ),
+
+                      const SizedBox(height: 30),
                       _isSubmitting
                           ? const CircularProgressIndicator()
                           : ElevatedButton(
@@ -192,10 +250,11 @@ class _AddDoctorDialogState extends State<AddDoctorDialog> {
         maxLines: maxLines,
         validator:
             validator ??
-            (value) =>
-                required && (value == null || value.isEmpty)
-                    ? "Required"
-                    : null,
+            (value) {
+              if (required && (value == null || value.isEmpty))
+                return "Required";
+              return null;
+            },
       ),
     );
   }
@@ -204,6 +263,7 @@ class _AddDoctorDialogState extends State<AddDoctorDialog> {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isSubmitting = true);
+
     try {
       await Provider.of<DoctorsProvider>(context, listen: false).insert({
         "user": {
@@ -217,6 +277,7 @@ class _AddDoctorDialogState extends State<AddDoctorDialog> {
         },
         "biography": biographyController.text,
         "title": titleController.text,
+        "specializationIds": selectedSpecializationIds,
       });
 
       if (context.mounted) {

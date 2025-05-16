@@ -91,7 +91,6 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 itemCount: _transactions.length + 1,
                 itemBuilder: (context, index) {
                   if (index == 0) {
-                    // Header with total
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Card(

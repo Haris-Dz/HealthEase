@@ -15,12 +15,24 @@ public static class MappingConfig
 
         config.NewConfig<Doctor, DoctorDTO>()
             .Map(dest => dest.DoctorSpecializations,
-                 src => src.DoctorSpecializations
-                           .Where(ds => !ds.Specialization.IsDeleted)
-                           .Select(ds => ds.Specialization))
+                 src => src.DoctorSpecializations != null
+                     ? src.DoctorSpecializations
+                           .Where(ds => ds.Specialization != null && !ds.Specialization.IsDeleted && !ds.IsDeleted)
+                           .Select(ds => new SpecializationDTO
+                           {
+                               SpecializationId = ds.Specialization.SpecializationId,
+                               Name = ds.Specialization.Name,
+                               Description = ds.Specialization.Description
+                           })
+                            : new List<SpecializationDTO>())
+
             .Map(dest => dest.WorkingHours,
-                 src => src.User.WorkingHours.Where(wh => !wh.IsDeleted))
-            .Map(dest => dest.User, src => src.User);
+                 src => src.User != null && src.User.WorkingHours != null
+                     ? src.User.WorkingHours.Where(wh => !wh.IsDeleted)
+                     : new List<WorkingHours>())
+            .Map(dest => dest.User,
+                 src => src.User != null ? src.User : new User());
+
 
 
         config.NewConfig<DoctorSpecialization, SpecializationDTO>()

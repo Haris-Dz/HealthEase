@@ -162,7 +162,7 @@ class _EditWorkingHoursDialogState extends State<EditWorkingHoursDialog> {
                                   retrieveAll: true,
                                 );
 
-                                // Mapiraj dan -> existing WorkingHours
+                                // Mapp day -> existingWorkingHours
                                 final existingMap = {
                                   for (var wh in existing.resultList)
                                     if (wh.day != null) wh.day!: wh,
@@ -186,7 +186,7 @@ class _EditWorkingHoursDialogState extends State<EditWorkingHoursDialog> {
                                       (endText != null && endText.isNotEmpty);
 
                                   if (hasInput) {
-                                    // Insert ili update
+                                    // Insert or update
                                     updates.add({
                                       "userId": widget.userId,
                                       "day": dayIndex,

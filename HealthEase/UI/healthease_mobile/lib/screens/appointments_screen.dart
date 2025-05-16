@@ -1,12 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:healthease_mobile/layouts/master_screen.dart';
 import 'package:healthease_mobile/models/appointment.dart';
 import 'package:healthease_mobile/providers/appointments_provider.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
 import 'package:healthease_mobile/providers/utils.dart';
-import 'package:flutter_paypal_payment/flutter_paypal_payment.dart';
+import 'package:healthease_mobile/screens/paypal_screen.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({super.key});
@@ -84,7 +82,21 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _appointments.isEmpty
-              ? const Center(child: Text("No appointments found"))
+              ? const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.schedule_outlined, size: 80, color: Colors.grey),
+                    SizedBox(height: 24),
+                    Text(
+                      "No Appointments yet",
+                      style: TextStyle(fontSize: 18, color: Colors.black54),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 16),
+                  ],
+                ),
+              )
               : ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: _appointments.length,
@@ -127,10 +139,54 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                               ),
                             ),
                           const SizedBox(height: 6),
-                          Text(
-                            "Date: ${formatDateString(a.appointmentDate?.substring(0, 10))}",
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Date:",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      "Time:",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(width: 12),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      formatDateString(
+                                        a.appointmentDate?.substring(0, 10),
+                                      ),
+                                      style: const TextStyle(
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      a.appointmentTime ?? 'N/A',
+                                      style: const TextStyle(
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          Text("Time: ${a.appointmentTime ?? 'N/A'}"),
+
                           if (a.note != null && a.note!.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 8),
@@ -154,22 +210,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                               padding: const EdgeInsets.only(top: 12),
                               child: ElevatedButton.icon(
                                 onPressed: () async {
-                                  var clientId =
-                                      "AURtCEWnvA03YzChyXThPXeyY2beJP1RFJlUAzpjk1tBD8Xu166eActAUmwQmf_moWiVAzmxVVCMPdFp";
-                                  var secret =
-                                      "ECC5-TP5yuNrOYTOXPUvGg6m49UdvPmKOKb3yhG2_r-R-5rdHr7Ryj0NuFWkA6zGKIXWzvk2bmCcpxaw";
-
-                                  if (clientId == null || secret == null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          "PayPal credentials missing",
-                                        ),
-                                      ),
-                                    );
-                                    return;
-                                  }
-
                                   final appointment = a;
                                   final price =
                                       appointment.appointmentType?.price
@@ -180,102 +220,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder:
-                                          (context) => PaypalCheckoutView(
-                                            sandboxMode: true,
-                                            clientId: clientId,
-                                            secretKey: secret,
-                                            transactions: [
-                                              {
-                                                "amount": {
-                                                  "total": price,
-                                                  "currency": "USD",
-                                                  "details": {
-                                                    "subtotal": price,
-                                                    "shipping": '0',
-                                                    "shipping_discount": 0,
-                                                  },
-                                                },
-                                                "description":
-                                                    "Appointment payment",
-                                                "item_list": {
-                                                  "items": [
-                                                    {
-                                                      "name":
-                                                          appointment
-                                                              .appointmentType
-                                                              ?.name ??
-                                                          "Appointment",
-                                                      "quantity": 1,
-                                                      "price": price,
-                                                      "currency": "USD",
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                            note: "Thank you for your payment",
-                                            onSuccess: (Map params) async {
-                                              if (!context.mounted) return;
-
-                                              print(
-                                                "👉 Full PayPal Params: ${jsonEncode(params)}",
-                                              );
-
-                                              final data = params['data'];
-
-                                              final transaction = {
-                                                "amount": double.parse(
-                                                  data['transactions'][0]['amount']['total'],
-                                                ),
-                                                "paymentMethod":
-                                                    data['payer']['payment_method'],
-                                                "paymentId": data['id'],
-                                                "payerId":
-                                                    data['payer']['payer_info']['payer_id'],
-                                                "patientId":
-                                                    appointment.patientId,
-                                                "appointmentId":
-                                                    appointment.appointmentId,
-                                              };
-
-                                              Navigator.pop(context, true);
-                                              final updatedAppointment = {
-                                                ...appointment.toJson(),
-                                                "isPaid": true,
-                                                "status": "paid",
-                                                "transactionInsert":
-                                                    transaction,
-                                              };
-                                              await _appointmentsProvider
-                                                  .update(
-                                                    appointment.appointmentId!,
-                                                    updatedAppointment,
-                                                  );
-                                              showSuccessAlert(
-                                                context,
-                                                "Payment successful",
-                                              );
-                                              if (!mounted) return;
-                                              setState(() {
-                                                _fetchAppointments();
-                                              });
-                                            },
-
-                                            onError: (error) {
-                                              Navigator.pop(context);
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    "Payment error: $error",
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            onCancel: () {
-                                              Navigator.pop(context);
-                                            },
+                                          (context) => PaypalScreen(
+                                            appointment: appointment,
+                                            price: price,
                                           ),
                                     ),
                                   );
