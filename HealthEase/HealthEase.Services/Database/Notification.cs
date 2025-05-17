@@ -14,8 +14,9 @@ namespace HealthEase.Services.Database
         public int NotificationId { get; set; }
         public int PatientId { get; set; }
         [ForeignKey("PatientId")]
-        public Patient Patient { get; set; } = null!;
+        public virtual Patient Patient { get; set; } = null!;
         public string? Message { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public bool IsRead { get; set; }
     }
 }

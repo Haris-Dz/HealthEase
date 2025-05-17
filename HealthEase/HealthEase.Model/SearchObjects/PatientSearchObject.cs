@@ -17,5 +17,6 @@ namespace HealthEase.Model.SearchObjects
         public string? PhoneNumber { get; set; }
 
         public string? Username { get; set; }
+        public string? UsernameGTE { get; set; }
     }
 }

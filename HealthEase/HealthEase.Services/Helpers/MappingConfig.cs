@@ -71,6 +71,10 @@ public static class MappingConfig
             .Ignore(dest => dest.Appointment)
             .Ignore(dest => dest.Patient);
 
+        config.NewConfig<Notification, NotificationDTO>()
+            .Map(dest => dest.Patient, src => src.Patient);
+
+
 
 
     }

@@ -17,9 +17,11 @@ namespace HealthEase.Services
     public class AppointmentService : BaseCRUDServiceAsync<AppointmentDTO, AppointmentSearchObject, Appointment, AppointmentInsertRequest, AppointmentUpdateRequest>, IAppointmentService
     {
         private readonly ITransactionService _transactionService;
-        public AppointmentService(HealthEaseContext context, IMapper mapper, ITransactionService transactionService) : base(context, mapper)
+        private readonly INotificationService _notificationService;
+        public AppointmentService(HealthEaseContext context, IMapper mapper, ITransactionService transactionService, INotificationService notificationService) : base(context, mapper)
         {
             _transactionService = transactionService;
+            _notificationService = notificationService;
         }
         public override IQueryable<Appointment> AddFilter(AppointmentSearchObject search, IQueryable<Appointment> query)
         {
@@ -60,6 +62,16 @@ namespace HealthEase.Services
             if (request.Approve.HasValue)
             {
                 entity.Status = request.Approve.Value ? "Approved" : "Declined";
+                // automatic notifications
+                var message = request.Approve.Value
+                    ? "Your appointment has been approved."
+                    : "Your appointment has been declined.";
+
+                await _notificationService.InsertAsync(new NotificationInsertRequest
+                {
+                    PatientId = entity.PatientId,
+                    Message = message
+                }, cancellationToken);
             }
             if (request.IsPaid == true)
             {
