@@ -57,7 +57,7 @@ builder.Services.AddSwaggerGen(c =>
     } });
 
 });
-Env.Load();
+Env.Load("../.env");
 var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 builder.Services.AddDbContext<HealthEaseContext>(options => options.UseSqlServer(connectionString));
 

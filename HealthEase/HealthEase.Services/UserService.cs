@@ -1,5 +1,7 @@
-﻿using HealthEase.Model.DTOs;
-using HealthEase.Model.Exceptions;
+﻿using System.Linq;
+using EasyNetQ;
+using HealthEase.Model.DTOs;
+using HealthEase.Model.Messages;
 using HealthEase.Model.Requests;
 using HealthEase.Model.SearchObjects;
 using HealthEase.Services.BaseServices;
@@ -7,12 +9,6 @@ using HealthEase.Services.Database;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HealthEase.Services
 {
@@ -80,16 +76,24 @@ namespace HealthEase.Services
             entity.PasswordSalt = Helpers.Helper.GenerateSalt();
             entity.PasswordHash = Helpers.Helper.GenerateHash(entity.PasswordSalt, newPass);
 
-            //await rabbitMqService.SendAnEmail(new EmailDTO
-            //{
-            //    EmailTo = entity.Email,
-            //    Message = $"Poštovani<br>" +
-            //  $"Korisnicko ime: {entity.KorisnickoIme}<br>" +
-            //  $"Lozinka: {lozinka}<br><br>" +
-            //  $"Srdačan pozdrav",
-            //    ReceiverName = entity.Ime + " " + entity.Prezime,
-            //    Subject = "Registracija"
-            //});
+
+            string rabbitmq = Environment.GetEnvironmentVariable("RABBIT_MQ") ?? string.Empty;
+
+            var bus = RabbitHutch.CreateBus(rabbitmq);
+
+            Console.WriteLine(bus);
+            RegisterMessage registerMessage = new RegisterMessage {
+                employeeFirstName = request.FirstName, 
+                employeeLastName = request.LastName, 
+                email = request.Email, 
+                username = request.Username,
+                password = newPass
+            };
+
+           await  bus.PubSub.PublishAsync(registerMessage);
+            Console.WriteLine($"✅ Sent RegisterMessage to {request.Email}");
+
+
         }
 
         public override async Task AfterInsertAsync(UserInsertRequest request, User entity, CancellationToken cancellationToken = default)
@@ -112,8 +116,8 @@ namespace HealthEase.Services
                     StateMachine = "draft"
                 });
             }
-
             await Context.SaveChangesAsync(cancellationToken);
+
         }
 
         public override async Task BeforeUpdateAsync(UserUpdateRequest request, User entity, CancellationToken cancellationToken = default)
