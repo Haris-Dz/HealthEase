@@ -52,6 +52,10 @@ namespace HealthEase.Services
             {
                 query = query.Where(x => x.Username == searchObject.Username);
             }
+            if (!string.IsNullOrWhiteSpace(searchObject?.UsernameGTE))
+            {
+                query = query.Where(p => p.Username.ToLower().StartsWith(searchObject.UsernameGTE.ToLower()));
+            }
             query = query.Where(x => !x.IsDeleted);
             return query;
         }

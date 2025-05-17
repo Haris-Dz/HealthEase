@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:healthease_mobile/main.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
 import 'package:healthease_mobile/providers/utils.dart';
+import 'package:healthease_mobile/providers/notifications_provider.dart';
 import 'package:healthease_mobile/screens/appointments_screen.dart';
 import 'package:healthease_mobile/screens/doctors_screen.dart';
 import 'package:healthease_mobile/screens/favorites_screen.dart';
 import 'package:healthease_mobile/screens/my_profile_screen.dart';
+import 'package:healthease_mobile/screens/notifications_screen.dart';
 import 'package:healthease_mobile/screens/payments_screen.dart';
 import 'package:healthease_mobile/screens/placeholder_screen.dart';
 
@@ -16,6 +18,7 @@ class MasterScreen extends StatelessWidget {
   final List<Widget>? actions;
   final bool showBackButton;
   final String currentRoute;
+
   const MasterScreen({
     super.key,
     required this.title,
@@ -83,17 +86,64 @@ class MasterScreen extends StatelessWidget {
     required String route,
     required Widget screen,
     required String currentRoute,
+    bool showNotificationBadge = false,
   }) {
     final isActive = currentRoute == route;
+
+    Widget leadingIcon = Icon(
+      icon,
+      color: isActive ? Colors.blue : Colors.black,
+      size: isActive ? 28 : 24,
+    );
+
+    if (showNotificationBadge) {
+      leadingIcon = Stack(
+        clipBehavior: Clip.none,
+        children: [
+          leadingIcon,
+          Positioned(
+            right: -6,
+            top: -6,
+            child: FutureBuilder<int>(
+              future: NotificationsProvider()
+                  .get(
+                    filter: {
+                      "PatientId": AuthProvider.patientId,
+                      "IsRead": false,
+                    },
+                    retrieveAll: true,
+                  )
+                  .then((res) => res.resultList.length),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data == 0) {
+                  return const SizedBox.shrink();
+                }
+                return Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    '${snapshot.data}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      );
+    }
 
     return ListTile(
       leading: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        child: Icon(
-          icon,
-          color: isActive ? Colors.blue : Colors.black,
-          size: isActive ? 28 : 24,
-        ),
+        child: leadingIcon,
       ),
       title: Text(title),
       tileColor: isActive ? Colors.blue.shade100 : null,
@@ -143,7 +193,6 @@ class MasterScreen extends StatelessWidget {
                   screen: const DoctorsScreen(),
                   currentRoute: currentRoute,
                 ),
-
                 _buildDrawerItem(
                   context,
                   icon: Icons.favorite_border,
@@ -162,17 +211,9 @@ class MasterScreen extends StatelessWidget {
                 ),
                 _buildDrawerItem(
                   context,
-                  icon: Icons.payment,
-                  title: "Payments",
-                  route: "Payments",
-                  screen: const PaymentsScreen(),
-                  currentRoute: currentRoute,
-                ),
-                _buildDrawerItem(
-                  context,
                   icon: Icons.medical_information_outlined,
-                  title: "Medical Records",
-                  route: "Medical Records",
+                  title: "Medical Record",
+                  route: "Medical Record",
                   screen: const PlaceholderScreen(),
                   currentRoute: currentRoute,
                 ),
@@ -184,14 +225,22 @@ class MasterScreen extends StatelessWidget {
                   screen: const PlaceholderScreen(),
                   currentRoute: currentRoute,
                 ),
-
+                _buildDrawerItem(
+                  context,
+                  icon: Icons.payment,
+                  title: "Payments",
+                  route: "Payments",
+                  screen: const PaymentsScreen(),
+                  currentRoute: currentRoute,
+                ),
                 _buildDrawerItem(
                   context,
                   icon: Icons.notifications_none_outlined,
                   title: "Notifications",
                   route: "Notifications",
-                  screen: const PlaceholderScreen(),
+                  screen: const NotificationsScreen(),
                   currentRoute: currentRoute,
+                  showNotificationBadge: true,
                 ),
                 _buildDrawerItem(
                   context,
@@ -204,7 +253,6 @@ class MasterScreen extends StatelessWidget {
               ],
             ),
           ),
-
           const Divider(height: 1),
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),

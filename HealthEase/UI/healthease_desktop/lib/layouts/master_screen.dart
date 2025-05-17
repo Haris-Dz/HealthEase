@@ -6,6 +6,7 @@ import 'package:healthease_desktop/screens/dashboard_screen.dart';
 import 'package:healthease_desktop/screens/doctors_screen.dart';
 import 'package:healthease_desktop/screens/management_screen.dart';
 import 'package:healthease_desktop/screens/my_profile_screen.dart';
+import 'package:healthease_desktop/screens/notifications_screen.dart';
 import 'package:healthease_desktop/screens/users_screen.dart';
 import 'package:healthease_desktop/main.dart';
 
@@ -116,12 +117,7 @@ class _MasterScreenState extends State<MasterScreen> {
       _logout(context);
     } else if (selected == 'profile') {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('My profile selected'),
-          duration: Duration(milliseconds: 900),
-        ),
-      );
+      _onSidebarItemTapped("MyProfile", const MyProfileScreen(), "MyProfile");
     }
   }
 
@@ -163,34 +159,14 @@ class _MasterScreenState extends State<MasterScreen> {
                         const MyProfileScreen(),
                         "MyProfile",
                       ),
-
                       if (isAdmin) ...[
-                        _buildSidebarItem(
-                          "Users",
-                          Icons.people,
-                          const UsersScreen(),
-                          "Users",
-                        ),
                         _buildSidebarItem(
                           "Doctors",
                           Icons.health_and_safety_outlined,
                           const DoctorsScreen(),
                           "Doctors",
                         ),
-                        _buildSidebarItem(
-                          "Management",
-                          Icons.settings,
-                          const ManagementScreen(),
-                          "Management",
-                        ),
-                        _buildSidebarItem(
-                          "Reports",
-                          Icons.insert_chart_outlined,
-                          const Placeholder(),
-                          "Reports",
-                        ),
                       ],
-
                       _buildSidebarItem(
                         "Appointments",
                         Icons.schedule,
@@ -209,12 +185,34 @@ class _MasterScreenState extends State<MasterScreen> {
                         const Placeholder(),
                         "Feedback",
                       ),
-                      _buildSidebarItem(
-                        "Notifications",
-                        Icons.notifications,
-                        const Placeholder(),
-                        "Notifications",
-                      ),
+
+                      if (isAdmin) ...[
+                        _buildSidebarItem(
+                          "Users",
+                          Icons.people,
+                          const UsersScreen(),
+                          "Users",
+                        ),
+
+                        _buildSidebarItem(
+                          "Reports",
+                          Icons.insert_chart_outlined,
+                          const Placeholder(),
+                          "Reports",
+                        ),
+                        _buildSidebarItem(
+                          "Management",
+                          Icons.settings,
+                          const ManagementScreen(),
+                          "Management",
+                        ),
+                        _buildSidebarItem(
+                          "Notifications Manager",
+                          Icons.notifications,
+                          const NotificationsScreen(),
+                          "Notifications Manager",
+                        ),
+                      ],
                     ],
                   ),
                 ),
