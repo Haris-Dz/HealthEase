@@ -6,6 +6,7 @@ import 'package:healthease_desktop/providers/appointments_provider.dart';
 import 'package:healthease_desktop/providers/doctors_provider.dart';
 import 'package:healthease_desktop/providers/utils.dart';
 import 'package:provider/provider.dart';
+import 'package:healthease_desktop/providers/auth_provider.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({super.key});
@@ -26,10 +27,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   DateTime? _endDate;
   bool _isLoading = true;
 
+  bool get isDoctor =>
+      AuthProvider.userRoles?.any((role) => role.role?.roleId == 2) ?? false;
+  int? get doctorId => AuthProvider.userId;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     if (_isLoading) {
       _loadData();
       _loadStatusOptions();
@@ -63,37 +67,41 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     if (!mounted) return;
     setState(() {
       _appointments = appointmentsResponse.resultList;
-      _filteredAppointments = _appointments;
+      _filteredAppointments = _filterAppointments(_appointments);
       _doctors = doctorsResponse.resultList;
       _isLoading = false;
     });
   }
 
+  List<Appointment> _filterAppointments(List<Appointment> all) {
+    return all.where((a) {
+      if (isDoctor && a.doctor?.userId != doctorId) return false;
+
+      final matchesDoctor =
+          isDoctor ||
+          _selectedDoctor == null ||
+          a.doctor?.doctorId == _selectedDoctor!.doctorId;
+      final matchesStatus =
+          _selectedStatus == null ||
+          a.status?.toLowerCase() == _selectedStatus!.toLowerCase();
+      final appointmentDate = DateTime.tryParse(a.appointmentDate ?? "");
+      final matchesStart =
+          _startDate == null ||
+          (appointmentDate != null &&
+              appointmentDate.isAfter(
+                _startDate!.subtract(const Duration(days: 1)),
+              ));
+      final matchesEnd =
+          _endDate == null ||
+          (appointmentDate != null &&
+              appointmentDate.isBefore(_endDate!.add(const Duration(days: 1))));
+      return matchesDoctor && matchesStatus && matchesStart && matchesEnd;
+    }).toList();
+  }
+
   void _applyFilters() {
     setState(() {
-      _filteredAppointments =
-          _appointments.where((a) {
-            final matchesDoctor =
-                _selectedDoctor == null ||
-                a.doctor?.doctorId == _selectedDoctor!.doctorId;
-            final matchesStatus =
-                _selectedStatus == null ||
-                a.status?.toLowerCase() == _selectedStatus!.toLowerCase();
-            final appointmentDate = DateTime.tryParse(a.appointmentDate ?? "");
-            final matchesStart =
-                _startDate == null ||
-                (appointmentDate != null &&
-                    appointmentDate.isAfter(
-                      _startDate!.subtract(const Duration(days: 1)),
-                    ));
-            final matchesEnd =
-                _endDate == null ||
-                (appointmentDate != null &&
-                    appointmentDate.isBefore(
-                      _endDate!.add(const Duration(days: 1)),
-                    ));
-            return matchesDoctor && matchesStatus && matchesStart && matchesEnd;
-          }).toList();
+      _filteredAppointments = _filterAppointments(_appointments);
     });
   }
 
@@ -142,30 +150,32 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   Widget _buildFilters() {
     return Row(
       children: [
-        Expanded(
-          child: DropdownButtonFormField<Doctor>(
-            isExpanded: true,
-            decoration: const InputDecoration(
-              labelText: "Doctor",
-              border: OutlineInputBorder(),
-            ),
-            value: _selectedDoctor,
-            items: [
-              const DropdownMenuItem(value: null, child: Text("All")),
-              ..._doctors.map(
-                (d) => DropdownMenuItem(
-                  value: d,
-                  child: Text("${d.user?.firstName} ${d.user?.lastName}"),
-                ),
+        if (!isDoctor)
+          Expanded(
+            child: DropdownButtonFormField<Doctor>(
+              isExpanded: true,
+              decoration: const InputDecoration(
+                labelText: "Doctor",
+                border: OutlineInputBorder(),
               ),
-            ],
-            onChanged: (value) {
-              setState(() => _selectedDoctor = value);
-              _applyFilters();
-            },
+              value: _selectedDoctor,
+              items: [
+                const DropdownMenuItem(value: null, child: Text("All")),
+                ..._doctors.map(
+                  (d) => DropdownMenuItem(
+                    value: d,
+                    child: Text("${d.user?.firstName} ${d.user?.lastName}"),
+                  ),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() => _selectedDoctor = value);
+                _applyFilters();
+              },
+            ),
           ),
-        ),
-        const SizedBox(width: 12),
+        if (!isDoctor) const SizedBox(width: 12),
+
         Expanded(
           child: DropdownButtonFormField<String>(
             decoration: const InputDecoration(
@@ -187,21 +197,116 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           ),
         ),
         const SizedBox(width: 12),
+        // START DATE
         Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () => _pickDate(context, true),
-            icon: const Icon(Icons.calendar_today),
-            label: Text(
-              _startDate == null ? "Start Date" : formatDate(_startDate!),
+          child: OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+              alignment: Alignment.centerLeft,
+            ),
+            onPressed: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: _startDate ?? DateTime.now(),
+                firstDate: DateTime(2020),
+                lastDate: DateTime(2030),
+              );
+              if (picked != null) {
+                setState(() {
+                  _startDate = picked;
+                  _applyFilters();
+                });
+              }
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.calendar_today, size: 18),
+                    const SizedBox(width: 8),
+                    Text(
+                      _startDate == null
+                          ? "Start Date"
+                          : formatDate(_startDate!),
+                      style: TextStyle(
+                        color: _startDate == null ? Colors.grey : Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                if (_startDate != null)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _startDate = null;
+                        _applyFilters();
+                      });
+                    },
+                    child: const Icon(
+                      Icons.clear,
+                      size: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+              ],
             ),
           ),
         ),
         const SizedBox(width: 12),
+
+        // END DATE
         Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () => _pickDate(context, false),
-            icon: const Icon(Icons.calendar_today),
-            label: Text(_endDate == null ? "End Date" : formatDate(_endDate!)),
+          child: OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+              alignment: Alignment.centerLeft,
+            ),
+            onPressed: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: _endDate ?? DateTime.now(),
+                firstDate: DateTime(2020),
+                lastDate: DateTime(2030),
+              );
+              if (picked != null) {
+                setState(() {
+                  _endDate = picked;
+                  _applyFilters();
+                });
+              }
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.calendar_today, size: 18),
+                    const SizedBox(width: 8),
+                    Text(
+                      _endDate == null ? "End Date" : formatDate(_endDate!),
+                      style: TextStyle(
+                        color: _endDate == null ? Colors.grey : Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                if (_endDate != null)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _endDate = null;
+                        _applyFilters();
+                      });
+                    },
+                    child: const Icon(
+                      Icons.clear,
+                      size: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ],

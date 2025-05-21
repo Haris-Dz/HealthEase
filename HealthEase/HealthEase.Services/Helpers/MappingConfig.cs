@@ -74,6 +74,29 @@ public static class MappingConfig
         config.NewConfig<Notification, NotificationDTO>()
             .Map(dest => dest.Patient, src => src.Patient);
 
+        config.NewConfig<Review, ReviewDTO>()
+            .Map(dest => dest.DoctorName, src => src.Doctor.User.FirstName + " " + src.Doctor.User.LastName)
+            .Map(dest => dest.PatientName, src => src.Patient.FirstName + " " + src.Patient.LastName)
+            .Map(dest => dest.PatientProfilePicture, src => src.Patient.ProfilePicture);
+
+        config.NewConfig<Review, ReviewDTO>()
+            .Map(dest => dest.DoctorName,
+                src => src.Doctor != null && src.Doctor.User != null
+                    ? src.Doctor.User.FirstName + " " + src.Doctor.User.LastName
+                    : "")
+            .Map(dest => dest.PatientName,
+                src => src.Patient != null
+                    ? (
+                        (src.Patient.FirstName ?? "") + " " +
+                        (src.Patient.LastName ?? "")
+                      ).Trim()
+                    : "")
+            .Map(dest => dest.PatientProfilePicture,
+                 src => src.Patient.ProfilePicture != null
+                     ? Convert.ToBase64String(src.Patient.ProfilePicture)
+                     : null)
+                    .IgnoreNullValues(true);
+
 
 
 

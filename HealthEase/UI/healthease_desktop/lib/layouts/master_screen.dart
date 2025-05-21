@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:healthease_desktop/providers/auth_provider.dart';
 import 'package:healthease_desktop/providers/utils.dart';
 import 'package:healthease_desktop/screens/appointments_screen.dart';
-import 'package:healthease_desktop/screens/dashboard_screen.dart';
+import 'package:healthease_desktop/screens/home_screen.dart';
 import 'package:healthease_desktop/screens/doctors_screen.dart';
 import 'package:healthease_desktop/screens/management_screen.dart';
 import 'package:healthease_desktop/screens/my_profile_screen.dart';
 import 'package:healthease_desktop/screens/notifications_screen.dart';
+import 'package:healthease_desktop/screens/reviews_screen.dart';
 import 'package:healthease_desktop/screens/users_screen.dart';
 import 'package:healthease_desktop/main.dart';
 
@@ -148,16 +149,16 @@ class _MasterScreenState extends State<MasterScreen> {
                       ),
                       const SizedBox(height: 20),
                       _buildSidebarItem(
-                        "Dashboard",
-                        Icons.bar_chart,
-                        const DashboardScreen(),
-                        "Dashboard",
+                        "Home",
+                        Icons.home_outlined,
+                        const HomeScreen(),
+                        "Home",
                       ),
                       _buildSidebarItem(
-                        "MyProfile",
+                        "My Profile",
                         Icons.person,
                         const MyProfileScreen(),
-                        "MyProfile",
+                        "My Profile",
                       ),
                       if (isAdmin) ...[
                         _buildSidebarItem(
@@ -180,10 +181,10 @@ class _MasterScreenState extends State<MasterScreen> {
                         "Prescriptions",
                       ),
                       _buildSidebarItem(
-                        "Feedback",
-                        Icons.feedback_outlined,
-                        const Placeholder(),
-                        "Feedback",
+                        "Reviews",
+                        Icons.rate_review_outlined,
+                        const ReviewsScreen(),
+                        "Reviews",
                       ),
 
                       if (isAdmin) ...[
@@ -200,6 +201,14 @@ class _MasterScreenState extends State<MasterScreen> {
                           const Placeholder(),
                           "Reports",
                         ),
+                      ],
+                      _buildSidebarItem(
+                        "Messages",
+                        Icons.message_outlined,
+                        const Placeholder(),
+                        "Messages",
+                      ),
+                      if (isAdmin) ...[
                         _buildSidebarItem(
                           "Management",
                           Icons.settings,

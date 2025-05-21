@@ -88,7 +88,14 @@ namespace HealthEase.Services.Database
                 .HasOne(t => t.Appointment)
                 .WithOne()
                 .HasForeignKey<Transaction>(t => t.AppointmentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(x => x.Appointment)
+                .WithMany()
+                .HasForeignKey(x => x.AppointmentId)
                 .OnDelete(DeleteBehavior.Restrict); 
+
 
 
 

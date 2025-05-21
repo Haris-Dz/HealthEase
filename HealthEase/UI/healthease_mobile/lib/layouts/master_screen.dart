@@ -219,7 +219,7 @@ class MasterScreen extends StatelessWidget {
                 ),
                 _buildDrawerItem(
                   context,
-                  icon: Icons.sms_outlined,
+                  icon: Icons.mail_outlined,
                   title: "Messages",
                   route: "Messages",
                   screen: const PlaceholderScreen(),
