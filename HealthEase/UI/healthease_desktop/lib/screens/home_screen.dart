@@ -6,14 +6,14 @@ import 'package:healthease_desktop/providers/users_provider.dart';
 import 'package:healthease_desktop/providers/patients_provider.dart';
 import 'package:healthease_desktop/providers/doctors_provider.dart';
 
-class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen>
+class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   int employeesCount = 0;
   int patientsCount = 0;
@@ -191,146 +191,6 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-  Widget _buildProfitChart() {
-    List<FlSpot> profits = [
-      const FlSpot(0, 1000),
-      const FlSpot(1, 3000),
-      const FlSpot(2, 2000),
-      const FlSpot(3, 4000),
-      const FlSpot(4, 3500),
-      const FlSpot(5, 5000),
-    ];
-
-    if (profits.isEmpty) {
-      return const Center(child: Text("No data available for profit chart"));
-    }
-
-    return Card(
-      elevation: 8,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: SizedBox(
-          height: 300,
-          child: LineChart(
-            LineChartData(
-              titlesData: FlTitlesData(
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (value, _) {
-                      switch (value.toInt()) {
-                        case 0:
-                          return const Text('Jan');
-                        case 1:
-                          return const Text('Feb');
-                        case 2:
-                          return const Text('Mar');
-                        case 3:
-                          return const Text('Apr');
-                        case 4:
-                          return const Text('May');
-                        case 5:
-                          return const Text('Jun');
-                      }
-                      return const Text('');
-                    },
-                  ),
-                ),
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: true),
-                ),
-              ),
-              borderData: FlBorderData(show: false),
-              lineBarsData: [
-                LineChartBarData(
-                  spots: profits,
-                  isCurved: true,
-                  color: Colors.green,
-                  barWidth: 3,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAppointmentsOverview() {
-    return Card(
-      elevation: 8,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Appointments Overview",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
-                  children: const [
-                    Text(
-                      "Total",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 5),
-                    Text("120"),
-                  ],
-                ),
-                Column(
-                  children: const [
-                    Text(
-                      "Approved",
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text("85"),
-                  ],
-                ),
-                Column(
-                  children: const [
-                    Text(
-                      "Pending",
-                      style: TextStyle(
-                        color: Colors.orange,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text("25"),
-                  ],
-                ),
-                Column(
-                  children: const [
-                    Text(
-                      "Declined",
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text("10"),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -386,10 +246,6 @@ class _DashboardScreenState extends State<DashboardScreen>
                         ),
                         const SizedBox(height: 30),
                         Center(child: _buildPieChart()),
-                        const SizedBox(height: 30),
-                        Center(child: _buildProfitChart()),
-                        const SizedBox(height: 30),
-                        Center(child: _buildAppointmentsOverview()),
                       ],
                     ),
                   ),

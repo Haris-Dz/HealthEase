@@ -5,11 +5,12 @@ import 'package:healthease_desktop/providers/appointments_provider.dart';
 import 'package:healthease_desktop/providers/doctors_provider.dart';
 import 'package:healthease_desktop/providers/notifications_provider.dart';
 import 'package:healthease_desktop/providers/patients_provider.dart';
+import 'package:healthease_desktop/providers/reviews_provider.dart';
 import 'package:healthease_desktop/providers/roles_provider.dart';
 import 'package:healthease_desktop/providers/specializations_provider.dart';
 import 'package:healthease_desktop/providers/utils.dart';
 import 'package:healthease_desktop/providers/working_hours_provider.dart';
-import 'package:healthease_desktop/screens/dashboard_screen.dart';
+import 'package:healthease_desktop/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:healthease_desktop/providers/auth_provider.dart';
 import 'package:healthease_desktop/providers/users_provider.dart';
@@ -34,6 +35,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => SpecializationsProvider()),
         ChangeNotifierProvider(create: (_) => WorkingHoursProvider()),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
+        ChangeNotifierProvider(create: (_) => ReviewsProvider()),
       ],
       child: const MyApp(),
     ),
@@ -218,9 +220,9 @@ class _LoginPageState extends State<LoginPage> {
                                     MaterialPageRoute(
                                       builder:
                                           (context) => MasterScreen(
-                                            title: "Dashboard",
-                                            currentRoute: "Dashboard",
-                                            child: const DashboardScreen(),
+                                            title: "Home",
+                                            currentRoute: "Home",
+                                            child: const HomeScreen(),
                                           ),
                                     ),
                                   );

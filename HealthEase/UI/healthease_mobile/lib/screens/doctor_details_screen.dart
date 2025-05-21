@@ -3,12 +3,40 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:healthease_mobile/layouts/master_screen.dart';
 import 'package:healthease_mobile/models/doctor.dart';
+import 'package:healthease_mobile/models/review.dart';
 import 'package:healthease_mobile/screens/make_appointment_screen.dart';
+import 'package:healthease_mobile/screens/doctor_reviews_screen.dart';
+import 'package:healthease_mobile/providers/review_provider.dart';
+import 'package:provider/provider.dart';
 
 class DoctorDetailsScreen extends StatelessWidget {
   final Doctor doctor;
 
   const DoctorDetailsScreen({super.key, required this.doctor});
+
+  double _calculateAverageRating(List<Review> reviews) {
+    final validReviews =
+        reviews
+            .where((r) => r.isDeleted != true && (r.rating ?? 0) > 0)
+            .toList();
+    if (validReviews.isEmpty) return 0.0;
+    final sum = validReviews.fold<double>(
+      0.0,
+      (prev, r) => prev + (r.rating ?? 0),
+    );
+    return sum / validReviews.length;
+  }
+
+  int _countComments(List<Review> reviews) {
+    return reviews
+        .where(
+          (r) =>
+              r.isDeleted != true &&
+              r.comment != null &&
+              r.comment!.trim().isNotEmpty,
+        )
+        .length;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +45,6 @@ class DoctorDetailsScreen extends StatelessWidget {
         doctor.user?.profilePicture != "AA==") {
       imageBytes = base64Decode(doctor.user!.profilePicture!);
     }
-
-    final workingHours = doctor.workingHours;
-    String workingText =
-        workingHours != null && workingHours.isNotEmpty
-            ? "${workingHours.first.startTime} - ${workingHours.first.endTime}"
-            : "Not specified";
 
     final specializations =
         doctor.doctorSpecializations
@@ -74,20 +96,102 @@ class DoctorDetailsScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _InfoChip(icon: Icons.access_time, text: workingText),
-                    ],
+
+                  // FutureBuilder za reviews!
+                  FutureBuilder(
+                    future: Provider.of<ReviewProvider>(
+                      context,
+                      listen: false,
+                    ).get(
+                      filter: {
+                        "DoctorId": doctor.doctorId,
+                        // dodaš i isDeleted=false filter ako imaš podršku na backendu
+                      },
+                    ),
+                    builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        return const Text("Failed to load reviews.");
+                      }
+                      final reviewList =
+                          (snapshot.data?.resultList as List?)
+                              ?.cast<Review>() ??
+                          <Review>[];
+                      final avgRating = _calculateAverageRating(reviewList);
+                      final numComments = _countComments(reviewList);
+
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _InfoChip(
+                            icon: Icons.star,
+                            text: avgRating.toStringAsFixed(1),
+                          ),
+                          const SizedBox(width: 10),
+                          _InfoChip(icon: Icons.reviews, text: "$numComments"),
+                        ],
+                      );
+                    },
                   ),
 
                   const SizedBox(height: 12),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      _InfoChip(icon: Icons.star, text: "5"),
-                      SizedBox(width: 10),
-                      _InfoChip(icon: Icons.people, text: "40"),
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => DoctorReviewsScreen(doctor: doctor),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.reviews),
+                        label: const Text("View Reviews"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade600,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 10,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                "Coming soon: Send message to doctor!",
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.mail),
+                        label: const Text("Send Message"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey.shade400,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 10,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
 
@@ -101,10 +205,8 @@ class DoctorDetailsScreen extends StatelessWidget {
                         ),
                       );
                     },
-
                     icon: const Icon(Icons.calendar_today),
                     label: const Text("Book an Appointment"),
-
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
@@ -120,7 +222,6 @@ class DoctorDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 20),
             _Section(
               title: "Details",
@@ -129,7 +230,6 @@ class DoctorDetailsScreen extends StatelessWidget {
                       ? doctor.biography!
                       : "No biography available.",
             ),
-
             _SectionWithList(
               title: "Specializations",
               items: doctor.doctorSpecializations ?? [],
@@ -140,6 +240,8 @@ class DoctorDetailsScreen extends StatelessWidget {
     );
   }
 }
+
+// Helper widgeti ostaju isti:
 
 class _InfoChip extends StatelessWidget {
   final IconData icon;
@@ -248,7 +350,3 @@ class _SectionWithList extends StatelessWidget {
     );
   }
 }
-
-const String lorem =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-    "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";

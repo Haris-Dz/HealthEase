@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:healthease_mobile/layouts/master_screen.dart';
 import 'package:healthease_mobile/models/appointment.dart';
+import 'package:healthease_mobile/models/review.dart';
 import 'package:healthease_mobile/providers/appointments_provider.dart';
+import 'package:healthease_mobile/providers/review_provider.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
 import 'package:healthease_mobile/providers/utils.dart';
 import 'package:healthease_mobile/screens/paypal_screen.dart';
+import 'package:provider/provider.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({super.key});
@@ -41,6 +44,19 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     }
   }
 
+  DateTime _getAppointmentDateTime(Appointment a) {
+    final date = DateTime.parse(a.appointmentDate!);
+    final timeParts = a.appointmentTime!.split(":");
+    return DateTime(
+      date.year,
+      date.month,
+      date.day,
+      int.parse(timeParts[0]),
+      int.parse(timeParts[1]),
+      timeParts.length > 2 ? int.parse(timeParts[2]) : 0,
+    );
+  }
+
   Widget _buildStatusBadge(String status) {
     Color badgeColor;
     switch (status.toLowerCase()) {
@@ -73,6 +89,21 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     );
   }
 
+  Future<Review?> _getReview(int appointmentId) async {
+    final reviewProvider = Provider.of<ReviewProvider>(context, listen: false);
+    final result = await reviewProvider.get(
+      filter: {
+        'isDeleted': true,
+        'AppointmentId': appointmentId,
+        'PatientId': AuthProvider.patientId,
+      },
+    );
+    if (result.resultList.isNotEmpty) {
+      return result.resultList.first;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreen(
@@ -103,6 +134,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                 itemBuilder: (context, index) {
                   final a = _appointments[index];
                   final type = a.appointmentType;
+
+                  final isPaid = a.isPaid == true;
+                  final appointmentDateTime = _getAppointmentDateTime(a);
+                  final isPast = appointmentDateTime.isBefore(DateTime.now());
+                  final canReview = isPaid && isPast;
 
                   return Card(
                     elevation: 4,
@@ -186,7 +222,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                               ],
                             ),
                           ),
-
                           if (a.note != null && a.note!.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 8),
@@ -215,7 +250,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                       appointment.appointmentType?.price
                                           ?.toStringAsFixed(2) ??
                                       "0.00";
-
                                   final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -226,12 +260,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                           ),
                                     ),
                                   );
-
                                   if (result == true) {
                                     _fetchAppointments();
                                   }
                                 },
-
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue.shade800,
                                   foregroundColor: Colors.white,
@@ -243,12 +275,270 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                 label: const Text("Pay Now"),
                               ),
                             ),
+
+                          // OVDJE IDE NAŠA NOVA LOGIKA
+                          if (isPaid && !isPast)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 12),
+                              child: Text(
+                                "You can leave a review after your appointment.",
+                                style: TextStyle(
+                                  color: Colors.blue.shade700,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+
+                          if (canReview)
+                            FutureBuilder<Review?>(
+                              future: _getReview(a.appointmentId!),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Padding(
+                                    padding: EdgeInsets.only(top: 12),
+                                    child: LinearProgressIndicator(),
+                                  );
+                                }
+                                final review = snapshot.data;
+
+                                if (review == null) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 12),
+                                    child: ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.orange.shade700,
+                                        foregroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                      ),
+                                      icon: const Icon(Icons.star_rate_rounded),
+                                      label: const Text("Leave Review"),
+                                      onPressed: () async {
+                                        final submitted =
+                                            await showDialog<bool>(
+                                              context: context,
+                                              builder:
+                                                  (context) =>
+                                                      LeaveReviewDialog(
+                                                        appointmentId:
+                                                            a.appointmentId!,
+                                                        doctorId: a.doctorId!,
+                                                      ),
+                                            );
+                                        if (submitted == true) setState(() {});
+                                      },
+                                    ),
+                                  );
+                                }
+                                if (review.isDeleted == true) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 12),
+                                    child: Chip(
+                                      avatar: const Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                        size: 18,
+                                      ),
+                                      label: const Text(
+                                        "Reviewed",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      backgroundColor: Colors.grey.shade600,
+                                    ),
+                                  );
+                                }
+
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 12),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Chip(
+                                        avatar: const Icon(
+                                          Icons.check,
+                                          color: Colors.white,
+                                          size: 18,
+                                        ),
+                                        label: const Text(
+                                          "Reviewed",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        backgroundColor: Colors.green.shade600,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Tooltip(
+                                        message: "Edit your review",
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.blueAccent,
+                                          ),
+                                          onPressed: () async {
+                                            final submitted = await showDialog<
+                                              bool
+                                            >(
+                                              context: context,
+                                              builder:
+                                                  (
+                                                    context,
+                                                  ) => LeaveReviewDialog(
+                                                    appointmentId:
+                                                        a.appointmentId!,
+                                                    doctorId: a.doctorId!,
+                                                    initialRating:
+                                                        review.rating
+                                                            ?.toInt() ??
+                                                        5,
+                                                    initialComment:
+                                                        review.comment ?? "",
+                                                    reviewId: review.reviewId,
+                                                  ),
+                                            );
+                                            if (submitted == true)
+                                              setState(() {});
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
                         ],
                       ),
                     ),
                   );
                 },
               ),
+    );
+  }
+}
+
+class LeaveReviewDialog extends StatefulWidget {
+  final int appointmentId;
+  final int doctorId;
+  final int? initialRating;
+  final String? initialComment;
+  final int? reviewId;
+
+  const LeaveReviewDialog({
+    super.key,
+    required this.appointmentId,
+    required this.doctorId,
+    this.initialRating,
+    this.initialComment,
+    this.reviewId,
+  });
+
+  @override
+  State<LeaveReviewDialog> createState() => _LeaveReviewDialogState();
+}
+
+class _LeaveReviewDialogState extends State<LeaveReviewDialog> {
+  late int _rating;
+  late TextEditingController _commentController;
+  bool _submitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _rating = widget.initialRating ?? 5;
+    _commentController = TextEditingController(
+      text: widget.initialComment ?? "",
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final reviewProvider = Provider.of<ReviewProvider>(context, listen: false);
+
+    return AlertDialog(
+      title: Text(
+        widget.reviewId == null ? "Rate Your Experience" : "Edit Your Review",
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(5, (index) {
+              return IconButton(
+                icon: Icon(
+                  _rating > index ? Icons.star : Icons.star_border,
+                  color: Colors.amber,
+                  size: 32,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _rating = index + 1;
+                  });
+                },
+              );
+            }),
+          ),
+          TextField(
+            controller: _commentController,
+            decoration: const InputDecoration(
+              labelText: "Comment (optional)",
+              border: OutlineInputBorder(),
+            ),
+            minLines: 1,
+            maxLines: 3,
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed:
+              _submitting ? null : () => Navigator.of(context).pop(false),
+          child: const Text("Cancel"),
+        ),
+        ElevatedButton(
+          onPressed:
+              _submitting
+                  ? null
+                  : () async {
+                    setState(() => _submitting = true);
+                    try {
+                      if (widget.reviewId == null) {
+                        await reviewProvider.insert({
+                          'appointmentId': widget.appointmentId,
+                          'rating': _rating,
+                          'comment': _commentController.text.trim(),
+                        });
+                      } else {
+                        await reviewProvider.update(widget.reviewId!, {
+                          'appointmentId': widget.appointmentId,
+                          'rating': _rating,
+                          'comment': _commentController.text.trim(),
+                        });
+                      }
+                      if (context.mounted) Navigator.of(context).pop(true);
+                    } catch (_) {
+                      if (context.mounted) {
+                        await showErrorAlert(
+                          context,
+                          "Failed to submit review.",
+                        );
+                      }
+                    } finally {
+                      setState(() => _submitting = false);
+                    }
+                  },
+          child:
+              _submitting
+                  ? const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(),
+                  )
+                  : const Text("Submit"),
+        ),
+      ],
     );
   }
 }

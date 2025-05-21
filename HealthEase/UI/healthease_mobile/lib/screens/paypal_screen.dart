@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_paypal_payment/flutter_paypal_payment.dart';
 import 'package:healthease_mobile/models/appointment.dart';
 import 'package:healthease_mobile/providers/appointments_provider.dart';
@@ -23,10 +24,12 @@ class PaypalScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PaypalCheckoutView(
       sandboxMode: true,
-      clientId:
-          "AURtCEWnvA03YzChyXThPXeyY2beJP1RFJlUAzpjk1tBD8Xu166eActAUmwQmf_moWiVAzmxVVCMPdFp",
-      secretKey:
-          "ECC5-TP5yuNrOYTOXPUvGg6m49UdvPmKOKb3yhG2_r-R-5rdHr7Ryj0NuFWkA6zGKIXWzvk2bmCcpxaw",
+      clientId: dotenv.env['PAYPAL_CLIENT_ID'] ?? "",
+      secretKey: dotenv.env['PAYPAL_SECRET'] ?? "",
+      // clientId:
+      //     "AURtCEWnvA03YzChyXThPXeyY2beJP1RFJlUAzpjk1tBD8Xu166eActAUmwQmf_moWiVAzmxVVCMPdFp",
+      // secretKey:
+      //     "ECC5-TP5yuNrOYTOXPUvGg6m49UdvPmKOKb3yhG2_r-R-5rdHr7Ryj0NuFWkA6zGKIXWzvk2bmCcpxaw",
       transactions: [
         {
           "amount": {
