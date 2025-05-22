@@ -5,7 +5,6 @@ import 'package:healthease_mobile/layouts/master_screen.dart';
 import 'package:healthease_mobile/models/doctor.dart';
 import 'package:healthease_mobile/models/review.dart';
 import 'package:healthease_mobile/providers/review_provider.dart';
-import 'package:healthease_mobile/providers/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 

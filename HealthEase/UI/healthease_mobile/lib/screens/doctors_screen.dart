@@ -20,6 +20,7 @@ class DoctorsScreen extends StatefulWidget {
 
 class _DoctorsScreenState extends State<DoctorsScreen> {
   List<Doctor> _doctors = [];
+  List<Doctor> _recommendedDoctors = [];
   List<Specialization> _specializations = [];
   List<int> _selectedSpecializationIds = [];
   List<int> _favoriteDoctorIds = [];
@@ -36,6 +37,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     await _fetchFilters();
     await _fetchFavorites();
     await _fetchDoctors();
+    await _fetchRecommended();
   }
 
   Future<void> _fetchFilters() async {
@@ -80,12 +82,20 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     });
   }
 
+  Future<void> _fetchRecommended() async {
+    final provider = Provider.of<DoctorsProvider>(context, listen: false);
+    final recommended = await provider.getRecommended();
+    if (!mounted) return;
+    setState(() {
+      _recommendedDoctors = recommended;
+    });
+  }
+
   Future<void> _toggleFavorite(int doctorId) async {
     final favProvider = Provider.of<PatientDoctorFavoritesProvider>(
       context,
       listen: false,
     );
-
     await favProvider.toggleFavorite(AuthProvider.patientId!, doctorId);
     if (!mounted) return;
     setState(() {
@@ -95,6 +105,10 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
         _favoriteDoctorIds.add(doctorId);
       }
     });
+  }
+
+  bool _isRecommended(int doctorId) {
+    return _recommendedDoctors.any((doc) => doc.doctorId == doctorId);
   }
 
   Widget _buildDoctorCard(Doctor doctor) {
@@ -111,11 +125,12 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             : "";
 
     final isFavorite = _favoriteDoctorIds.contains(doctor.doctorId);
+    final isRecommended = _isRecommended(doctor.doctorId!);
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: const Color(0xFFDCE7FF),
+      color: isRecommended ? const Color(0xFFB3E5FC) : const Color(0xFFDCE7FF),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
@@ -134,12 +149,37 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Dr. ${doctor.user?.firstName ?? ''} ${doctor.user?.lastName ?? ''}",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Dr. ${doctor.user?.firstName ?? ''} ${doctor.user?.lastName ?? ''}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      if (isRecommended)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            "Recommended",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -273,6 +313,14 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Kombinuj doktore, preporučene idu na vrh, ostali ispod
+    final Set<int> recommendedIds =
+        _recommendedDoctors.map((d) => d.doctorId!).toSet();
+    final List<Doctor> sortedDoctors = [
+      ..._recommendedDoctors,
+      ..._doctors.where((d) => !recommendedIds.contains(d.doctorId)),
+    ];
+
     return MasterScreen(
       title: "Doctors",
       currentRoute: "Doctors",
@@ -313,10 +361,10 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                     const SizedBox(height: 16),
                     Expanded(
                       child: ListView.builder(
-                        itemCount: _doctors.length,
+                        itemCount: sortedDoctors.length,
                         itemBuilder:
                             (context, index) =>
-                                _buildDoctorCard(_doctors[index]),
+                                _buildDoctorCard(sortedDoctors[index]),
                       ),
                     ),
                   ],

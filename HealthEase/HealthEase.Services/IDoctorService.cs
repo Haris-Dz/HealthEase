@@ -16,5 +16,7 @@ namespace HealthEase.Services
         public Task<DoctorDTO> EditAsync (int id, CancellationToken cancellationToken = default);
         public Task<DoctorDTO> HideAsync (int id, CancellationToken cancellationToken = default);
         //public List<string> AllowedActions(int id);
+        Task<List<DoctorDTO>> Recommend(int id);
+        void TrainData();
     }
 }

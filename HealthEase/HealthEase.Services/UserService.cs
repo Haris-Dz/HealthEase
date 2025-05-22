@@ -82,16 +82,16 @@ namespace HealthEase.Services
             var bus = RabbitHutch.CreateBus(rabbitmq);
 
             Console.WriteLine(bus);
-            RegisterMessage registerMessage = new RegisterMessage {
-                employeeFirstName = request.FirstName, 
-                employeeLastName = request.LastName, 
-                email = request.Email, 
+            RegisterMessage registerMessage = new RegisterMessage
+            {
+                employeeFirstName = request.FirstName,
+                employeeLastName = request.LastName,
+                email = request.Email,
                 username = request.Username,
                 password = newPass
             };
 
-           await  bus.PubSub.PublishAsync(registerMessage);
-            Console.WriteLine($"✅ Sent RegisterMessage to {request.Email}");
+            await bus.PubSub.PublishAsync(registerMessage);
 
 
         }

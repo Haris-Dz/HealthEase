@@ -8,6 +8,7 @@ using Mapster;
 using Healthease.API.Auth;
 using Microsoft.AspNetCore.Authentication;
 using HealthEase.Services.DoctorStateMachine;
+using HealthEase.Services.Recommender;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
@@ -29,6 +30,8 @@ builder.Services.AddTransient<InitialDoctorState>();
 builder.Services.AddTransient<DraftDoctorState>();
 builder.Services.AddTransient<ActiveDoctorState>();
 builder.Services.AddTransient<HiddenDoctorState>();
+
+builder.Services.AddScoped<IRecommenderService, RecommenderService>();
 
 MappingConfig.RegisterMappings();
 

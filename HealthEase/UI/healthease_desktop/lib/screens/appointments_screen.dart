@@ -105,28 +105,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     });
   }
 
-  Future<void> _pickDate(BuildContext context, bool isStart) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate:
-          isStart
-              ? (_startDate ?? DateTime.now())
-              : (_endDate ?? DateTime.now()),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
-    );
-    if (picked != null && mounted) {
-      setState(() {
-        if (isStart) {
-          _startDate = picked;
-        } else {
-          _endDate = picked;
-        }
-        _applyFilters();
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(

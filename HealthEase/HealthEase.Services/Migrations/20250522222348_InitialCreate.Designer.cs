@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthEase.Services.Migrations
 {
     [DbContext(typeof(HealthEaseContext))]
-    [Migration("20250514215601_InitialCreate")]
+    [Migration("20250522222348_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -84,7 +84,7 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             AppointmentId = 1,
-                            AppointmentDate = new DateTime(2025, 7, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentDate = new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             AppointmentTime = new TimeSpan(0, 9, 0, 0, 0),
                             AppointmentTypeId = 1,
                             DoctorId = 1,
@@ -97,7 +97,7 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             AppointmentId = 2,
-                            AppointmentDate = new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentDate = new DateTime(2025, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             AppointmentTime = new TimeSpan(0, 11, 0, 0, 0),
                             AppointmentTypeId = 2,
                             DoctorId = 2,
@@ -111,8 +111,8 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             AppointmentId = 3,
-                            AppointmentDate = new DateTime(2025, 7, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AppointmentTime = new TimeSpan(0, 13, 0, 0, 0),
+                            AppointmentDate = new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 11, 0, 0, 0),
                             AppointmentTypeId = 4,
                             DoctorId = 3,
                             IsDeleted = false,
@@ -126,7 +126,7 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             AppointmentId = 4,
-                            AppointmentDate = new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentDate = new DateTime(2025, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             AppointmentTime = new TimeSpan(0, 10, 0, 0, 0),
                             AppointmentTypeId = 3,
                             DoctorId = 4,
@@ -140,8 +140,8 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             AppointmentId = 5,
-                            AppointmentDate = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AppointmentTime = new TimeSpan(0, 14, 0, 0, 0),
+                            AppointmentDate = new DateTime(2025, 7, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 13, 0, 0, 0),
                             AppointmentTypeId = 2,
                             DoctorId = 1,
                             IsDeleted = false,
@@ -245,16 +245,16 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             DoctorId = 1,
-                            Biography = "Dr. Doctor1 is an experienced specialist in internal medicine. He has dedicated over 10 years to diagnosing and treating a wide range of chronic diseases, with a focus on patient-centered care and health education.",
+                            Biography = "Expert in internal medicine with 10+ years of experience.",
                             IsDeleted = false,
-                            StateMachine = "draft",
+                            StateMachine = "active",
                             Title = "Dr. med.",
                             UserId = 3
                         },
                         new
                         {
                             DoctorId = 2,
-                            Biography = "Dr. Doctor2 is a double specialist in cardiology and neurology. With a strong academic background and clinical expertise, she combines knowledge from both fields to provide comprehensive diagnostic and treatment solutions.",
+                            Biography = "Cardiologist and neurologist. Strong academic background.",
                             IsDeleted = false,
                             StateMachine = "active",
                             Title = "Dr. sci. med.",
@@ -263,7 +263,7 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             DoctorId = 3,
-                            Biography = "Dr. Doctor3 is a pediatrician with more than 7 years of experience in treating children of all ages. Known for a compassionate approach and excellent communication with both kids and parents.",
+                            Biography = "Pediatrician known for working with children and parents.",
                             IsDeleted = false,
                             StateMachine = "active",
                             Title = "Mr. sci. med.",
@@ -272,11 +272,110 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             DoctorId = 4,
-                            Biography = "Dr. Doctor4 is a skilled dermatologist who has worked extensively with skin conditions ranging from acne to rare autoimmune diseases. She emphasizes early diagnosis and personalized treatment plans.",
+                            Biography = "Dermatologist with focus on autoimmune diseases.",
                             IsDeleted = false,
                             StateMachine = "active",
                             Title = "Dr. med.",
                             UserId = 6
+                        },
+                        new
+                        {
+                            DoctorId = 5,
+                            Biography = "Renowned orthopedic surgeon with innovative approach.",
+                            IsDeleted = false,
+                            StateMachine = "active",
+                            Title = "Dr. med.",
+                            UserId = 7
+                        },
+                        new
+                        {
+                            DoctorId = 6,
+                            Biography = "Ophthalmologist specialized in laser vision correction.",
+                            IsDeleted = false,
+                            StateMachine = "active",
+                            Title = "Dr. med.",
+                            UserId = 8
+                        },
+                        new
+                        {
+                            DoctorId = 7,
+                            Biography = "ENT specialist, passionate about minimally invasive surgery.",
+                            IsDeleted = false,
+                            StateMachine = "active",
+                            Title = "Dr. med.",
+                            UserId = 9
+                        },
+                        new
+                        {
+                            DoctorId = 8,
+                            Biography = "Experienced oncologist, published over 20 papers.",
+                            IsDeleted = false,
+                            StateMachine = "active",
+                            Title = "Dr. sci. med.",
+                            UserId = 10
+                        },
+                        new
+                        {
+                            DoctorId = 9,
+                            Biography = "Pulmonologist focusing on chronic lung diseases.",
+                            IsDeleted = false,
+                            StateMachine = "active",
+                            Title = "Dr. med.",
+                            UserId = 11
+                        },
+                        new
+                        {
+                            DoctorId = 10,
+                            Biography = "Gastroenterologist with holistic patient approach.",
+                            IsDeleted = false,
+                            StateMachine = "active",
+                            Title = "Dr. med.",
+                            UserId = 12
+                        },
+                        new
+                        {
+                            DoctorId = 11,
+                            Biography = "Endocrinologist, specialist for diabetes.",
+                            IsDeleted = false,
+                            StateMachine = "active",
+                            Title = "Dr. med.",
+                            UserId = 13
+                        },
+                        new
+                        {
+                            DoctorId = 12,
+                            Biography = "General surgeon, expert in abdominal surgery.",
+                            IsDeleted = false,
+                            StateMachine = "active",
+                            Title = "Dr. med.",
+                            UserId = 14
+                        },
+                        new
+                        {
+                            DoctorId = 13,
+                            Biography = "Psychiatrist with focus on youth mental health.",
+                            IsDeleted = false,
+                            StateMachine = "active",
+                            Title = "Dr. sci. med.",
+                            UserId = 15
+                        },
+                        new
+                        {
+                            DoctorId = 14,
+                            Biography = "Urologist, pioneer in new surgical techniques.",
+                            IsDeleted = false,
+                            StateMachine = "active",
+                            Title = "Dr. med.",
+                            UserId = 16
+                        },
+                        new
+                        {
+                            DoctorId = 15,
+                            Biography = "Rheumatologist passionate about research.",
+                            IsDeleted = false,
+                            StateMachine = "active",
+                            Title = "Dr. sci. med.",
+                            UserId = 17
                         });
                 });
 
@@ -321,28 +420,98 @@ namespace HealthEase.Services.Migrations
                             DoctorSpecializationId = 2,
                             DoctorId = 2,
                             IsDeleted = false,
-                            SpecializationId = 1
-                        },
-                        new
-                        {
-                            DoctorSpecializationId = 3,
-                            DoctorId = 2,
-                            IsDeleted = false,
                             SpecializationId = 2
                         },
                         new
                         {
-                            DoctorSpecializationId = 4,
+                            DoctorSpecializationId = 3,
                             DoctorId = 3,
                             IsDeleted = false,
                             SpecializationId = 3
                         },
                         new
                         {
-                            DoctorSpecializationId = 5,
+                            DoctorSpecializationId = 4,
                             DoctorId = 4,
                             IsDeleted = false,
                             SpecializationId = 4
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 5,
+                            DoctorId = 5,
+                            IsDeleted = false,
+                            SpecializationId = 2
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 6,
+                            DoctorId = 6,
+                            IsDeleted = false,
+                            SpecializationId = 3
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 7,
+                            DoctorId = 7,
+                            IsDeleted = false,
+                            SpecializationId = 1
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 8,
+                            DoctorId = 8,
+                            IsDeleted = false,
+                            SpecializationId = 4
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 9,
+                            DoctorId = 9,
+                            IsDeleted = false,
+                            SpecializationId = 2
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 10,
+                            DoctorId = 10,
+                            IsDeleted = false,
+                            SpecializationId = 1
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 11,
+                            DoctorId = 11,
+                            IsDeleted = false,
+                            SpecializationId = 3
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 12,
+                            DoctorId = 12,
+                            IsDeleted = false,
+                            SpecializationId = 4
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 13,
+                            DoctorId = 13,
+                            IsDeleted = false,
+                            SpecializationId = 1
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 14,
+                            DoctorId = 14,
+                            IsDeleted = false,
+                            SpecializationId = 4
+                        },
+                        new
+                        {
+                            DoctorSpecializationId = 15,
+                            DoctorId = 15,
+                            IsDeleted = false,
+                            SpecializationId = 3
                         });
                 });
 
@@ -389,6 +558,9 @@ namespace HealthEase.Services.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
                     b.Property<string>("Message")
@@ -528,6 +700,78 @@ namespace HealthEase.Services.Migrations
                     b.HasIndex("DoctorId");
 
                     b.ToTable("PatientDoctorFavorites");
+
+                    b.HasData(
+                        new
+                        {
+                            PatientId = 1,
+                            DoctorId = 2,
+                            CreatedAt = new DateTime(2025, 5, 22, 8, 30, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            PatientId = 1,
+                            DoctorId = 5,
+                            CreatedAt = new DateTime(2025, 5, 21, 14, 15, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            PatientId = 1,
+                            DoctorId = 10,
+                            CreatedAt = new DateTime(2025, 5, 21, 15, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            PatientId = 2,
+                            DoctorId = 3,
+                            CreatedAt = new DateTime(2025, 5, 20, 9, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            PatientId = 2,
+                            DoctorId = 7,
+                            CreatedAt = new DateTime(2025, 5, 19, 11, 45, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            PatientId = 2,
+                            DoctorId = 12,
+                            CreatedAt = new DateTime(2025, 5, 18, 17, 10, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            PatientId = 3,
+                            DoctorId = 1,
+                            CreatedAt = new DateTime(2025, 5, 22, 9, 20, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            PatientId = 3,
+                            DoctorId = 6,
+                            CreatedAt = new DateTime(2025, 5, 21, 10, 50, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            PatientId = 3,
+                            DoctorId = 13,
+                            CreatedAt = new DateTime(2025, 5, 20, 13, 5, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            PatientId = 2,
+                            DoctorId = 14,
+                            CreatedAt = new DateTime(2025, 5, 22, 16, 30, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Prescription", b =>
@@ -609,12 +853,21 @@ namespace HealthEase.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReviewId"));
 
+                    b.Property<int>("AppointmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Comment")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -622,17 +875,16 @@ namespace HealthEase.Services.Migrations
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
+                    b.Property<int>("Rating")
                         .HasColumnType("int");
 
                     b.HasKey("ReviewId");
 
-                    b.HasIndex("PatientId");
+                    b.HasIndex("AppointmentId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
 
                     b.ToTable("Reviews");
                 });
@@ -923,6 +1175,149 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             UserId = 7,
+                            Email = "james.s@mail.com",
+                            FirstName = "James",
+                            IsDeleted = false,
+                            LastName = "Smith",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "061222111",
+                            ProfilePicture = new byte[] { 0 },
+                            Username = "james.s"
+                        },
+                        new
+                        {
+                            UserId = 8,
+                            Email = "emma.j@mail.com",
+                            FirstName = "Emma",
+                            IsDeleted = false,
+                            LastName = "Johnson",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "060111222",
+                            ProfilePicture = new byte[] { 0 },
+                            Username = "emma.j"
+                        },
+                        new
+                        {
+                            UserId = 9,
+                            Email = "liam.w@mail.com",
+                            FirstName = "Liam",
+                            IsDeleted = false,
+                            LastName = "Williams",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "065333444",
+                            ProfilePicture = new byte[] { 0 },
+                            Username = "liam.w"
+                        },
+                        new
+                        {
+                            UserId = 10,
+                            Email = "olivia.b@mail.com",
+                            FirstName = "Olivia",
+                            IsDeleted = false,
+                            LastName = "Brown",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "064222333",
+                            ProfilePicture = new byte[] { 0 },
+                            Username = "olivia.b"
+                        },
+                        new
+                        {
+                            UserId = 11,
+                            Email = "mason.d@mail.com",
+                            FirstName = "Mason",
+                            IsDeleted = false,
+                            LastName = "Davis",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "063444555",
+                            ProfilePicture = new byte[] { 0 },
+                            Username = "mason.d"
+                        },
+                        new
+                        {
+                            UserId = 12,
+                            Email = "ava.m@mail.com",
+                            FirstName = "Ava",
+                            IsDeleted = false,
+                            LastName = "Miller",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "062111999",
+                            ProfilePicture = new byte[] { 0 },
+                            Username = "ava.m"
+                        },
+                        new
+                        {
+                            UserId = 13,
+                            Email = "lucas.g@mail.com",
+                            FirstName = "Lucas",
+                            IsDeleted = false,
+                            LastName = "Garcia",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "061555888",
+                            ProfilePicture = new byte[] { 0 },
+                            Username = "lucas.g"
+                        },
+                        new
+                        {
+                            UserId = 14,
+                            Email = "mia.r@mail.com",
+                            FirstName = "Mia",
+                            IsDeleted = false,
+                            LastName = "Rodriguez",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "065777666",
+                            ProfilePicture = new byte[] { 0 },
+                            Username = "mia.r"
+                        },
+                        new
+                        {
+                            UserId = 15,
+                            Email = "jack.m@mail.com",
+                            FirstName = "Jack",
+                            IsDeleted = false,
+                            LastName = "Martinez",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "064888777",
+                            ProfilePicture = new byte[] { 0 },
+                            Username = "jack.m"
+                        },
+                        new
+                        {
+                            UserId = 16,
+                            Email = "sophia.h@mail.com",
+                            FirstName = "Sophia",
+                            IsDeleted = false,
+                            LastName = "Hernandez",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "063666555",
+                            ProfilePicture = new byte[] { 0 },
+                            Username = "sophia.h"
+                        },
+                        new
+                        {
+                            UserId = 17,
+                            Email = "logan.l@mail.com",
+                            FirstName = "Logan",
+                            IsDeleted = false,
+                            LastName = "Lopez",
+                            PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
+                            PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
+                            PhoneNumber = "061999222",
+                            ProfilePicture = new byte[] { 0 },
+                            Username = "logan.l"
+                        },
+                        new
+                        {
+                            UserId = 18,
                             Email = "sabrina.g@mail.com",
                             FirstName = "Sabrina",
                             IsDeleted = false,
@@ -972,28 +1367,12 @@ namespace HealthEase.Services.Migrations
                             UserRoleId = 1,
                             ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
-                            RoleId = 1,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            UserRoleId = 2,
-                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RoleId = 1,
-                            UserId = 2
-                        },
-                        new
-                        {
-                            UserRoleId = 3,
-                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             RoleId = 2,
                             UserId = 3
                         },
                         new
                         {
-                            UserRoleId = 4,
+                            UserRoleId = 2,
                             ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             RoleId = 2,
@@ -1001,7 +1380,7 @@ namespace HealthEase.Services.Migrations
                         },
                         new
                         {
-                            UserRoleId = 5,
+                            UserRoleId = 3,
                             ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             RoleId = 2,
@@ -1009,7 +1388,7 @@ namespace HealthEase.Services.Migrations
                         },
                         new
                         {
-                            UserRoleId = 6,
+                            UserRoleId = 4,
                             ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             RoleId = 2,
@@ -1017,11 +1396,115 @@ namespace HealthEase.Services.Migrations
                         },
                         new
                         {
+                            UserRoleId = 5,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 7
+                        },
+                        new
+                        {
+                            UserRoleId = 6,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 8
+                        },
+                        new
+                        {
                             UserRoleId = 7,
                             ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 9
+                        },
+                        new
+                        {
+                            UserRoleId = 8,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 10
+                        },
+                        new
+                        {
+                            UserRoleId = 9,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 11
+                        },
+                        new
+                        {
+                            UserRoleId = 10,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 12
+                        },
+                        new
+                        {
+                            UserRoleId = 11,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 13
+                        },
+                        new
+                        {
+                            UserRoleId = 12,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 14
+                        },
+                        new
+                        {
+                            UserRoleId = 13,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 15
+                        },
+                        new
+                        {
+                            UserRoleId = 14,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 16
+                        },
+                        new
+                        {
+                            UserRoleId = 15,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 2,
+                            UserId = 17
+                        },
+                        new
+                        {
+                            UserRoleId = 16,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 1,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            UserRoleId = 17,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             RoleId = 3,
-                            UserId = 7
+                            UserId = 18
+                        },
+                        new
+                        {
+                            UserRoleId = 18,
+                            ChangeDate = new DateTime(2025, 3, 23, 22, 48, 41, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RoleId = 1,
+                            UserId = 2
                         });
                 });
 
@@ -1070,7 +1553,7 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             WorkingHoursId = 2,
-                            Day = 2,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 14, 0, 0, 0),
                             IsDeleted = false,
                             StartTime = new TimeSpan(0, 8, 0, 0, 0),
@@ -1079,7 +1562,7 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             WorkingHoursId = 3,
-                            Day = 3,
+                            Day = 5,
                             EndTime = new TimeSpan(0, 14, 0, 0, 0),
                             IsDeleted = false,
                             StartTime = new TimeSpan(0, 8, 0, 0, 0),
@@ -1088,155 +1571,380 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             WorkingHoursId = 4,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 16, 0, 0, 0),
                             IsDeleted = false,
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
-                            UserId = 3
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 4
                         },
                         new
                         {
                             WorkingHoursId = 5,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 16, 0, 0, 0),
                             IsDeleted = false,
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
-                            UserId = 3
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 4
                         },
                         new
                         {
                             WorkingHoursId = 6,
-                            Day = 1,
-                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            Day = 4,
+                            EndTime = new TimeSpan(0, 16, 0, 0, 0),
                             IsDeleted = false,
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
                             UserId = 4
                         },
                         new
                         {
                             WorkingHoursId = 7,
-                            Day = 2,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 14, 0, 0, 0),
                             IsDeleted = false,
                             StartTime = new TimeSpan(0, 8, 0, 0, 0),
-                            UserId = 4
+                            UserId = 5
                         },
                         new
                         {
                             WorkingHoursId = 8,
-                            Day = 3,
+                            Day = 4,
                             EndTime = new TimeSpan(0, 14, 0, 0, 0),
                             IsDeleted = false,
                             StartTime = new TimeSpan(0, 8, 0, 0, 0),
-                            UserId = 4
+                            UserId = 5
                         },
                         new
                         {
                             WorkingHoursId = 9,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
-                            IsDeleted = false,
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
-                            UserId = 4
-                        },
-                        new
-                        {
-                            WorkingHoursId = 10,
                             Day = 5,
                             EndTime = new TimeSpan(0, 14, 0, 0, 0),
                             IsDeleted = false,
                             StartTime = new TimeSpan(0, 8, 0, 0, 0),
-                            UserId = 4
+                            UserId = 5
+                        },
+                        new
+                        {
+                            WorkingHoursId = 10,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0),
+                            UserId = 6
                         },
                         new
                         {
                             WorkingHoursId = 11,
-                            Day = 1,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 17, 0, 0, 0),
                             IsDeleted = false,
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            UserId = 5
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0),
+                            UserId = 6
                         },
                         new
                         {
                             WorkingHoursId = 12,
-                            Day = 2,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 17, 0, 0, 0),
                             IsDeleted = false,
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            UserId = 5
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0),
+                            UserId = 6
                         },
                         new
                         {
                             WorkingHoursId = 13,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 15, 0, 0, 0),
                             IsDeleted = false,
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            UserId = 5
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 7
                         },
                         new
                         {
                             WorkingHoursId = 14,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 15, 0, 0, 0),
                             IsDeleted = false,
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            UserId = 5
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 7
                         },
                         new
                         {
                             WorkingHoursId = 15,
                             Day = 5,
-                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            EndTime = new TimeSpan(0, 15, 0, 0, 0),
                             IsDeleted = false,
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            UserId = 5
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 7
                         },
                         new
                         {
                             WorkingHoursId = 16,
                             Day = 1,
-                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            EndTime = new TimeSpan(0, 18, 0, 0, 0),
                             IsDeleted = false,
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            UserId = 6
+                            StartTime = new TimeSpan(0, 12, 0, 0, 0),
+                            UserId = 8
                         },
                         new
                         {
                             WorkingHoursId = 17,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 18, 0, 0, 0),
                             IsDeleted = false,
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            UserId = 6
+                            StartTime = new TimeSpan(0, 12, 0, 0, 0),
+                            UserId = 8
                         },
                         new
                         {
                             WorkingHoursId = 18,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            Day = 4,
+                            EndTime = new TimeSpan(0, 18, 0, 0, 0),
                             IsDeleted = false,
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            UserId = 6
+                            StartTime = new TimeSpan(0, 12, 0, 0, 0),
+                            UserId = 8
                         },
                         new
                         {
                             WorkingHoursId = 19,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 15, 0, 0, 0),
                             IsDeleted = false,
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            UserId = 6
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 9
                         },
                         new
                         {
                             WorkingHoursId = 20,
+                            Day = 4,
+                            EndTime = new TimeSpan(0, 15, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 9
+                        },
+                        new
+                        {
+                            WorkingHoursId = 21,
+                            Day = 5,
+                            EndTime = new TimeSpan(0, 15, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 9
+                        },
+                        new
+                        {
+                            WorkingHoursId = 22,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            UserId = 10
+                        },
+                        new
+                        {
+                            WorkingHoursId = 23,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            UserId = 10
+                        },
+                        new
+                        {
+                            WorkingHoursId = 24,
+                            Day = 4,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            UserId = 10
+                        },
+                        new
+                        {
+                            WorkingHoursId = 25,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0),
+                            UserId = 11
+                        },
+                        new
+                        {
+                            WorkingHoursId = 26,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0),
+                            UserId = 11
+                        },
+                        new
+                        {
+                            WorkingHoursId = 27,
+                            Day = 5,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0),
+                            UserId = 11
+                        },
+                        new
+                        {
+                            WorkingHoursId = 28,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 19, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 13, 0, 0, 0),
+                            UserId = 12
+                        },
+                        new
+                        {
+                            WorkingHoursId = 29,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 19, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 13, 0, 0, 0),
+                            UserId = 12
+                        },
+                        new
+                        {
+                            WorkingHoursId = 30,
+                            Day = 4,
+                            EndTime = new TimeSpan(0, 19, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 13, 0, 0, 0),
+                            UserId = 12
+                        },
+                        new
+                        {
+                            WorkingHoursId = 31,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 15, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 13
+                        },
+                        new
+                        {
+                            WorkingHoursId = 32,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 15, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 13
+                        },
+                        new
+                        {
+                            WorkingHoursId = 33,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 15, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 13
+                        },
+                        new
+                        {
+                            WorkingHoursId = 34,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 14
+                        },
+                        new
+                        {
+                            WorkingHoursId = 35,
+                            Day = 4,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 14
+                        },
+                        new
+                        {
+                            WorkingHoursId = 36,
+                            Day = 5,
+                            EndTime = new TimeSpan(0, 14, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 14
+                        },
+                        new
+                        {
+                            WorkingHoursId = 37,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 15, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 15
+                        },
+                        new
+                        {
+                            WorkingHoursId = 38,
+                            Day = 4,
+                            EndTime = new TimeSpan(0, 15, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 15
+                        },
+                        new
+                        {
+                            WorkingHoursId = 39,
+                            Day = 5,
+                            EndTime = new TimeSpan(0, 15, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 15
+                        },
+                        new
+                        {
+                            WorkingHoursId = 40,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 16
+                        },
+                        new
+                        {
+                            WorkingHoursId = 41,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UserId = 16
+                        },
+                        new
+                        {
+                            WorkingHoursId = 42,
                             Day = 5,
                             EndTime = new TimeSpan(0, 17, 0, 0, 0),
                             IsDeleted = false,
                             StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            UserId = 6
+                            UserId = 16
+                        },
+                        new
+                        {
+                            WorkingHoursId = 43,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 17
+                        },
+                        new
+                        {
+                            WorkingHoursId = 44,
+                            Day = 4,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 17
+                        },
+                        new
+                        {
+                            WorkingHoursId = 45,
+                            Day = 5,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            IsDeleted = false,
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = 17
                         });
                 });
 
@@ -1249,7 +1957,7 @@ namespace HealthEase.Services.Migrations
                         .IsRequired();
 
                     b.HasOne("HealthEase.Services.Database.Doctor", "Doctor")
-                        .WithMany()
+                        .WithMany("Appointments")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1367,21 +2075,29 @@ namespace HealthEase.Services.Migrations
 
             modelBuilder.Entity("HealthEase.Services.Database.Review", b =>
                 {
+                    b.HasOne("HealthEase.Services.Database.Appointment", "Appointment")
+                        .WithMany()
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HealthEase.Services.Database.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("HealthEase.Services.Database.Patient", "Patient")
                         .WithMany("Reviews")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HealthEase.Services.Database.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Appointment");
+
+                    b.Navigation("Doctor");
 
                     b.Navigation("Patient");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Transaction", b =>
@@ -1440,6 +2156,8 @@ namespace HealthEase.Services.Migrations
 
             modelBuilder.Entity("HealthEase.Services.Database.Doctor", b =>
                 {
+                    b.Navigation("Appointments");
+
                     b.Navigation("DoctorSpecializations");
                 });
 
