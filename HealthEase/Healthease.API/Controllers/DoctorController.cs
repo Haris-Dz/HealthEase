@@ -3,6 +3,7 @@ using HealthEase.Model.DTOs;
 using HealthEase.Model.Requests;
 using HealthEase.Model.SearchObjects;
 using HealthEase.Services;
+using HealthEase.Services.Recommender;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Healthease.API.Controllers
@@ -29,6 +30,27 @@ namespace Healthease.API.Controllers
         {
             return await (_service as IDoctorService)!.HideAsync(id, cancellationToken);
         }
+        [HttpGet("recommended")]
+        public async Task<ActionResult<List<DoctorDTO>>> Recommend(int patientId)
+        {
+            var recommender = _service as IDoctorService;
+            if (recommender == null)
+                return BadRequest("Service does not support recommendations.");
+
+            var result = await recommender.Recommend(patientId);
+            return Ok(result);
+        }
+        [HttpPost("trainData")]
+        public async Task<ActionResult> TrainData()
+        {
+            var trainData = _service as IDoctorService;
+            if (trainData == null)
+                return BadRequest("Service does not support data training.");
+
+            trainData.TrainData();
+            return Ok();
+        }
+
 
     }
 }

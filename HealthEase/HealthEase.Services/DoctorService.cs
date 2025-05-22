@@ -5,6 +5,7 @@ using HealthEase.Model.SearchObjects;
 using HealthEase.Services.BaseServices;
 using HealthEase.Services.Database;
 using HealthEase.Services.DoctorStateMachine;
+using HealthEase.Services.Recommender;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,14 +17,17 @@ namespace HealthEase.Services
     {
         private readonly ILogger<DoctorService> _logger;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IRecommenderService _recommenderService;
 
         public DoctorService(
             HealthEaseContext context,
             IMapper mapper,
             ILogger<DoctorService> logger,
-            IServiceProvider serviceProvider
+            IServiceProvider serviceProvider,
+            IRecommenderService recommenderService
         ) : base(context, mapper)
         {
+            _recommenderService = recommenderService;
             _logger = logger;
             _serviceProvider = serviceProvider;
         }
@@ -142,6 +146,16 @@ namespace HealthEase.Services
 
             var state = BaseDoctorState.CreateState(entity.StateMachine, _serviceProvider);
             return await state.HideAsync(id, cancellationToken);
+        }
+        public async Task<List<DoctorDTO>> Recommend(int patientId)
+        {
+            var recommend = await _recommenderService.Recommend(patientId);
+            return recommend.Where(d=> d.StateMachine == "active").ToList();
+        }
+
+        public void TrainData()
+        {
+            _recommenderService.TrainModel();
         }
     }
 }

@@ -22,5 +22,6 @@ namespace HealthEase.Services.Database
 
         public virtual ICollection<DoctorSpecialization> DoctorSpecializations { get; set; } = new List<DoctorSpecialization>();
 
+        public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
 }
