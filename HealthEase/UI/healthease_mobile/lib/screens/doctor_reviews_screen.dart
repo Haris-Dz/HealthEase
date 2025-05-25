@@ -61,7 +61,6 @@ class DoctorReviewsScreen extends StatelessWidget {
               final r = reviews[index];
               final isDeleted = r.isDeleted == true;
 
-              // Decode profile picture, fallback na placeholder
               ImageProvider patientImage;
               if (r.patientProfilePicture != null &&
                   r.patientProfilePicture!.isNotEmpty &&
@@ -93,14 +92,12 @@ class DoctorReviewsScreen extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Profile slika
                         CircleAvatar(backgroundImage: patientImage, radius: 22),
                         const SizedBox(width: 14),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Ime pacijenta, datum i vrijeme
                               Row(
                                 children: [
                                   Text(

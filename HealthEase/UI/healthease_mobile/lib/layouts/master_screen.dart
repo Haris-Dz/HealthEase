@@ -6,6 +6,7 @@ import 'package:healthease_mobile/providers/notifications_provider.dart';
 import 'package:healthease_mobile/screens/appointments_screen.dart';
 import 'package:healthease_mobile/screens/doctors_screen.dart';
 import 'package:healthease_mobile/screens/favorites_screen.dart';
+import 'package:healthease_mobile/screens/messages_screen.dart';
 import 'package:healthease_mobile/screens/my_profile_screen.dart';
 import 'package:healthease_mobile/screens/notifications_screen.dart';
 import 'package:healthease_mobile/screens/payments_screen.dart';
@@ -222,7 +223,7 @@ class MasterScreen extends StatelessWidget {
                   icon: Icons.mail_outlined,
                   title: "Messages",
                   route: "Messages",
-                  screen: const PlaceholderScreen(),
+                  screen: const MessagesScreen(),
                   currentRoute: currentRoute,
                 ),
                 _buildDrawerItem(

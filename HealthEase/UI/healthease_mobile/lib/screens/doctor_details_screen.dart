@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:healthease_mobile/layouts/master_screen.dart';
 import 'package:healthease_mobile/models/doctor.dart';
 import 'package:healthease_mobile/models/review.dart';
+import 'package:healthease_mobile/screens/chat_details_screen.dart';
 import 'package:healthease_mobile/screens/make_appointment_screen.dart';
 import 'package:healthease_mobile/screens/doctor_reviews_screen.dart';
 import 'package:healthease_mobile/providers/review_provider.dart';
@@ -96,18 +97,11 @@ class DoctorDetailsScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
-
-                  // FutureBuilder za reviews!
                   FutureBuilder(
                     future: Provider.of<ReviewProvider>(
                       context,
                       listen: false,
-                    ).get(
-                      filter: {
-                        "DoctorId": doctor.doctorId,
-                        // dodaš i isDeleted=false filter ako imaš podršku na backendu
-                      },
-                    ),
+                    ).get(filter: {"DoctorId": doctor.doctorId}),
                     builder: (context, AsyncSnapshot<dynamic> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Padding(
@@ -170,18 +164,21 @@ class DoctorDetailsScreen extends StatelessWidget {
                       const SizedBox(width: 12),
                       ElevatedButton.icon(
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                "Coming soon: Send message to doctor!",
-                              ),
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => ChatDetailScreen(
+                                    otherId: doctor.user!.userId!,
+                                    otherName:
+                                        "${doctor.user?.firstName ?? ''} ${doctor.user?.lastName ?? ''}",
+                                  ),
                             ),
                           );
                         },
                         icon: const Icon(Icons.mail),
                         label: const Text("Send Message"),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey.shade400,
+                          backgroundColor: Colors.blue.shade600,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 18,
@@ -240,8 +237,6 @@ class DoctorDetailsScreen extends StatelessWidget {
     );
   }
 }
-
-// Helper widgeti ostaju isti:
 
 class _InfoChip extends StatelessWidget {
   final IconData icon;
