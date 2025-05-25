@@ -33,6 +33,7 @@ namespace HealthEase.Services.Database
         public virtual DbSet<WorkingHours> WorkingHours { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
         public virtual DbSet<PatientDoctorFavorite> PatientDoctorFavorites { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -94,7 +95,19 @@ namespace HealthEase.Services.Database
                 .HasOne(x => x.Appointment)
                 .WithMany()
                 .HasForeignKey(x => x.AppointmentId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(x => x.Patient)
+                .WithMany()
+                .HasForeignKey(x => x.PatientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
 
 

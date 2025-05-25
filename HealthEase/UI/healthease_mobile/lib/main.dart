@@ -4,6 +4,7 @@ import 'package:healthease_mobile/providers/appointment_types_provider.dart';
 import 'package:healthease_mobile/providers/appointments_provider.dart';
 import 'package:healthease_mobile/providers/auth_provider.dart';
 import 'package:healthease_mobile/providers/doctors_provider.dart';
+import 'package:healthease_mobile/providers/messages_provider.dart';
 import 'package:healthease_mobile/providers/notifications_provider.dart';
 import 'package:healthease_mobile/providers/patient_doctor_favorites_provider.dart';
 import 'package:healthease_mobile/providers/patients_provider.dart';
@@ -30,6 +31,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => TransactionsProvider()),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
         ChangeNotifierProvider(create: (_) => ReviewProvider()),
+        ChangeNotifierProvider(create: (_) => MessagesProvider()),
       ],
 
       child: const MyApp(),

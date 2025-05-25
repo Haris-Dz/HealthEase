@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:healthease_desktop/providers/auth_provider.dart';
 import 'package:healthease_desktop/providers/utils.dart';
 import 'package:healthease_desktop/screens/appointments_screen.dart';
+import 'package:healthease_desktop/screens/chat_details_screen.dart';
 import 'package:healthease_desktop/screens/home_screen.dart';
 import 'package:healthease_desktop/screens/doctors_screen.dart';
 import 'package:healthease_desktop/screens/management_screen.dart';
+import 'package:healthease_desktop/screens/messages_screen.dart';
 import 'package:healthease_desktop/screens/my_profile_screen.dart';
 import 'package:healthease_desktop/screens/notifications_screen.dart';
 import 'package:healthease_desktop/screens/reports_screen.dart';
@@ -42,17 +44,52 @@ class _MasterScreenState extends State<MasterScreen> {
   @override
   void initState() {
     super.initState();
-    _currentChild = widget.child;
+    if (widget.currentRoute == "Messages") {
+      // Prikazujemo poruke sa callbackom
+      _currentChild = MessagesScreen(onOpenChat: _openChatDetail);
+    } else {
+      _currentChild = widget.child;
+    }
     _currentTitle = widget.title;
     _currentRoute = widget.currentRoute;
   }
 
   void _onSidebarItemTapped(String title, Widget screen, String route) {
     if (!mounted) return;
+
+    // Samo za Messages moraš proslijediti callback
+    if (route == "Messages") {
+      setState(() {
+        _currentTitle = title;
+        _currentChild = MessagesScreen(onOpenChat: _openChatDetail);
+        _currentRoute = route;
+      });
+    } else {
+      setState(() {
+        _currentTitle = title;
+        _currentChild = screen;
+        _currentRoute = route;
+      });
+    }
+  }
+
+  void _openChatDetail(int patientId, String patientName) {
     setState(() {
-      _currentTitle = title;
-      _currentChild = screen;
-      _currentRoute = route;
+      _currentTitle = patientName;
+      _currentChild = ChatDetailScreen(
+        otherId: patientId,
+        otherName: patientName,
+        onBack: _goBackToMessages,
+      );
+      _currentRoute = "Messages"; // Ostaje na Messages
+    });
+  }
+
+  void _goBackToMessages() {
+    setState(() {
+      _currentTitle = "Messages";
+      _currentChild = MessagesScreen(onOpenChat: _openChatDetail);
+      _currentRoute = "Messages";
     });
   }
 
@@ -119,7 +156,7 @@ class _MasterScreenState extends State<MasterScreen> {
       _logout(context);
     } else if (selected == 'profile') {
       if (!mounted) return;
-      _onSidebarItemTapped("MyProfile", const MyProfileScreen(), "MyProfile");
+      _onSidebarItemTapped("My Profile", const MyProfileScreen(), "My Profile");
     }
   }
 
@@ -129,6 +166,7 @@ class _MasterScreenState extends State<MasterScreen> {
       backgroundColor: const Color(0xFF1565C0),
       body: Row(
         children: [
+          // SIDEBAR
           Container(
             width: 240,
             color: const Color(0xFF1976D2),
@@ -187,7 +225,6 @@ class _MasterScreenState extends State<MasterScreen> {
                         const ReviewsScreen(),
                         "Reviews",
                       ),
-
                       if (isAdmin) ...[
                         _buildSidebarItem(
                           "Users",
@@ -195,7 +232,6 @@ class _MasterScreenState extends State<MasterScreen> {
                           const UsersScreen(),
                           "Users",
                         ),
-
                         _buildSidebarItem(
                           "Reports",
                           Icons.insert_chart_outlined,
@@ -206,7 +242,7 @@ class _MasterScreenState extends State<MasterScreen> {
                       _buildSidebarItem(
                         "Messages",
                         Icons.message_outlined,
-                        const Placeholder(),
+                        MessagesScreen(onOpenChat: _openChatDetail),
                         "Messages",
                       ),
                       if (isAdmin) ...[
@@ -239,6 +275,7 @@ class _MasterScreenState extends State<MasterScreen> {
             ),
           ),
 
+          // CONTENT
           Expanded(
             child: Column(
               children: [

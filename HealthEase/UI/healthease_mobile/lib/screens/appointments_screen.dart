@@ -276,7 +276,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                               ),
                             ),
 
-                          // OVDJE IDE NAŠA NOVA LOGIKA
                           if (isPaid && !isPast)
                             Padding(
                               padding: const EdgeInsets.only(top: 12),

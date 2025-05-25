@@ -313,7 +313,6 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Kombinuj doktore, preporučene idu na vrh, ostali ispod
     final Set<int> recommendedIds =
         _recommendedDoctors.map((d) => d.doctorId!).toSet();
     final List<Doctor> sortedDoctors = [
