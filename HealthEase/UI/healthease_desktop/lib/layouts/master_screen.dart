@@ -7,6 +7,7 @@ import 'package:healthease_desktop/screens/doctors_screen.dart';
 import 'package:healthease_desktop/screens/management_screen.dart';
 import 'package:healthease_desktop/screens/my_profile_screen.dart';
 import 'package:healthease_desktop/screens/notifications_screen.dart';
+import 'package:healthease_desktop/screens/reports_screen.dart';
 import 'package:healthease_desktop/screens/reviews_screen.dart';
 import 'package:healthease_desktop/screens/users_screen.dart';
 import 'package:healthease_desktop/main.dart';
@@ -198,7 +199,7 @@ class _MasterScreenState extends State<MasterScreen> {
                         _buildSidebarItem(
                           "Reports",
                           Icons.insert_chart_outlined,
-                          const Placeholder(),
+                          const ReportsScreen(),
                           "Reports",
                         ),
                       ],

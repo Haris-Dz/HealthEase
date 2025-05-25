@@ -33,8 +33,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         false;
   }
 
-  int? get doctorId =>
-      AuthProvider.userId; // zamijeni ako imaš poseban doctorId
+  int? get doctorId => AuthProvider.userId;
 
   @override
   void dispose() {
@@ -93,67 +92,54 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     }
   }
 
-  Widget _datePickerField({
-    required String label,
-    required DateTime? value,
-    required void Function(DateTime?) onChanged,
-    required TextEditingController controller,
-  }) {
+  Widget _dateFilterField(
+    String label,
+    DateTime? value,
+    TextEditingController controller,
+    ValueChanged<DateTime?> onChange,
+    VoidCallback onClear,
+  ) {
     return SizedBox(
-      width: 180,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      width: 120,
+      child: Stack(
+        alignment: Alignment.centerRight,
         children: [
-          const SizedBox(height: 4),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    value != null
-                        ? DateFormat('dd.MM.yyyy.').format(value)
-                        : label,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: value != null ? Colors.black87 : Colors.grey,
-                    ),
-                  ),
+          InkWell(
+            onTap: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: value ?? DateTime.now(),
+                firstDate: DateTime(2020),
+                lastDate: DateTime.now(),
+              );
+              if (picked != null) {
+                controller.text = DateFormat('dd.MM.yyyy.').format(picked);
+                onChange(picked);
+              }
+            },
+            child: InputDecorator(
+              decoration: InputDecoration(
+                labelText: label,
+                border: const OutlineInputBorder(),
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 8,
                 ),
-                IconButton(
-                  icon: const Icon(Icons.calendar_today, size: 20),
-                  tooltip: "Pick date",
-                  onPressed: () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialDate: value ?? DateTime.now(),
-                      firstDate: DateTime(2020),
-                      lastDate: DateTime.now(),
-                    );
-                    if (picked != null) {
-                      controller.text = DateFormat(
-                        'dd.MM.yyyy.',
-                      ).format(picked);
-                      onChanged(picked);
-                    }
-                  },
-                ),
-                if (value != null)
-                  IconButton(
-                    icon: const Icon(Icons.clear, size: 20),
-                    tooltip: "Clear date",
-                    onPressed: () {
-                      controller.clear();
-                      onChanged(null);
-                    },
-                  ),
-              ],
+              ),
+              child: Text(
+                value != null ? DateFormat('dd.MM.yyyy.').format(value) : '',
+              ),
             ),
           ),
+          if (value != null)
+            Positioned(
+              right: 2,
+              child: GestureDetector(
+                onTap: onClear,
+                child: const Icon(Icons.clear, size: 18, color: Colors.grey),
+              ),
+            ),
         ],
       ),
     );
@@ -161,94 +147,126 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
   Widget _buildFilters() {
     if (isDoctor) return const SizedBox.shrink(); // No filters for doctor
+
     return Card(
-      margin: const EdgeInsets.only(bottom: 18),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      color: Colors.blue.shade50,
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.only(bottom: 12, top: 6),
       child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            SizedBox(
-              width: 160,
-              child: TextField(
-                decoration: const InputDecoration(labelText: "Doctor name"),
-                onChanged: (value) {
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              const Icon(Icons.filter_alt, color: Colors.blueAccent),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 150,
+                child: TextField(
+                  decoration: const InputDecoration(
+                    labelText: "Doctor name",
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _doctorNameGTE = value;
+                      _fetchReviews();
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 150,
+                child: TextField(
+                  decoration: const InputDecoration(
+                    labelText: "Patient name",
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _patientNameGTE = value;
+                      _fetchReviews();
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 10),
+              _dateFilterField(
+                "From",
+                _createdAfter,
+                _fromDateController,
+                (picked) {
                   setState(() {
-                    _doctorNameGTE = value;
+                    _createdAfter = picked;
                     _fetchReviews();
                   });
                 },
-              ),
-            ),
-            SizedBox(
-              width: 160,
-              child: TextField(
-                decoration: const InputDecoration(labelText: "Patient name"),
-                onChanged: (value) {
-                  setState(() {
-                    _patientNameGTE = value;
-                    _fetchReviews();
-                  });
-                },
-              ),
-            ),
-            _datePickerField(
-              label: "From",
-              value: _createdAfter,
-              controller: _fromDateController,
-              onChanged: (picked) {
-                setState(() {
-                  _createdAfter = picked;
-                  _fetchReviews();
-                });
-              },
-            ),
-            _datePickerField(
-              label: "To",
-              value: _createdBefore,
-              controller: _toDateController,
-              onChanged: (picked) {
-                setState(() {
-                  _createdBefore = picked;
-                  _fetchReviews();
-                });
-              },
-            ),
-            DropdownButton<int>(
-              value: _selectedRating,
-              hint: const Text("Rating"),
-              items: List.generate(
-                5,
-                (i) => DropdownMenuItem(value: i + 1, child: Text("${i + 1}")),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _selectedRating = value;
-                  _fetchReviews();
-                });
-              },
-            ),
-            OutlinedButton.icon(
-              onPressed: () {
-                setState(() {
-                  _selectedRating = null;
-                  _doctorNameGTE = null;
-                  _patientNameGTE = null;
-                  _createdAfter = null;
-                  _createdBefore = null;
+                () {
                   _fromDateController.clear();
+                  setState(() {
+                    _createdAfter = null;
+                    _fetchReviews();
+                  });
+                },
+              ),
+              const Text("—"),
+              _dateFilterField(
+                "To",
+                _createdBefore,
+                _toDateController,
+                (picked) {
+                  setState(() {
+                    _createdBefore = picked;
+                    _fetchReviews();
+                  });
+                },
+                () {
                   _toDateController.clear();
-                  _fetchReviews();
-                });
-              },
-              icon: const Icon(Icons.clear),
-              label: const Text('Reset'),
-            ),
-          ],
+                  setState(() {
+                    _createdBefore = null;
+                    _fetchReviews();
+                  });
+                },
+              ),
+              const SizedBox(width: 10),
+              DropdownButton<int>(
+                value: _selectedRating,
+                hint: const Text("Rating"),
+                items: List.generate(
+                  5,
+                  (i) =>
+                      DropdownMenuItem(value: i + 1, child: Text("${i + 1}")),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedRating = value;
+                    _fetchReviews();
+                  });
+                },
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _selectedRating = null;
+                    _doctorNameGTE = null;
+                    _patientNameGTE = null;
+                    _createdAfter = null;
+                    _createdBefore = null;
+                    _fromDateController.clear();
+                    _toDateController.clear();
+                    _fetchReviews();
+                  });
+                },
+                icon: const Icon(Icons.clear),
+                label: const Text('Reset'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -294,7 +312,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Star & rating
                 Column(
                   children: [
                     Icon(Icons.star, color: Colors.orange.shade700, size: 24),

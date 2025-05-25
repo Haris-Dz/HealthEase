@@ -25,7 +25,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Patient? _selectedPatient;
   bool _sendToAll = false;
 
-  // Autocomplete key for resetting
   Key _autocompleteKey = UniqueKey();
 
   @override
@@ -65,7 +64,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         _messageController.clear();
         _selectedPatient = null;
         _formKey.currentState!.reset();
-        _autocompleteKey = UniqueKey(); // resetuje Autocomplete
+        _autocompleteKey = UniqueKey();
       });
 
       _loadNotifications();
