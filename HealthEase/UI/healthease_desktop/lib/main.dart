@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healthease_desktop/layouts/master_screen.dart';
+import 'package:healthease_desktop/providers/admin_report_summary_provider.dart';
 import 'package:healthease_desktop/providers/appointment_types_provider.dart';
 import 'package:healthease_desktop/providers/appointments_provider.dart';
 import 'package:healthease_desktop/providers/doctors_provider.dart';
@@ -36,6 +37,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => WorkingHoursProvider()),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
         ChangeNotifierProvider(create: (_) => ReviewsProvider()),
+        ChangeNotifierProvider(create: (_) => AdminReportProvider()),
       ],
       child: const MyApp(),
     ),

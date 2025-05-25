@@ -42,6 +42,8 @@ dependencies:
   fl_chart: ^0.71.0
   image_picker: ^1.1.2
   window_manager: ^0.4.3
+  pdf: ^3.11.3
+  printing: ^5.14.2
 
 dev_dependencies:
   flutter_test:

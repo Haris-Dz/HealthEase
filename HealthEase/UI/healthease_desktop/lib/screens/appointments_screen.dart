@@ -175,7 +175,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           ),
         ),
         const SizedBox(width: 12),
-        // START DATE
         Expanded(
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(
@@ -232,8 +231,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           ),
         ),
         const SizedBox(width: 12),
-
-        // END DATE
         Expanded(
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(

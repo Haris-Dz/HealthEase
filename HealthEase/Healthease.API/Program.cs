@@ -32,6 +32,7 @@ builder.Services.AddTransient<ActiveDoctorState>();
 builder.Services.AddTransient<HiddenDoctorState>();
 
 builder.Services.AddScoped<IRecommenderService, RecommenderService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 MappingConfig.RegisterMappings();
 
