@@ -54,21 +54,6 @@ namespace HealthEase.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PrescriptionStatuses",
-                columns: table => new
-                {
-                    PrescriptionStatusId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PrescriptionStatuses", x => x.PrescriptionStatusId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -129,7 +114,7 @@ namespace HealthEase.Services.Migrations
                     MedicalRecordId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PatientId = table.Column<int>(type: "int", nullable: false),
-                    HealthConditions = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -279,49 +264,6 @@ namespace HealthEase.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Prescriptions",
-                columns: table => new
-                {
-                    PrescriptionId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    PatientId = table.Column<int>(type: "int", nullable: false),
-                    Medication = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Dosage = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PrescriptionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    MedicalRecordId = table.Column<int>(type: "int", nullable: true),
-                    PrescriptionStatusId = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Prescriptions", x => x.PrescriptionId);
-                    table.ForeignKey(
-                        name: "FK_Prescriptions_MedicalRecords_MedicalRecordId",
-                        column: x => x.MedicalRecordId,
-                        principalTable: "MedicalRecords",
-                        principalColumn: "MedicalRecordId");
-                    table.ForeignKey(
-                        name: "FK_Prescriptions_Patients_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patients",
-                        principalColumn: "PatientId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Prescriptions_PrescriptionStatuses_PrescriptionStatusId",
-                        column: x => x.PrescriptionStatusId,
-                        principalTable: "PrescriptionStatuses",
-                        principalColumn: "PrescriptionStatusId");
-                    table.ForeignKey(
-                        name: "FK_Prescriptions_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Appointments",
                 columns: table => new
                 {
@@ -389,6 +331,38 @@ namespace HealthEase.Services.Migrations
                         principalTable: "Specializations",
                         principalColumn: "SpecializationId",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MedicalRecordEntries",
+                columns: table => new
+                {
+                    MedicalRecordEntryId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MedicalRecordId = table.Column<int>(type: "int", nullable: false),
+                    EntryType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EntryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DoctorId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MedicalRecordEntries", x => x.MedicalRecordEntryId);
+                    table.ForeignKey(
+                        name: "FK_MedicalRecordEntries_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "DoctorId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MedicalRecordEntries_MedicalRecords_MedicalRecordId",
+                        column: x => x.MedicalRecordId,
+                        principalTable: "MedicalRecords",
+                        principalColumn: "MedicalRecordId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -737,6 +711,16 @@ namespace HealthEase.Services.Migrations
                 column: "SpecializationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MedicalRecordEntries_DoctorId",
+                table: "MedicalRecordEntries",
+                column: "DoctorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MedicalRecordEntries_MedicalRecordId",
+                table: "MedicalRecordEntries",
+                column: "MedicalRecordId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MedicalRecords_PatientId",
                 table: "MedicalRecords",
                 column: "PatientId");
@@ -760,26 +744,6 @@ namespace HealthEase.Services.Migrations
                 name: "IX_PatientDoctorFavorites_DoctorId",
                 table: "PatientDoctorFavorites",
                 column: "DoctorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prescriptions_MedicalRecordId",
-                table: "Prescriptions",
-                column: "MedicalRecordId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prescriptions_PatientId",
-                table: "Prescriptions",
-                column: "PatientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prescriptions_PrescriptionStatusId",
-                table: "Prescriptions",
-                column: "PrescriptionStatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prescriptions_UserId",
-                table: "Prescriptions",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_AppointmentId",
@@ -830,6 +794,9 @@ namespace HealthEase.Services.Migrations
                 name: "DoctorSpecializations");
 
             migrationBuilder.DropTable(
+                name: "MedicalRecordEntries");
+
+            migrationBuilder.DropTable(
                 name: "Messages");
 
             migrationBuilder.DropTable(
@@ -837,9 +804,6 @@ namespace HealthEase.Services.Migrations
 
             migrationBuilder.DropTable(
                 name: "PatientDoctorFavorites");
-
-            migrationBuilder.DropTable(
-                name: "Prescriptions");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
@@ -858,9 +822,6 @@ namespace HealthEase.Services.Migrations
 
             migrationBuilder.DropTable(
                 name: "MedicalRecords");
-
-            migrationBuilder.DropTable(
-                name: "PrescriptionStatuses");
 
             migrationBuilder.DropTable(
                 name: "Appointments");

@@ -26,6 +26,9 @@ builder.Services.AddTransient<IDoctorSpecializationService, DoctorSpecialization
 builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddTransient<IReviewService, ReviewService>();
 builder.Services.AddTransient<IMessageService, MessageService>();
+builder.Services.AddTransient<IMedicalRecordService, MedicalRecordService>();
+builder.Services.AddTransient<IMedicalRecordEntryService, MedicalRecordEntryService>();
+
 builder.Services.AddTransient<InitialDoctorState>();
 builder.Services.AddTransient<DraftDoctorState>();
 builder.Services.AddTransient<ActiveDoctorState>();

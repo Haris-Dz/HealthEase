@@ -6,6 +6,7 @@ import 'package:healthease_mobile/providers/notifications_provider.dart';
 import 'package:healthease_mobile/screens/appointments_screen.dart';
 import 'package:healthease_mobile/screens/doctors_screen.dart';
 import 'package:healthease_mobile/screens/favorites_screen.dart';
+import 'package:healthease_mobile/screens/medical_record_screen.dart';
 import 'package:healthease_mobile/screens/messages_screen.dart';
 import 'package:healthease_mobile/screens/my_profile_screen.dart';
 import 'package:healthease_mobile/screens/notifications_screen.dart';
@@ -215,7 +216,7 @@ class MasterScreen extends StatelessWidget {
                   icon: Icons.medical_information_outlined,
                   title: "Medical Record",
                   route: "Medical Record",
-                  screen: const PlaceholderScreen(),
+                  screen: const MedicalRecordScreen(),
                   currentRoute: currentRoute,
                 ),
                 _buildDrawerItem(

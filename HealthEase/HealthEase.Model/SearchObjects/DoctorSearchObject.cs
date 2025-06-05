@@ -7,7 +7,7 @@ namespace HealthEase.Model.SearchObjects
     public class DoctorSearchObject:BaseSearchObject
     {
         public string? FirstNameGTE { get; set; }
-
+        public int? UserId { get; set; }
         public string? LastNameGTE { get; set; }
 
         public string? FirstLastNameGTE { get; set; }

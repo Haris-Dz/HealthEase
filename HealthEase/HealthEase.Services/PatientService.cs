@@ -18,9 +18,11 @@ namespace HealthEase.Services
     public class PatientService : BaseCRUDServiceAsync<PatientDTO, PatientSearchObject, Patient, PatientInsertRequest, PatientUpdateRequest>, IPatientService
     {
         ILogger<PatientService> _logger;
-        public PatientService(HealthEaseContext context, IMapper mapper, ILogger<PatientService> logger) : base(context, mapper)
+        IMedicalRecordService _medicalRecordService;
+        public PatientService(HealthEaseContext context, IMapper mapper, ILogger<PatientService> logger, IMedicalRecordService medicalRecordService) : base(context, mapper)
         {
             _logger = logger;
+            _medicalRecordService = medicalRecordService;
         }
         public override IQueryable<Patient> AddFilter(PatientSearchObject searchObject, IQueryable<Patient> query)
         {
@@ -99,6 +101,14 @@ namespace HealthEase.Services
             //    ReceiverName = entity.Ime + " " + entity.Prezime,
             //    Subject = "Registracija"
             //});
+        }
+        public override async Task AfterInsertAsync(PatientInsertRequest request, Patient entity, CancellationToken cancellationToken = default) 
+        {
+            await _medicalRecordService.InsertAsync(new MedicalRecordInsertRequest
+            {
+                PatientId = entity.PatientId,
+                Notes = ""
+            }, cancellationToken);
         }
         public override async Task BeforeUpdateAsync(PatientUpdateRequest request, Patient entity, CancellationToken cancellationToken = default)
         {

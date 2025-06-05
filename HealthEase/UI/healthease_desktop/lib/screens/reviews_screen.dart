@@ -64,6 +64,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       "isDeleted": true,
     };
     final result = await _reviewProvider.get(filter: filter);
+
     setState(() {
       _reviews = result.resultList.cast<Review>();
       _isLoading = false;

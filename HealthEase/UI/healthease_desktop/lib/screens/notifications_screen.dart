@@ -122,28 +122,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ),
               const SizedBox(height: 10),
               Row(
-                children: [
-                  Checkbox(
-                    value: _sendToAll,
-                    onChanged: (value) {
-                      setState(() {
-                        _sendToAll = value!;
-                        if (_sendToAll) {
-                          _selectedPatient = null;
-                          _autocompleteKey = UniqueKey();
-                        }
-                      });
-                    },
-                  ),
-                  const SizedBox(width: 6),
-                  const Text(
-                    "Send to all patients //TODO (RabbitMQ)",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FormField<bool>(
