@@ -49,6 +49,9 @@ namespace HealthEase.Services
                 query = query.Where(x =>
                     (x.User.FirstName + " " + x.User.LastName).ToLower().StartsWith(searchObject.FirstLastNameGTE.ToLower()));
             }
+            if (searchObject.UserId.HasValue)
+                query = query.Where(x => x.UserId == searchObject.UserId.Value);
+
 
             if (!string.IsNullOrWhiteSpace(searchObject?.EmailGTE))
                 query = query.Where(x => x.User.Email == searchObject.EmailGTE);

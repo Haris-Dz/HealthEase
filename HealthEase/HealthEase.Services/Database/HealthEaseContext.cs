@@ -25,10 +25,9 @@ namespace HealthEase.Services.Database
         public virtual DbSet<Appointment> Appointments { get; set; }
         public virtual DbSet<AppointmentType> AppointmentTypes { get; set; }
         public virtual DbSet<MedicalRecord> MedicalRecords { get; set; }
+        public virtual DbSet<MedicalRecordEntry> MedicalRecordEntries { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
-        public virtual DbSet<Prescription> Prescriptions { get; set; }
-        public virtual DbSet<PrescriptionStatus> PrescriptionStatuses { get; set; }
         public virtual DbSet<DoctorSpecialization> DoctorSpecializations { get; set; }
         public virtual DbSet<WorkingHours> WorkingHours { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }

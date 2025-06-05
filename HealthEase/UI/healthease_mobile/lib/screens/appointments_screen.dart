@@ -117,7 +117,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.schedule_outlined, size: 80, color: Colors.grey),
+                    Icon(Icons.schedule_outlined, size: 80),
                     SizedBox(height: 24),
                     Text(
                       "No Appointments yet",

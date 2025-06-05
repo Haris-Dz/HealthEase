@@ -10,15 +10,11 @@ namespace HealthEase.Services.Database
 {
     public partial class MedicalRecord : BaseEntity
     {
-        [Key]
         public int MedicalRecordId { get; set; }
         public int PatientId { get; set; }
         [ForeignKey("PatientId")]
         public virtual Patient Patient { get; set; } = null!;
-
-        [MaxLength(500)]
-        public string? HealthConditions { get; set; }
-
-        public virtual ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
+        public string? Notes { get; set; }
+        public virtual List<MedicalRecordEntry> Entries { get; set; } = new List<MedicalRecordEntry>();
     }
 }

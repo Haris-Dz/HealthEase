@@ -24,7 +24,7 @@ namespace HealthEase.Services
         {
 
             if (search.DoctorId.HasValue)
-                query = query.Where(r => r.Doctor.User.UserId == search.DoctorId.Value);
+                query = query.Where(r => r.Doctor.DoctorId == search.DoctorId.Value);
 
             if (search.PatientId.HasValue)
                 query = query.Where(r => r.PatientId == search.PatientId.Value);

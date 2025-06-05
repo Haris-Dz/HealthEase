@@ -296,7 +296,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           "username": _usernameController.text.trim(),
           "password": _passwordController.text,
           "passwordConfirmation": _confirmPasswordController.text,
-          "profilePicture": _base64Image ?? "",
+          "profilePicture": _base64Image ?? null,
         };
         await _patientProvider.register(request);
         if (!mounted) return;

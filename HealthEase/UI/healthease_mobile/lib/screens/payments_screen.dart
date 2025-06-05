@@ -63,11 +63,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.receipt_long_outlined,
-                      size: 72,
-                      color: Colors.grey.shade400,
-                    ),
+                    Icon(Icons.receipt_long_outlined, size: 72),
                     const SizedBox(height: 16),
                     const Text(
                       "No payments yet",

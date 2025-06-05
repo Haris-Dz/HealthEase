@@ -133,7 +133,7 @@ namespace HealthEase.Services.Recommender
             {
                 var fallback = allDoctors
                     .OrderByDescending(d => d.Appointments.Count(a => !a.IsDeleted))
-                    .Take(5)
+                    .Take(3)
                     .ToList();
                 return _mapper.Map<List<DoctorDTO>>(fallback);
             }

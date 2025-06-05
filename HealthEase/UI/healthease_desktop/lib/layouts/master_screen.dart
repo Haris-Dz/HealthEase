@@ -6,6 +6,7 @@ import 'package:healthease_desktop/screens/chat_details_screen.dart';
 import 'package:healthease_desktop/screens/home_screen.dart';
 import 'package:healthease_desktop/screens/doctors_screen.dart';
 import 'package:healthease_desktop/screens/management_screen.dart';
+import 'package:healthease_desktop/screens/medical_records_screen.dart';
 import 'package:healthease_desktop/screens/messages_screen.dart';
 import 'package:healthease_desktop/screens/my_profile_screen.dart';
 import 'package:healthease_desktop/screens/notifications_screen.dart';
@@ -214,10 +215,10 @@ class _MasterScreenState extends State<MasterScreen> {
                         "Appointments",
                       ),
                       _buildSidebarItem(
-                        "Prescriptions",
+                        "Medical records",
                         Icons.medical_services_outlined,
-                        const Placeholder(),
-                        "Prescriptions",
+                        const MedicalRecordsScreen(),
+                        "Medical records",
                       ),
                       _buildSidebarItem(
                         "Reviews",
