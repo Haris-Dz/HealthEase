@@ -514,7 +514,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
   Widget _buildDataTable() {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: Axis.vertical,
       child: ConstrainedBox(
         constraints: const BoxConstraints(minWidth: 1000),
         child: DataTable(

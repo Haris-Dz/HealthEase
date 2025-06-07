@@ -98,7 +98,6 @@ class _MedicalRecordEntryDialogState extends State<MedicalRecordEntryDialog> {
         ElevatedButton(
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              // Dohvati ispravan doctorId
               final doctorId = await _getDoctorIdForCurrentUser();
 
               final entry =

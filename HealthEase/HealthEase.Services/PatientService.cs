@@ -90,17 +90,6 @@ namespace HealthEase.Services
             entity.RegistrationDate = DateTime.Now;
             entity.PasswordSalt = Helpers.Helper.GenerateSalt();
             entity.PasswordHash = Helpers.Helper.GenerateHash(entity.PasswordSalt, request.Password);
-
-            //await rabbitMqService.SendAnEmail(new EmailDTO
-            //{
-            //    EmailTo = entity.Email,
-            //    Message = $"Poštovani<br>" +
-            //  $"Korisnicko ime: {entity.KorisnickoIme}<br>" +
-            //  $"Lozinka: {lozinka}<br><br>" +
-            //  $"Srdačan pozdrav",
-            //    ReceiverName = entity.Ime + " " + entity.Prezime,
-            //    Subject = "Registracija"
-            //});
         }
         public override async Task AfterInsertAsync(PatientInsertRequest request, Patient entity, CancellationToken cancellationToken = default) 
         {

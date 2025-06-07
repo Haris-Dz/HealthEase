@@ -16,8 +16,6 @@ class MedicalRecordScreen extends StatefulWidget {
 class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
   MedicalRecord? _medicalRecord;
   bool _isLoading = true;
-
-  // FILTERS:
   String _searchQuery = "";
   String _selectedType = "All";
   bool _sortNewestFirst = true;
@@ -33,6 +31,48 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
   void initState() {
     super.initState();
     _fetchMedicalRecord();
+  }
+
+  Future<void> _editGeneralInfo() async {
+    final TextEditingController _notesController = TextEditingController(
+      text: _medicalRecord?.notes ?? "",
+    );
+    final updated = await showDialog<String>(
+      context: context,
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text("Edit General Info"),
+            content: TextField(
+              controller: _notesController,
+              maxLines: 4,
+              decoration: const InputDecoration(labelText: "Notes"),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: const Text("Cancel"),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.of(ctx).pop(_notesController.text),
+                child: const Text("Save"),
+              ),
+            ],
+          ),
+    );
+
+    if (updated != null && updated.trim() != _medicalRecord?.notes?.trim()) {
+      try {
+        final provider = MedicalRecordsProvider();
+        await provider.update(_medicalRecord!.medicalRecordId!, {
+          "notes": updated.trim(),
+          "patientId": AuthProvider.patientId,
+        });
+        await showSuccessAlert(context, "General info updated!");
+        await _fetchMedicalRecord();
+      } catch (e) {
+        await showErrorAlert(context, "Failed to update info.");
+      }
+    }
   }
 
   Future<void> _fetchMedicalRecord() async {
@@ -60,7 +100,6 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
     if (_medicalRecord?.entries == null) return [];
     var entries = List<MedicalRecordEntry>.from(_medicalRecord!.entries!);
 
-    // Type filter
     if (_selectedType != "All") {
       entries =
           entries
@@ -72,7 +111,6 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
               .toList();
     }
 
-    // Search
     if (_searchQuery.trim().isNotEmpty) {
       final q = _searchQuery.trim().toLowerCase();
       entries =
@@ -85,7 +123,6 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
               .toList();
     }
 
-    // Sort
     entries.sort((a, b) {
       final adate = DateTime.tryParse(a.entryDate ?? "") ?? DateTime(2000);
       final bdate = DateTime.tryParse(b.entryDate ?? "") ?? DateTime(2000);
@@ -126,7 +163,6 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
                 child: ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    // Info o kartonu
                     Card(
                       elevation: 2,
                       shape: RoundedRectangleBorder(
@@ -137,12 +173,26 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "General Info",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
+                            Row(
+                              children: [
+                                const Expanded(
+                                  child: Text(
+                                    "General Info",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: Colors.blueGrey,
+                                  ),
+                                  tooltip: "Edit General Info",
+                                  onPressed: _editGeneralInfo,
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 12),
                             Text(
@@ -153,8 +203,8 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 18),
-                    // FILTERS
                     Card(
                       margin: const EdgeInsets.only(bottom: 18),
                       elevation: 1,
@@ -164,7 +214,6 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
                           vertical: 10,
                         ),
                         child: Column(
-                          // OVDJE UMJESTO Row
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             TextField(
@@ -326,7 +375,6 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen> {
   }
 }
 
-// Helper za capitalize (možeš i negdje globalno):
 extension StringCap on String {
   String capitalize() {
     if (isEmpty) return this;

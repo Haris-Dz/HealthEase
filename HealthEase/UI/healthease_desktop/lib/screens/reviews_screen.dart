@@ -147,7 +147,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   }
 
   Widget _buildFilters() {
-    if (isDoctor) return const SizedBox.shrink(); // No filters for doctor
+    if (isDoctor) return const SizedBox.shrink(); 
 
     return Card(
       color: Colors.blue.shade50,
@@ -326,7 +326,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   ],
                 ),
                 const SizedBox(width: 16),
-                // Review main body
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,7 +344,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                         )
                       else
                         const SizedBox(height: 18),
-                      // Patient name & review date
                       Row(
                         children: [
                           if (r.patientName != null) ...[

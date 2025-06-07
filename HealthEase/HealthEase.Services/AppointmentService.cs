@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EasyNetQ;
 using HealthEase.Model.DTOs;
 using HealthEase.Model.Requests;
 using HealthEase.Model.SearchObjects;
@@ -82,11 +83,23 @@ namespace HealthEase.Services
                 var existingTransaction = await Context.Transactions
                     .FirstOrDefaultAsync(t => t.AppointmentId == request.TransactionInsert.AppointmentId, cancellationToken);
 
+                await _notificationService.InsertAsync(new NotificationInsertRequest
+                {
+                    PatientId = entity.PatientId,
+                    Message = "Successfully paid for an appointment"
+                }, cancellationToken);
+                
                 if (existingTransaction == null)
                 {
                     await _transactionService.InsertAsync(request.TransactionInsert, cancellationToken);
                 }
+
+
             }
+        }
+        public override async Task AfterUpdateAsync(int id, AppointmentUpdateRequest request, Appointment entity, CancellationToken cancellationToken = default) 
+        {
+
         }
 
     }

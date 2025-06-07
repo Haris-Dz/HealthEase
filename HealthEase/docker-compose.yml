@@ -1,0 +1,75 @@
+version: '3.8'
+services:
+  healthease-sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: healthease-sql
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - 1433:1433
+    networks:
+      - healthease_net
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "15672:15672"  # management ui
+      - "5672:5672"    # rabbitmq
+    networks:
+      - healthease_net
+
+  healthease-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: healthease-api
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DATABASE_CONNECTION_STRING=Server=healthease-sql,1433;Initial Catalog=${CATALOG};User=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
+      - PAYPAL_SECRET=${PAYPAL_SECRET}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - RABBIT_MQ=host=rabbitmq;username=guest;password=guest
+      - RABBIT_MQ_HOST=rabbitmq
+      - RABBIT_MQ_PORT=5672
+      - ENABLE_SSL=${ENABLE_SSL}
+    ports:
+      - "5200:5200"
+    depends_on:
+      - healthease-sql
+      - rabbitmq
+    networks:
+      - healthease_net
+
+  healthease-subscriber:
+    build:
+      context: .
+      dockerfile: Dockerfile.subscriber
+    container_name: healthease-subscriber
+    restart: unless-stopped
+    environment:
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - RABBIT_MQ=host=rabbitmq;username=guest;password=guest
+      - RABBIT_MQ_HOST=rabbitmq
+      - RABBIT_MQ_PORT=5672
+      - ENABLE_SSL=${ENABLE_SSL}
+    depends_on:
+      - rabbitmq
+    networks:
+      - healthease_net
+
+networks:
+  healthease_net:
+    driver: bridge

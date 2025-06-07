@@ -81,71 +81,132 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             AppointmentId = 1,
-                            AppointmentDate = new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AppointmentTime = new TimeSpan(0, 9, 0, 0, 0),
+                            AppointmentDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 10, 0, 0, 0),
                             AppointmentTypeId = 1,
                             DoctorId = 1,
                             IsDeleted = false,
                             IsPaid = false,
-                            Note = "Headache and dizziness",
+                            Note = "Requesting general checkup.",
                             PatientId = 1,
                             Status = "Pending"
                         },
                         new
                         {
                             AppointmentId = 2,
-                            AppointmentDate = new DateTime(2025, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentDate = new DateTime(2025, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             AppointmentTime = new TimeSpan(0, 11, 0, 0, 0),
-                            AppointmentTypeId = 2,
-                            DoctorId = 2,
-                            IsDeleted = false,
-                            IsPaid = false,
-                            Note = "Routine check-up",
-                            PatientId = 2,
-                            Status = "Approved",
-                            StatusMessage = "See you on time"
-                        },
-                        new
-                        {
-                            AppointmentId = 3,
-                            AppointmentDate = new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AppointmentTime = new TimeSpan(0, 11, 0, 0, 0),
-                            AppointmentTypeId = 4,
-                            DoctorId = 3,
-                            IsDeleted = false,
-                            IsPaid = true,
-                            Note = "Follow-up for lab results",
-                            PatientId = 3,
-                            PaymentDate = new DateTime(2025, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "Paid",
-                            StatusMessage = "Confirmed and paid"
-                        },
-                        new
-                        {
-                            AppointmentId = 4,
-                            AppointmentDate = new DateTime(2025, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AppointmentTime = new TimeSpan(0, 10, 0, 0, 0),
-                            AppointmentTypeId = 3,
-                            DoctorId = 4,
-                            IsDeleted = false,
-                            IsPaid = false,
-                            Note = "Skin irritation consultation",
-                            PatientId = 1,
-                            Status = "Declined",
-                            StatusMessage = "Doctor unavailable on selected date"
-                        },
-                        new
-                        {
-                            AppointmentId = 5,
-                            AppointmentDate = new DateTime(2025, 7, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AppointmentTime = new TimeSpan(0, 13, 0, 0, 0),
                             AppointmentTypeId = 2,
                             DoctorId = 1,
                             IsDeleted = false,
                             IsPaid = false,
-                            Note = "Consultation about recurring migraines",
+                            Note = "Consultation for recurring headaches.",
+                            PatientId = 1,
+                            Status = "Approved",
+                            StatusMessage = "Approved by Dr. Trahan"
+                        },
+                        new
+                        {
+                            AppointmentId = 3,
+                            AppointmentDate = new DateTime(2025, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 9, 30, 0, 0),
+                            AppointmentTypeId = 3,
+                            DoctorId = 2,
+                            IsDeleted = false,
+                            IsPaid = true,
+                            Note = "Lab results follow-up.",
+                            PatientId = 1,
+                            PaymentDate = new DateTime(2025, 5, 12, 8, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Paid",
+                            StatusMessage = "Payment completed"
+                        },
+                        new
+                        {
+                            AppointmentId = 4,
+                            AppointmentDate = new DateTime(2025, 8, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 14, 0, 0, 0),
+                            AppointmentTypeId = 1,
+                            DoctorId = 3,
+                            IsDeleted = false,
+                            IsPaid = true,
+                            Note = "Scheduled preventive check.",
+                            PatientId = 1,
+                            PaymentDate = new DateTime(2025, 6, 1, 9, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Paid",
+                            StatusMessage = "Payment completed"
+                        },
+                        new
+                        {
+                            AppointmentId = 5,
+                            AppointmentDate = new DateTime(2025, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 13, 0, 0, 0),
+                            AppointmentTypeId = 2,
+                            DoctorId = 4,
+                            IsDeleted = false,
+                            IsPaid = true,
+                            Note = "Consultation about recurring migraines.",
                             PatientId = 2,
-                            Status = "Pending"
+                            PaymentDate = new DateTime(2025, 7, 10, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Paid",
+                            StatusMessage = "Paid - consultation"
+                        },
+                        new
+                        {
+                            AppointmentId = 6,
+                            AppointmentDate = new DateTime(2025, 7, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 15, 30, 0, 0),
+                            AppointmentTypeId = 1,
+                            DoctorId = 5,
+                            IsDeleted = false,
+                            IsPaid = true,
+                            Note = "General checkup.",
+                            PatientId = 2,
+                            PaymentDate = new DateTime(2025, 7, 16, 14, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Paid",
+                            StatusMessage = "Paid online"
+                        },
+                        new
+                        {
+                            AppointmentId = 7,
+                            AppointmentDate = new DateTime(2025, 7, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 10, 30, 0, 0),
+                            AppointmentTypeId = 3,
+                            DoctorId = 6,
+                            IsDeleted = false,
+                            IsPaid = true,
+                            Note = "Pediatric consultation.",
+                            PatientId = 3,
+                            PaymentDate = new DateTime(2025, 7, 19, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Paid",
+                            StatusMessage = "Payment confirmed"
+                        },
+                        new
+                        {
+                            AppointmentId = 8,
+                            AppointmentDate = new DateTime(2025, 7, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 12, 0, 0, 0),
+                            AppointmentTypeId = 4,
+                            DoctorId = 7,
+                            IsDeleted = false,
+                            IsPaid = false,
+                            Note = "Dermatology check.",
+                            PatientId = 2,
+                            Status = "Declined",
+                            StatusMessage = "Doctor unavailable"
+                        },
+                        new
+                        {
+                            AppointmentId = 9,
+                            AppointmentDate = new DateTime(2025, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 16, 0, 0, 0),
+                            AppointmentTypeId = 2,
+                            DoctorId = 8,
+                            IsDeleted = false,
+                            IsPaid = false,
+                            Note = "Follow-up visit.",
+                            PatientId = 3,
+                            Status = "Approved",
+                            StatusMessage = "See you on time"
                         });
                 });
 
@@ -537,6 +598,29 @@ namespace HealthEase.Services.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("MedicalRecords");
+
+                    b.HasData(
+                        new
+                        {
+                            MedicalRecordId = 1,
+                            IsDeleted = false,
+                            Notes = "Alergic to pollen",
+                            PatientId = 1
+                        },
+                        new
+                        {
+                            MedicalRecordId = 2,
+                            IsDeleted = false,
+                            Notes = "Blood type B-",
+                            PatientId = 2
+                        },
+                        new
+                        {
+                            MedicalRecordId = 3,
+                            IsDeleted = false,
+                            Notes = "Sensitive to Ibuprofen",
+                            PatientId = 3
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.MedicalRecordEntry", b =>
@@ -581,6 +665,41 @@ namespace HealthEase.Services.Migrations
                     b.HasIndex("MedicalRecordId");
 
                     b.ToTable("MedicalRecordEntries");
+
+                    b.HasData(
+                        new
+                        {
+                            MedicalRecordEntryId = 1,
+                            Description = "Recurring migraine attacks since childhood.",
+                            DoctorId = 1,
+                            EntryDate = new DateTime(2025, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntryType = "Diagnosis",
+                            IsDeleted = false,
+                            MedicalRecordId = 1,
+                            Title = "Migrane"
+                        },
+                        new
+                        {
+                            MedicalRecordEntryId = 2,
+                            Description = "Take 1 tablet every 8 hours as needed for pain.",
+                            DoctorId = 1,
+                            EntryDate = new DateTime(2025, 5, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntryType = "Prescription",
+                            IsDeleted = false,
+                            MedicalRecordId = 1,
+                            Title = "Ibuprofen 400mg"
+                        },
+                        new
+                        {
+                            MedicalRecordEntryId = 3,
+                            Description = "Cholesterol slightly elevated. All other parameters within normal range.",
+                            DoctorId = 2,
+                            EntryDate = new DateTime(2025, 5, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EntryType = "Diagnosis",
+                            IsDeleted = false,
+                            MedicalRecordId = 2,
+                            Title = "Blood Test Results"
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Message", b =>
@@ -627,6 +746,56 @@ namespace HealthEase.Services.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Messages");
+
+                    b.HasData(
+                        new
+                        {
+                            MessageId = 1,
+                            Content = "Hello, I have a question about my profile.",
+                            IsDeleted = false,
+                            IsRead = false,
+                            PatientId = 1,
+                            SenderId = 1,
+                            SenderType = "Patient",
+                            SentAt = new DateTime(2025, 6, 12, 9, 30, 0, 0, DateTimeKind.Unspecified),
+                            UserId = 2
+                        },
+                        new
+                        {
+                            MessageId = 2,
+                            Content = "Hi! How can I assist you today?",
+                            IsDeleted = false,
+                            IsRead = true,
+                            PatientId = 1,
+                            SenderId = 2,
+                            SenderType = "Admin",
+                            SentAt = new DateTime(2025, 6, 12, 9, 35, 0, 0, DateTimeKind.Unspecified),
+                            UserId = 2
+                        },
+                        new
+                        {
+                            MessageId = 3,
+                            Content = "Doctor, can I change my appointment date?",
+                            IsDeleted = false,
+                            IsRead = false,
+                            PatientId = 1,
+                            SenderId = 1,
+                            SenderType = "Patient",
+                            SentAt = new DateTime(2025, 6, 15, 14, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = 3
+                        },
+                        new
+                        {
+                            MessageId = 4,
+                            Content = "Yes, please suggest a new date and I'll check my schedule.",
+                            IsDeleted = false,
+                            IsRead = true,
+                            PatientId = 1,
+                            SenderId = 3,
+                            SenderType = "Doctor",
+                            SentAt = new DateTime(2025, 6, 15, 14, 5, 0, 0, DateTimeKind.Unspecified),
+                            UserId = 3
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Notification", b =>
@@ -660,6 +829,53 @@ namespace HealthEase.Services.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("Notifications");
+
+                    b.HasData(
+                        new
+                        {
+                            NotificationId = 1,
+                            CreatedAt = new DateTime(2025, 6, 1, 8, 30, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            IsRead = true,
+                            Message = "Your appointment with Dr. Robert Trahan is approved!",
+                            PatientId = 1
+                        },
+                        new
+                        {
+                            NotificationId = 2,
+                            CreatedAt = new DateTime(2025, 6, 2, 15, 10, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            IsRead = false,
+                            Message = "Lab results are uploaded to your medical record.",
+                            PatientId = 1
+                        },
+                        new
+                        {
+                            NotificationId = 3,
+                            CreatedAt = new DateTime(2025, 6, 3, 10, 45, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            IsRead = false,
+                            Message = "Your follow-up appointment was declined by Dr. Paul Ulrey. Please reschedule.",
+                            PatientId = 2
+                        },
+                        new
+                        {
+                            NotificationId = 4,
+                            CreatedAt = new DateTime(2025, 6, 3, 12, 15, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            IsRead = true,
+                            Message = "Payment for appointment successfully processed.",
+                            PatientId = 3
+                        },
+                        new
+                        {
+                            NotificationId = 5,
+                            CreatedAt = new DateTime(2025, 6, 4, 9, 20, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            IsRead = false,
+                            Message = "New doctor available: Dr. Helen Evans (Dermatology).",
+                            PatientId = 3
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Patient", b =>
@@ -902,6 +1118,63 @@ namespace HealthEase.Services.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("Reviews");
+
+                    b.HasData(
+                        new
+                        {
+                            ReviewId = 1,
+                            AppointmentId = 3,
+                            Comment = "Excellent doctor, very thorough and kind.",
+                            CreatedAt = new DateTime(2025, 5, 12, 12, 15, 0, 0, DateTimeKind.Unspecified),
+                            DoctorId = 2,
+                            IsDeleted = false,
+                            PatientId = 1,
+                            Rating = 5
+                        },
+                        new
+                        {
+                            ReviewId = 2,
+                            AppointmentId = 4,
+                            Comment = "Quick and professional, satisfied with the service.",
+                            CreatedAt = new DateTime(2025, 6, 1, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                            DoctorId = 3,
+                            IsDeleted = false,
+                            PatientId = 1,
+                            Rating = 4
+                        },
+                        new
+                        {
+                            ReviewId = 3,
+                            AppointmentId = 5,
+                            Comment = "Consultation was okay, but had to wait a bit.",
+                            CreatedAt = new DateTime(2025, 7, 10, 11, 30, 0, 0, DateTimeKind.Unspecified),
+                            DoctorId = 4,
+                            IsDeleted = false,
+                            PatientId = 2,
+                            Rating = 3
+                        },
+                        new
+                        {
+                            ReviewId = 4,
+                            AppointmentId = 6,
+                            Comment = "Amazing, friendly staff and clear explanations.",
+                            CreatedAt = new DateTime(2025, 7, 16, 15, 0, 0, 0, DateTimeKind.Unspecified),
+                            DoctorId = 5,
+                            IsDeleted = false,
+                            PatientId = 2,
+                            Rating = 5
+                        },
+                        new
+                        {
+                            ReviewId = 5,
+                            AppointmentId = 7,
+                            Comment = "Not satisfied with the approach.",
+                            CreatedAt = new DateTime(2025, 7, 19, 11, 45, 0, 0, DateTimeKind.Unspecified),
+                            DoctorId = 6,
+                            IsDeleted = false,
+                            PatientId = 3,
+                            Rating = 2
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.Role", b =>
@@ -1055,6 +1328,68 @@ namespace HealthEase.Services.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("Transactions");
+
+                    b.HasData(
+                        new
+                        {
+                            TransactionId = 1,
+                            Amount = 60.0,
+                            AppointmentId = 3,
+                            IsDeleted = false,
+                            PatientId = 1,
+                            PayerId = "PAYER-003",
+                            PaymentId = "PAYID-000003",
+                            PaymentMethod = "PayPal",
+                            TransactionDate = new DateTime(2025, 5, 12, 8, 15, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            TransactionId = 2,
+                            Amount = 75.0,
+                            AppointmentId = 4,
+                            IsDeleted = false,
+                            PatientId = 1,
+                            PayerId = "PAYER-004",
+                            PaymentId = "PAYID-000004",
+                            PaymentMethod = "PayPal",
+                            TransactionDate = new DateTime(2025, 6, 1, 9, 30, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            TransactionId = 3,
+                            Amount = 90.0,
+                            AppointmentId = 5,
+                            IsDeleted = false,
+                            PatientId = 2,
+                            PayerId = "PAYER-005",
+                            PaymentId = "PAYID-000005",
+                            PaymentMethod = "PayPal",
+                            TransactionDate = new DateTime(2025, 7, 10, 11, 10, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            TransactionId = 4,
+                            Amount = 55.0,
+                            AppointmentId = 6,
+                            IsDeleted = false,
+                            PatientId = 2,
+                            PayerId = "PAYER-006",
+                            PaymentId = "PAYID-000006",
+                            PaymentMethod = "PayPal",
+                            TransactionDate = new DateTime(2025, 7, 16, 14, 15, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            TransactionId = 5,
+                            Amount = 70.0,
+                            AppointmentId = 7,
+                            IsDeleted = false,
+                            PatientId = 3,
+                            PayerId = "PAYER-007",
+                            PaymentId = "PAYID-000007",
+                            PaymentMethod = "PayPal",
+                            TransactionDate = new DateTime(2025, 7, 19, 10, 20, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("HealthEase.Services.Database.User", b =>
@@ -1112,15 +1447,15 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             UserId = 1,
-                            Email = "1",
-                            FirstName = "1",
+                            Email = "test@mai.com",
+                            FirstName = "test",
                             IsDeleted = false,
-                            LastName = "1",
-                            PasswordHash = "XVDI7NKoOCtMiSrKR1uSSGWvA7o=",
-                            PasswordSalt = "NHVv+8KhAiQqFlz7k1P53Q==",
-                            PhoneNumber = "1",
+                            LastName = "test",
+                            PasswordHash = "wSG+yBth9HCj0O1AdRBL+CJjtR4=",
+                            PasswordSalt = "c0MJh5XS8DYQtkJavp5lsA==",
+                            PhoneNumber = "123456789",
                             ProfilePicture = new byte[] { 0 },
-                            Username = "1"
+                            Username = "test"
                         },
                         new
                         {
