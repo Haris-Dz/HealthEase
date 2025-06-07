@@ -46,7 +46,6 @@ class _MasterScreenState extends State<MasterScreen> {
   void initState() {
     super.initState();
     if (widget.currentRoute == "Messages") {
-      // Prikazujemo poruke sa callbackom
       _currentChild = MessagesScreen(onOpenChat: _openChatDetail);
     } else {
       _currentChild = widget.child;
@@ -58,7 +57,6 @@ class _MasterScreenState extends State<MasterScreen> {
   void _onSidebarItemTapped(String title, Widget screen, String route) {
     if (!mounted) return;
 
-    // Samo za Messages moraš proslijediti callback
     if (route == "Messages") {
       setState(() {
         _currentTitle = title;
@@ -82,7 +80,7 @@ class _MasterScreenState extends State<MasterScreen> {
         otherName: patientName,
         onBack: _goBackToMessages,
       );
-      _currentRoute = "Messages"; // Ostaje na Messages
+      _currentRoute = "Messages"; 
     });
   }
 
@@ -167,7 +165,6 @@ class _MasterScreenState extends State<MasterScreen> {
       backgroundColor: const Color(0xFF1565C0),
       body: Row(
         children: [
-          // SIDEBAR
           Container(
             width: 240,
             color: const Color(0xFF1976D2),
@@ -276,7 +273,6 @@ class _MasterScreenState extends State<MasterScreen> {
             ),
           ),
 
-          // CONTENT
           Expanded(
             child: Column(
               children: [

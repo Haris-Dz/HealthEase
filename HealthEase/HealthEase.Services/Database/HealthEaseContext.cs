@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
@@ -118,7 +119,7 @@ namespace HealthEase.Services.Database
                 );
 
             modelBuilder.Entity<User>().HasData(
-                new User { UserId = 1, FirstName = "1", LastName = "1", Username = "1", Email = "1", PhoneNumber = "1", IsDeleted = false, PasswordSalt = "NHVv+8KhAiQqFlz7k1P53Q==", PasswordHash = "XVDI7NKoOCtMiSrKR1uSSGWvA7o=", ProfilePicture = new byte[] { 0x0 } },
+                new User { UserId = 1, FirstName = "test", LastName = "test", Username = "test", Email = "test@mai.com", PhoneNumber = "123456789", IsDeleted = false, PasswordSalt = "c0MJh5XS8DYQtkJavp5lsA==", PasswordHash = "wSG+yBth9HCj0O1AdRBL+CJjtR4=", ProfilePicture = new byte[] { 0x0 } },
                 new User { UserId = 2, FirstName = "Admin", LastName = "Test", Username = "desktop", Email = "admin@mail.com", PhoneNumber = "000000000", IsDeleted = false, PasswordSalt = "c0MJh5XS8DYQtkJavp5lsA==", PasswordHash = "wSG+yBth9HCj0O1AdRBL+CJjtR4=", ProfilePicture = new byte[] { 0x0 } },
                 new User { UserId = 3, FirstName = "Robert", LastName = "Trahan", Username = "doctor", Email = "robert.t@mail.com", PhoneNumber = "062543234", IsDeleted = false, PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==", PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=", ProfilePicture = new byte[] { 0x0 } },
                 new User { UserId = 4, FirstName = "Paul", LastName = "Ulrey", Username = "doctor1", Email = "paul.u@mail.com", PhoneNumber = "062222333", IsDeleted = false, PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==", PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=", ProfilePicture = new byte[] { 0x0 } },
@@ -289,11 +290,15 @@ namespace HealthEase.Services.Database
                 new AppointmentType { AppointmentTypeId = 4, Name = "Follow-up", Price = 40 }
             );
             modelBuilder.Entity<Appointment>().HasData(
-                new Appointment { AppointmentId = 1, AppointmentDate = new DateTime(2025, 7, 7), AppointmentTime = new TimeSpan(9, 0, 0), Status = "Pending", StatusMessage = null, Note = "Headache and dizziness", IsPaid = false, PaymentDate = null, DoctorId = 1, PatientId = 1, AppointmentTypeId = 1, IsDeleted = false },
-                new Appointment { AppointmentId = 2, AppointmentDate = new DateTime(2025, 7, 15), AppointmentTime = new TimeSpan(11, 0, 0), Status = "Approved", StatusMessage = "See you on time", Note = "Routine check-up", IsPaid = false, PaymentDate = null, DoctorId = 2, PatientId = 2, AppointmentTypeId = 2, IsDeleted = false },
-                new Appointment { AppointmentId = 3, AppointmentDate = new DateTime(2025, 7, 10), AppointmentTime = new TimeSpan(11, 0, 0), Status = "Paid", StatusMessage = "Confirmed and paid", Note = "Follow-up for lab results", IsPaid = true, PaymentDate = new DateTime(2025, 5, 2), DoctorId = 3, PatientId = 3, AppointmentTypeId = 4, IsDeleted = false },
-                new Appointment { AppointmentId = 4, AppointmentDate = new DateTime(2025, 7, 11), AppointmentTime = new TimeSpan(10, 0, 0), Status = "Declined", StatusMessage = "Doctor unavailable on selected date", Note = "Skin irritation consultation", IsPaid = false, PaymentDate = null, DoctorId = 4, PatientId = 1, AppointmentTypeId = 3, IsDeleted = false },
-                new Appointment { AppointmentId = 5, AppointmentDate = new DateTime(2025, 7, 16), AppointmentTime = new TimeSpan(13, 0, 0), Status = "Pending", StatusMessage = null, Note = "Consultation about recurring migraines", IsPaid = false, PaymentDate = null, DoctorId = 1, PatientId = 2, AppointmentTypeId = 2, IsDeleted = false }
+                new Appointment { AppointmentId = 1, AppointmentDate = new DateTime(2025, 6, 20), AppointmentTime = new TimeSpan(10, 0, 0), Status = "Pending", StatusMessage = null, Note = "Requesting general checkup.", IsPaid = false, PaymentDate = null, DoctorId = 1, PatientId = 1, AppointmentTypeId = 1, IsDeleted = false },
+                new Appointment { AppointmentId = 2, AppointmentDate = new DateTime(2025, 6, 25), AppointmentTime = new TimeSpan(11, 0, 0), Status = "Approved", StatusMessage = "Approved by Dr. Trahan", Note = "Consultation for recurring headaches.", IsPaid = false, PaymentDate = null, DoctorId = 1, PatientId = 1, AppointmentTypeId = 2, IsDeleted = false },
+                new Appointment { AppointmentId = 3, AppointmentDate = new DateTime(2025, 5, 12), AppointmentTime = new TimeSpan(9, 30, 0), Status = "Paid", StatusMessage = "Payment completed", Note = "Lab results follow-up.", IsPaid = true, PaymentDate = new DateTime(2025, 5, 12, 8, 0, 0), DoctorId = 2, PatientId = 1, AppointmentTypeId = 3, IsDeleted = false },
+                new Appointment { AppointmentId = 4, AppointmentDate = new DateTime(2025, 8, 5), AppointmentTime = new TimeSpan(14, 0, 0), Status = "Paid", StatusMessage = "Payment completed", Note = "Scheduled preventive check.", IsPaid = true, PaymentDate = new DateTime(2025, 6, 1, 9, 0, 0), DoctorId = 3, PatientId = 1, AppointmentTypeId = 1, IsDeleted = false },
+                new Appointment { AppointmentId = 5, AppointmentDate = new DateTime(2025, 7, 15), AppointmentTime = new TimeSpan(13, 0, 0), Status = "Paid", StatusMessage = "Paid - consultation", Note = "Consultation about recurring migraines.", IsPaid = true, PaymentDate = new DateTime(2025, 7, 10, 11, 0, 0), DoctorId = 4, PatientId = 2, AppointmentTypeId = 2, IsDeleted = false },
+                new Appointment { AppointmentId = 6, AppointmentDate = new DateTime(2025, 7, 18), AppointmentTime = new TimeSpan(15, 30, 0), Status = "Paid", StatusMessage = "Paid online", Note = "General checkup.", IsPaid = true, PaymentDate = new DateTime(2025, 7, 16, 14, 0, 0), DoctorId = 5, PatientId = 2, AppointmentTypeId = 1, IsDeleted = false },
+                new Appointment { AppointmentId = 7, AppointmentDate = new DateTime(2025, 7, 20), AppointmentTime = new TimeSpan(10, 30, 0), Status = "Paid", StatusMessage = "Payment confirmed", Note = "Pediatric consultation.", IsPaid = true, PaymentDate = new DateTime(2025, 7, 19, 10, 0, 0), DoctorId = 6, PatientId = 3, AppointmentTypeId = 3, IsDeleted = false },
+                new Appointment { AppointmentId = 8, AppointmentDate = new DateTime(2025, 7, 22), AppointmentTime = new TimeSpan(12, 0, 0), Status = "Declined", StatusMessage = "Doctor unavailable", Note = "Dermatology check.", IsPaid = false, PaymentDate = null, DoctorId = 7, PatientId = 2, AppointmentTypeId = 4, IsDeleted = false },
+                new Appointment { AppointmentId = 9, AppointmentDate = new DateTime(2025, 7, 25), AppointmentTime = new TimeSpan(16, 0, 0), Status = "Approved", StatusMessage = "See you on time", Note = "Follow-up visit.", IsPaid = false, PaymentDate = null, DoctorId = 8, PatientId = 3, AppointmentTypeId = 2, IsDeleted = false }
             );
             modelBuilder.Entity<PatientDoctorFavorite>().HasData(
                 new PatientDoctorFavorite { PatientId = 1, DoctorId = 2, CreatedAt = new DateTime(2025, 5, 22, 8, 30, 0) },
@@ -308,8 +313,45 @@ namespace HealthEase.Services.Database
                 new PatientDoctorFavorite { PatientId = 2, DoctorId = 14, CreatedAt = new DateTime(2025, 5, 22, 16, 30, 0) }
             );
 
+            modelBuilder.Entity<MedicalRecord>().HasData(
+                new MedicalRecord { MedicalRecordId = 1, PatientId = 1, Notes = "Alergic to pollen" },
+                new MedicalRecord { MedicalRecordId = 2, PatientId = 2, Notes = "Blood type B-" },
+                new MedicalRecord { MedicalRecordId = 3, PatientId = 3, Notes = "Sensitive to Ibuprofen" }
+            );
 
+            modelBuilder.Entity<MedicalRecordEntry>().HasData(
+                new MedicalRecordEntry { MedicalRecordEntryId = 1, MedicalRecordId = 1, EntryType = "Diagnosis", EntryDate = new DateTime(2025, 5, 15),Title="Migrane", Description = "Recurring migraine attacks since childhood.", DoctorId = 1 },
+                new MedicalRecordEntry { MedicalRecordEntryId = 2, MedicalRecordId = 1, EntryType = "Prescription", EntryDate = new DateTime(2025, 5, 16), Title = "Ibuprofen 400mg", Description = "Take 1 tablet every 8 hours as needed for pain.", DoctorId = 1 },
+                new MedicalRecordEntry { MedicalRecordEntryId = 3, MedicalRecordId = 2, EntryType = "Diagnosis", EntryDate = new DateTime(2025, 5, 18), Title = "Blood Test Results", Description= "Cholesterol slightly elevated. All other parameters within normal range.", DoctorId = 2 }
+            );
 
+            modelBuilder.Entity<Notification>().HasData(
+                new Notification { NotificationId = 1, PatientId = 1, Message = "Your appointment with Dr. Robert Trahan is approved!", CreatedAt = new DateTime(2025, 6, 1, 8, 30, 0), IsRead = true, IsDeleted = false },
+                new Notification { NotificationId = 2, PatientId = 1, Message = "Lab results are uploaded to your medical record.", CreatedAt = new DateTime(2025, 6, 2, 15, 10, 0), IsRead = false, IsDeleted = false },
+                new Notification { NotificationId = 3, PatientId = 2, Message = "Your follow-up appointment was declined by Dr. Paul Ulrey. Please reschedule.", CreatedAt = new DateTime(2025, 6, 3, 10, 45, 0), IsRead = false, IsDeleted = false },
+                new Notification { NotificationId = 4, PatientId = 3, Message = "Payment for appointment successfully processed.", CreatedAt = new DateTime(2025, 6, 3, 12, 15, 0), IsRead = true, IsDeleted = false },
+                new Notification { NotificationId = 5, PatientId = 3, Message = "New doctor available: Dr. Helen Evans (Dermatology).", CreatedAt = new DateTime(2025, 6, 4, 9, 20, 0), IsRead = false, IsDeleted = false }
+            );
+            modelBuilder.Entity<Transaction>().HasData(
+                new Transaction { TransactionId = 1, Amount = 60.0, TransactionDate = new DateTime(2025, 5, 12, 8, 15, 0), PaymentMethod = "PayPal", PaymentId = "PAYID-000003", PayerId = "PAYER-003", PatientId = 1, AppointmentId = 3 },
+                new Transaction { TransactionId = 2, Amount = 75.0, TransactionDate = new DateTime(2025, 6, 1, 9, 30, 0), PaymentMethod = "PayPal", PaymentId = "PAYID-000004", PayerId = "PAYER-004", PatientId = 1, AppointmentId = 4 },
+                new Transaction { TransactionId = 3, Amount = 90.0, TransactionDate = new DateTime(2025, 7, 10, 11, 10, 0), PaymentMethod = "PayPal", PaymentId = "PAYID-000005", PayerId = "PAYER-005", PatientId = 2, AppointmentId = 5 },
+                new Transaction { TransactionId = 4, Amount = 55.0, TransactionDate = new DateTime(2025, 7, 16, 14, 15, 0), PaymentMethod = "PayPal", PaymentId = "PAYID-000006", PayerId = "PAYER-006", PatientId = 2, AppointmentId = 6 },
+                new Transaction { TransactionId = 5, Amount = 70.0, TransactionDate = new DateTime(2025, 7, 19, 10, 20, 0), PaymentMethod = "PayPal", PaymentId = "PAYID-000007", PayerId = "PAYER-007", PatientId = 3, AppointmentId = 7 }
+            );
+            modelBuilder.Entity<Review>().HasData(
+                new Review { ReviewId = 1, DoctorId = 2, AppointmentId = 3, PatientId = 1, Rating = 5, Comment = "Excellent doctor, very thorough and kind.", CreatedAt = new DateTime(2025, 5, 12, 12, 15, 0) },
+                new Review { ReviewId = 2, DoctorId = 3, AppointmentId = 4, PatientId = 1, Rating = 4, Comment = "Quick and professional, satisfied with the service.", CreatedAt = new DateTime(2025, 6, 1, 11, 0, 0) },
+                new Review { ReviewId = 3, DoctorId = 4, AppointmentId = 5, PatientId = 2, Rating = 3, Comment = "Consultation was okay, but had to wait a bit.", CreatedAt = new DateTime(2025, 7, 10, 11, 30, 0) },
+                new Review { ReviewId = 4, DoctorId = 5, AppointmentId = 6, PatientId = 2, Rating = 5, Comment = "Amazing, friendly staff and clear explanations.", CreatedAt = new DateTime(2025, 7, 16, 15, 0, 0) },
+                new Review { ReviewId = 5, DoctorId = 6, AppointmentId = 7, PatientId = 3, Rating = 2, Comment = "Not satisfied with the approach.", CreatedAt = new DateTime(2025, 7, 19, 11, 45, 0) }
+            );
+            modelBuilder.Entity<Message>().HasData(
+                new Message { MessageId = 1, PatientId = 1, UserId = 2, SenderId = 1, SenderType = "Patient", Content = "Hello, I have a question about my profile.", SentAt = new DateTime(2025, 6, 12, 9, 30, 0), IsRead = false },
+                new Message { MessageId = 2, PatientId = 1, UserId = 2, SenderId = 2, SenderType = "Admin", Content = "Hi! How can I assist you today?", SentAt = new DateTime(2025, 6, 12, 9, 35, 0), IsRead = true },
+                new Message { MessageId = 3, PatientId = 1, UserId = 3, SenderId = 1, SenderType = "Patient", Content = "Doctor, can I change my appointment date?", SentAt = new DateTime(2025, 6, 15, 14, 0, 0), IsRead = false },
+                new Message { MessageId = 4, PatientId = 1, UserId = 3, SenderId = 3, SenderType = "Doctor", Content = "Yes, please suggest a new date and I'll check my schedule.", SentAt = new DateTime(2025, 6, 15, 14, 05, 0), IsRead = true }
+            );
 
 
 

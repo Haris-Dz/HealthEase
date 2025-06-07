@@ -53,7 +53,6 @@ class _MessagesScreenState extends State<MessagesScreen> {
       sortDirection: "desc",
     );
 
-    // Grupiraj po PatientId
     Map<int, Message> chatMap = {};
     for (var msg in result.resultList) {
       final int? chatKey = msg.patientId;
@@ -105,7 +104,6 @@ class _MessagesScreenState extends State<MessagesScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Dropdown za izbor pacijenta ili Search
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 12, 8, 8),
           child:
@@ -184,7 +182,6 @@ class _MessagesScreenState extends State<MessagesScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // (Opcionalno dugme za otvaranje odabranog pacijenta)
                     ],
                   ),
         ),

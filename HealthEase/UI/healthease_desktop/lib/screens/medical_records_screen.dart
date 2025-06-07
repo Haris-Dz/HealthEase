@@ -30,11 +30,10 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
   bool _isPatientsLoading = false;
 
   String _search = '';
-  String? _entryTypeFilter;
+  String _entryTypeFilter = "All"; // Fix: Use "All" as default, never null.
 
   Timer? _debounce;
 
-  // Novi state za doctorId
   int? _currentDoctorId;
   bool _isDoctorIdLoading = false;
 
@@ -72,7 +71,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
       } catch (_) {
         _currentDoctorId = null;
       } finally {
-        setState(() => _isDoctorIdLoading = false);
+        if (mounted) setState(() => _isDoctorIdLoading = false);
       }
     }
     await _fetchRecords();
@@ -86,6 +85,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
   }
 
   Future<void> _fetchRecords({int? selectedMedicalRecordId}) async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
     try {
       var result = await _medicalRecordsProvider.get(
@@ -115,7 +115,6 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
 
       setState(() {
         _patientNames = names;
-        // Selektuj record nakon edit/dodavanja ako treba
         if (selectedMedicalRecordId != null) {
           if (_records.isNotEmpty) {
             _selectedRecord = _records.firstWhere(
@@ -137,10 +136,12 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
     } catch (e) {
       _showError(e.toString());
     } finally {
-      setState(() {
-        _isLoading = false;
-        _isPatientsLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _isPatientsLoading = false;
+        });
+      }
     }
   }
 
@@ -212,6 +213,17 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
     );
   }
 
+  List<String> get _uniqueEntryTypes {
+    final entries = _selectedRecord?.entries;
+    if (entries == null) return [];
+    return entries
+        .map((e) => e.entryType)
+        .whereType<String>()
+        .toSet()
+        .where((type) => type.trim().isNotEmpty)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading || _isDoctorIdLoading) {
@@ -220,7 +232,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
 
     return Row(
       children: [
-        // Lijeva strana: Lista pacijenata/rekorda
+        // Sidebar: Patient list & search
         Container(
           width: 340,
           decoration: BoxDecoration(
@@ -314,9 +326,10 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
                                         )
                                         : null,
                                 onTap:
-                                    () => setState(
-                                      () => _selectedRecord = record,
-                                    ),
+                                    () => setState(() {
+                                      _selectedRecord = record;
+                                      _entryTypeFilter = "All";
+                                    }),
                               ),
                             );
                           },
@@ -325,7 +338,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
             ],
           ),
         ),
-        // Desna strana: Entries za izabranog pacijenta
+        // Main panel: Medical record entries
         Expanded(
           child:
               _selectedRecord == null
@@ -351,26 +364,26 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
                         const SizedBox(height: 14),
                         Row(
                           children: [
+                            // Filter dropdown: ALWAYS safe now!
                             DropdownButton<String>(
-                              hint: const Text("Filter by type"),
                               value: _entryTypeFilter,
                               items: [
                                 const DropdownMenuItem(
-                                  value: null,
+                                  value: "All",
                                   child: Text("All"),
                                 ),
-                                ...?_selectedRecord?.entries
-                                    ?.map((e) => e.entryType)
-                                    .toSet()
-                                    .map(
-                                      (type) => DropdownMenuItem(
-                                        value: type,
-                                        child: Text(type ?? ''),
-                                      ),
-                                    ),
+                                ..._uniqueEntryTypes.map(
+                                  (type) => DropdownMenuItem(
+                                    value: type,
+                                    child: Text(type),
+                                  ),
+                                ),
                               ],
-                              onChanged:
-                                  (v) => setState(() => _entryTypeFilter = v),
+                              onChanged: (v) {
+                                if (v != null) {
+                                  setState(() => _entryTypeFilter = v);
+                                }
+                              },
                             ),
                             const Spacer(),
                             if (isDoctor)
@@ -436,7 +449,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
                                                   .where(
                                                     (e) =>
                                                         _entryTypeFilter ==
-                                                            null ||
+                                                            "All" ||
                                                         e.entryType ==
                                                             _entryTypeFilter,
                                                   )
@@ -530,7 +543,6 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
                                                                           context,
                                                                           "Entry deleted!",
                                                                         );
-                                                                        // Nije loše još jednom osigurati refresh:
                                                                         await _fetchRecords(
                                                                           selectedMedicalRecordId:
                                                                               _selectedRecord?.medicalRecordId,

@@ -621,13 +621,18 @@ class _UsersScreenState extends State<UsersScreen> {
                                 labelText: "Phone Number",
                               ),
                               validator: (value) {
-                                if (value == null || value.isEmpty)
-                                  return "Required";
-                                if (!RegExp(r'^\d{9}$').hasMatch(value))
+                                if (value == null || value.trim().isEmpty) {
+                                  return null;
+                                }
+                                if (!RegExp(
+                                  r'^\d{9}$',
+                                ).hasMatch(value.trim())) {
                                   return "Enter a valid 9-digit number";
+                                }
                                 return null;
                               },
                             ),
+
                             const SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

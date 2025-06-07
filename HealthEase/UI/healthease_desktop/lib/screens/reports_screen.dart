@@ -16,8 +16,6 @@ class ReportsScreen extends StatefulWidget {
 
 class _ReportsScreenState extends State<ReportsScreen> {
   bool _loaded = false;
-
-  // Section selection
   final Map<String, bool> _sections = {
     "appointments": true,
     "revenue": true,
@@ -53,7 +51,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // FILTER & ACTION BAR (all in one)
         Card(
           color: Colors.blue.shade50,
           elevation: 0,
@@ -155,8 +152,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
             ),
           ),
         ),
-
-        // SELECT SECTIONS BAR
         Card(
           color: Colors.grey.shade50,
           elevation: 0,
@@ -177,7 +172,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
             ),
           ),
         ),
-        // REPORT
         Expanded(
           child:
               provider.isLoading
@@ -466,8 +460,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
       ),
     );
   }
-
-  /// PDF export/print logic (uses only selected sections)
   Future<void> _exportPdf(
     BuildContext context,
     AdminReportSummary report, {
@@ -523,8 +515,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 ),
               ),
               pw.Divider(),
-
-              // --- APPOINTMENTS ---
               if (_sections["appointments"]!)
                 pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -576,8 +566,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     pw.SizedBox(height: 24),
                   ],
                 ),
-
-              // --- REVENUE ---
               if (_sections["revenue"]!)
                 pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -621,8 +609,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     pw.SizedBox(height: 22),
                   ],
                 ),
-
-              // --- TOP DOCTORS BY APPOINTMENTS ---
               if (_sections["topDoctorsByAppointments"]!)
                 pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -662,8 +648,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     pw.SizedBox(height: 22),
                   ],
                 ),
-
-              // --- TOP DOCTORS BY RATING ---
               if (_sections["topDoctorsByRating"]!)
                 pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -704,8 +688,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     pw.SizedBox(height: 22),
                   ],
                 ),
-
-              // Footer
               pw.Spacer(),
               pw.Divider(),
               pw.Row(

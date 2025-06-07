@@ -66,7 +66,7 @@ builder.Services.AddSwaggerGen(c =>
 
 });
 Env.Load("../.env");
-var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
 builder.Services.AddDbContext<HealthEaseContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddMapster();

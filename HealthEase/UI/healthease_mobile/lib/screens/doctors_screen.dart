@@ -313,12 +313,21 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Set<int> recommendedIds =
-        _recommendedDoctors.map((d) => d.doctorId!).toSet();
-    final List<Doctor> sortedDoctors = [
-      ..._recommendedDoctors,
-      ..._doctors.where((d) => !recommendedIds.contains(d.doctorId)),
-    ];
+    // Ako je search upit aktivan ili su filteri aktivni
+    final bool isFiltered =
+        _searchName.isNotEmpty || _selectedSpecializationIds.isNotEmpty;
+    final List<Doctor> displayDoctors;
+
+    if (isFiltered) {
+      displayDoctors = _doctors;
+    } else {
+      final Set<int> recommendedIds =
+          _recommendedDoctors.map((d) => d.doctorId!).toSet();
+      displayDoctors = [
+        ..._recommendedDoctors,
+        ..._doctors.where((d) => !recommendedIds.contains(d.doctorId)),
+      ];
+    }
 
     return MasterScreen(
       title: "Doctors",
@@ -360,10 +369,10 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                     const SizedBox(height: 16),
                     Expanded(
                       child: ListView.builder(
-                        itemCount: sortedDoctors.length,
+                        itemCount: displayDoctors.length,
                         itemBuilder:
                             (context, index) =>
-                                _buildDoctorCard(sortedDoctors[index]),
+                                _buildDoctorCard(displayDoctors[index]),
                       ),
                     ),
                   ],

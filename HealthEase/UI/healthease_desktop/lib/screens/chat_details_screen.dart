@@ -98,7 +98,6 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Back button odmah ispod AppBara (bez paddinga)
         Padding(
           padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 8),
           child: Container(
