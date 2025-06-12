@@ -11,8 +11,7 @@ Env.Load(envPath);
 
 
 DotNetEnv.Env.Load(envPath);
-Console.WriteLine($"Searching for .env in: {envPath}");
-Console.WriteLine($"File exists: {File.Exists(envPath)}");
+
 
 
 Console.WriteLine("Hello, World!");

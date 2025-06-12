@@ -127,7 +127,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   FormField<bool>(
                     validator: (_) {
                       if (!_sendToAll && _selectedPatient == null) {
-                        return 'Please select a patient or enable "Send to all".';
+                        return 'Please select a patient.';
                       }
                       return null;
                     },

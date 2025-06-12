@@ -4,22 +4,36 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: healthease-sql
     restart: unless-stopped
+    user: root
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=${SA_PASSWORD}
       - MSSQL_PID=Developer
     ports:
-      - 1433:1433
+      - 1401:1433
+    expose:
+        - 1433
     networks:
       - healthease_net
 
   rabbitmq:
-    image: rabbitmq:3.12-management
+    image: rabbitmq:4.0-management
     container_name: rabbitmq
+    hostname: "rabbitmq"
+    labels:
+        NAME: "rabbitmq"
     restart: unless-stopped
     ports:
       - "15672:15672"  # management ui
       - "5672:5672"    # rabbitmq
+    expose:
+        - 5672
+        - 15672
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:15672"]
+        interval: 30s
+        timeout: 10s
+        retries: 10
     networks:
       - healthease_net
 
@@ -47,6 +61,8 @@ services:
     depends_on:
       - healthease-sql
       - rabbitmq
+    links:
+      - healthease-sql
     networks:
       - healthease_net
 
@@ -55,7 +71,7 @@ services:
       context: .
       dockerfile: Dockerfile.subscriber
     container_name: healthease-subscriber
-    restart: unless-stopped
+    restart: on-failure
     environment:
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}

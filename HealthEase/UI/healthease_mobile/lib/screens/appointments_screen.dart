@@ -516,7 +516,15 @@ class _LeaveReviewDialogState extends State<LeaveReviewDialog> {
                           'comment': _commentController.text.trim(),
                         });
                       }
-                      if (context.mounted) Navigator.of(context).pop(true);
+                      if (context.mounted) {
+                        await showSuccessAlert(
+                          context,
+                          widget.reviewId == null
+                              ? "Review successfully submitted!"
+                              : "Review successfully updated!",
+                        );
+                        Navigator.of(context).pop(true);
+                      }
                     } catch (_) {
                       if (context.mounted) {
                         await showErrorAlert(

@@ -81,7 +81,7 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             AppointmentId = 1,
-                            AppointmentDate = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentDate = new DateTime(2025, 6, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             AppointmentTime = new TimeSpan(0, 10, 0, 0, 0),
                             AppointmentTypeId = 1,
                             DoctorId = 1,
@@ -94,36 +94,36 @@ namespace HealthEase.Services.Migrations
                         new
                         {
                             AppointmentId = 2,
-                            AppointmentDate = new DateTime(2025, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentDate = new DateTime(2025, 6, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             AppointmentTime = new TimeSpan(0, 11, 0, 0, 0),
                             AppointmentTypeId = 2,
-                            DoctorId = 1,
+                            DoctorId = 4,
                             IsDeleted = false,
                             IsPaid = false,
                             Note = "Consultation for recurring headaches.",
                             PatientId = 1,
                             Status = "Approved",
-                            StatusMessage = "Approved by Dr. Trahan"
+                            StatusMessage = "Approved"
                         },
                         new
                         {
                             AppointmentId = 3,
                             AppointmentDate = new DateTime(2025, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AppointmentTime = new TimeSpan(0, 9, 30, 0, 0),
+                            AppointmentTime = new TimeSpan(0, 9, 0, 0, 0),
                             AppointmentTypeId = 3,
                             DoctorId = 2,
                             IsDeleted = false,
                             IsPaid = true,
                             Note = "Lab results follow-up.",
-                            PatientId = 1,
-                            PaymentDate = new DateTime(2025, 5, 12, 8, 0, 0, 0, DateTimeKind.Unspecified),
+                            PatientId = 2,
+                            PaymentDate = new DateTime(2025, 4, 12, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Paid",
                             StatusMessage = "Payment completed"
                         },
                         new
                         {
                             AppointmentId = 4,
-                            AppointmentDate = new DateTime(2025, 8, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentDate = new DateTime(2025, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             AppointmentTime = new TimeSpan(0, 14, 0, 0, 0),
                             AppointmentTypeId = 1,
                             DoctorId = 3,
@@ -131,7 +131,7 @@ namespace HealthEase.Services.Migrations
                             IsPaid = true,
                             Note = "Scheduled preventive check.",
                             PatientId = 1,
-                            PaymentDate = new DateTime(2025, 6, 1, 9, 0, 0, 0, DateTimeKind.Unspecified),
+                            PaymentDate = new DateTime(2025, 5, 1, 9, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Paid",
                             StatusMessage = "Payment completed"
                         },
@@ -146,7 +146,7 @@ namespace HealthEase.Services.Migrations
                             IsPaid = true,
                             Note = "Consultation about recurring migraines.",
                             PatientId = 2,
-                            PaymentDate = new DateTime(2025, 7, 10, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                            PaymentDate = new DateTime(2025, 6, 10, 11, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Paid",
                             StatusMessage = "Paid - consultation"
                         },
@@ -154,14 +154,14 @@ namespace HealthEase.Services.Migrations
                         {
                             AppointmentId = 6,
                             AppointmentDate = new DateTime(2025, 7, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AppointmentTime = new TimeSpan(0, 15, 30, 0, 0),
+                            AppointmentTime = new TimeSpan(0, 15, 0, 0, 0),
                             AppointmentTypeId = 1,
                             DoctorId = 5,
                             IsDeleted = false,
                             IsPaid = true,
                             Note = "General checkup.",
                             PatientId = 2,
-                            PaymentDate = new DateTime(2025, 7, 16, 14, 0, 0, 0, DateTimeKind.Unspecified),
+                            PaymentDate = new DateTime(2025, 6, 16, 14, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Paid",
                             StatusMessage = "Paid online"
                         },
@@ -169,14 +169,14 @@ namespace HealthEase.Services.Migrations
                         {
                             AppointmentId = 7,
                             AppointmentDate = new DateTime(2025, 7, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AppointmentTime = new TimeSpan(0, 10, 30, 0, 0),
+                            AppointmentTime = new TimeSpan(0, 10, 0, 0, 0),
                             AppointmentTypeId = 3,
                             DoctorId = 6,
                             IsDeleted = false,
                             IsPaid = true,
                             Note = "Pediatric consultation.",
                             PatientId = 3,
-                            PaymentDate = new DateTime(2025, 7, 19, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                            PaymentDate = new DateTime(2025, 6, 19, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Paid",
                             StatusMessage = "Payment confirmed"
                         },
@@ -196,15 +196,15 @@ namespace HealthEase.Services.Migrations
                         },
                         new
                         {
-                            AppointmentId = 9,
-                            AppointmentDate = new DateTime(2025, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AppointmentTime = new TimeSpan(0, 16, 0, 0, 0),
+                            AppointmentId = 10,
+                            AppointmentDate = new DateTime(2025, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AppointmentTime = new TimeSpan(0, 12, 0, 0, 0),
                             AppointmentTypeId = 2,
-                            DoctorId = 8,
+                            DoctorId = 1,
                             IsDeleted = false,
                             IsPaid = false,
                             Note = "Follow-up visit.",
-                            PatientId = 3,
+                            PatientId = 1,
                             Status = "Approved",
                             StatusMessage = "See you on time"
                         });
@@ -768,7 +768,7 @@ namespace HealthEase.Services.Migrations
                             IsRead = true,
                             PatientId = 1,
                             SenderId = 2,
-                            SenderType = "Admin",
+                            SenderType = "User",
                             SentAt = new DateTime(2025, 6, 12, 9, 35, 0, 0, DateTimeKind.Unspecified),
                             UserId = 2
                         },
@@ -792,7 +792,7 @@ namespace HealthEase.Services.Migrations
                             IsRead = true,
                             PatientId = 1,
                             SenderId = 3,
-                            SenderType = "Doctor",
+                            SenderType = "User",
                             SentAt = new DateTime(2025, 6, 15, 14, 5, 0, 0, DateTimeKind.Unspecified),
                             UserId = 3
                         });
@@ -1128,7 +1128,7 @@ namespace HealthEase.Services.Migrations
                             CreatedAt = new DateTime(2025, 5, 12, 12, 15, 0, 0, DateTimeKind.Unspecified),
                             DoctorId = 2,
                             IsDeleted = false,
-                            PatientId = 1,
+                            PatientId = 2,
                             Rating = 5
                         },
                         new
@@ -1340,7 +1340,7 @@ namespace HealthEase.Services.Migrations
                             PayerId = "PAYER-003",
                             PaymentId = "PAYID-000003",
                             PaymentMethod = "PayPal",
-                            TransactionDate = new DateTime(2025, 5, 12, 8, 15, 0, 0, DateTimeKind.Unspecified)
+                            TransactionDate = new DateTime(2025, 4, 12, 8, 15, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1352,7 +1352,7 @@ namespace HealthEase.Services.Migrations
                             PayerId = "PAYER-004",
                             PaymentId = "PAYID-000004",
                             PaymentMethod = "PayPal",
-                            TransactionDate = new DateTime(2025, 6, 1, 9, 30, 0, 0, DateTimeKind.Unspecified)
+                            TransactionDate = new DateTime(2025, 5, 1, 9, 30, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1364,7 +1364,7 @@ namespace HealthEase.Services.Migrations
                             PayerId = "PAYER-005",
                             PaymentId = "PAYID-000005",
                             PaymentMethod = "PayPal",
-                            TransactionDate = new DateTime(2025, 7, 10, 11, 10, 0, 0, DateTimeKind.Unspecified)
+                            TransactionDate = new DateTime(2025, 6, 10, 11, 10, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1376,7 +1376,7 @@ namespace HealthEase.Services.Migrations
                             PayerId = "PAYER-006",
                             PaymentId = "PAYID-000006",
                             PaymentMethod = "PayPal",
-                            TransactionDate = new DateTime(2025, 7, 16, 14, 15, 0, 0, DateTimeKind.Unspecified)
+                            TransactionDate = new DateTime(2025, 6, 11, 14, 15, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1388,7 +1388,7 @@ namespace HealthEase.Services.Migrations
                             PayerId = "PAYER-007",
                             PaymentId = "PAYID-000007",
                             PaymentMethod = "PayPal",
-                            TransactionDate = new DateTime(2025, 7, 19, 10, 20, 0, 0, DateTimeKind.Unspecified)
+                            TransactionDate = new DateTime(2025, 6, 12, 10, 20, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -1454,7 +1454,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "wSG+yBth9HCj0O1AdRBL+CJjtR4=",
                             PasswordSalt = "c0MJh5XS8DYQtkJavp5lsA==",
                             PhoneNumber = "123456789",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "test"
                         },
                         new
@@ -1467,7 +1466,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "wSG+yBth9HCj0O1AdRBL+CJjtR4=",
                             PasswordSalt = "c0MJh5XS8DYQtkJavp5lsA==",
                             PhoneNumber = "000000000",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "desktop"
                         },
                         new
@@ -1480,7 +1478,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "062543234",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "doctor"
                         },
                         new
@@ -1493,7 +1490,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "062222333",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "doctor1"
                         },
                         new
@@ -1506,7 +1502,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "062958342",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "doctor2"
                         },
                         new
@@ -1519,7 +1514,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI=",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "062332123",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "doctor3"
                         },
                         new
@@ -1532,7 +1526,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "061222111",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "james.s"
                         },
                         new
@@ -1545,7 +1538,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "060111222",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "emma.j"
                         },
                         new
@@ -1558,7 +1550,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "065333444",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "liam.w"
                         },
                         new
@@ -1571,7 +1562,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "064222333",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "olivia.b"
                         },
                         new
@@ -1584,7 +1574,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "063444555",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "mason.d"
                         },
                         new
@@ -1597,7 +1586,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "062111999",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "ava.m"
                         },
                         new
@@ -1610,7 +1598,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "061555888",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "lucas.g"
                         },
                         new
@@ -1623,7 +1610,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "065777666",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "mia.r"
                         },
                         new
@@ -1636,7 +1622,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "064888777",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "jack.m"
                         },
                         new
@@ -1649,7 +1634,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "063666555",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "sophia.h"
                         },
                         new
@@ -1662,7 +1646,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "uAQkJu5IuKT3FArAvq4E5KbBzRI",
                             PasswordSalt = "ppASfJlw8D6P+mNsl7bqMA==",
                             PhoneNumber = "061999222",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "logan.l"
                         },
                         new
@@ -1675,7 +1658,6 @@ namespace HealthEase.Services.Migrations
                             PasswordHash = "3JVNj98T0GrBkWatJPLYoaIqBEA=",
                             PasswordSalt = "/gLAN9q37ktD4sUpWLjN1g==",
                             PhoneNumber = "062532195",
-                            ProfilePicture = new byte[] { 0 },
                             Username = "assistant"
                         });
                 });

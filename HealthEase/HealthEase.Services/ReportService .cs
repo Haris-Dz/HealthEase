@@ -67,7 +67,7 @@ namespace HealthEase.Services
 
             // Top 3 doctors by number of appointments
             var topDoctorsByAppointments = await appointmentsQuery
-                .Where(a => a.DoctorId != null && a.Status == "Approved")
+                .Where(a => a.DoctorId != null && (a.Status == "Approved" || a.Status == "Paid"))
                 .GroupBy(a => a.DoctorId)
                 .Select(g => new
                 {

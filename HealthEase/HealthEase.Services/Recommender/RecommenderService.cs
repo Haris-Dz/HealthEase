@@ -98,7 +98,7 @@ namespace HealthEase.Services.Recommender
             var allDoctors = await _context.Doctors
                 .Include(d => d.DoctorSpecializations)
                     .ThenInclude(ds => ds.Specialization)
-                .Include(d => d.User)
+                .Include(d => d.User).ThenInclude(u=>u.WorkingHours)
                 .Include(d => d.Appointments)
                     .ThenInclude(a => a.AppointmentType)
                 .Where(d => !d.IsDeleted && d.StateMachine == "active")
