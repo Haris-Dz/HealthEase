@@ -24,12 +24,12 @@ class PaypalScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PaypalCheckoutView(
       sandboxMode: true,
-      clientId: dotenv.env['PAYPAL_CLIENT_ID'] ?? "",
-      secretKey: dotenv.env['PAYPAL_SECRET'] ?? "",
-      // clientId:
-      //     "AURtCEWnvA03YzChyXThPXeyY2beJP1RFJlUAzpjk1tBD8Xu166eActAUmwQmf_moWiVAzmxVVCMPdFp",
-      // secretKey:
-      //     "ECC5-TP5yuNrOYTOXPUvGg6m49UdvPmKOKb3yhG2_r-R-5rdHr7Ryj0NuFWkA6zGKIXWzvk2bmCcpxaw",
+      clientId:
+          dotenv.env['PAYPAL_CLIENT_ID'] ??
+          "AURtCEWnvA03YzChyXThPXeyY2beJP1RFJlUAzpjk1tBD8Xu166eActAUmwQmf_moWiVAzmxVVCMPdFp",
+      secretKey:
+          dotenv.env['PAYPAL_SECRET'] ??
+          "ECC5-TP5yuNrOYTOXPUvGg6m49UdvPmKOKb3yhG2_r-R-5rdHr7Ryj0NuFWkA6zGKIXWzvk2bmCcpxaw",
       transactions: [
         {
           "amount": {

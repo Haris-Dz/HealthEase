@@ -460,6 +460,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       ),
     );
   }
+
   Future<void> _exportPdf(
     BuildContext context,
     AdminReportSummary report, {

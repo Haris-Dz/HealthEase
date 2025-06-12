@@ -7,7 +7,7 @@ import 'auth_provider.dart';
 class AdminReportProvider with ChangeNotifier {
   static String? baseUrl = const String.fromEnvironment(
     "baseUrl",
-    defaultValue: "http://localhost:5181/api/",
+    defaultValue: "http://localhost:5200/api/",
   );
 
   AdminReportSummary? _report;

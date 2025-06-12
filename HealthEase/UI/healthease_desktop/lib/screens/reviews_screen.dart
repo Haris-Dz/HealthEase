@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:healthease_desktop/models/review.dart';
 import 'package:healthease_desktop/providers/reviews_provider.dart';
+import 'package:healthease_desktop/providers/doctors_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:healthease_desktop/providers/utils.dart';
 import 'package:healthease_desktop/providers/auth_provider.dart';
@@ -28,12 +29,12 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   final _fromDateController = TextEditingController();
   final _toDateController = TextEditingController();
 
+  int? _doctorId; // <- REAL DoctorId!
+
   bool get isDoctor {
     return AuthProvider.userRoles?.any((role) => role.role?.roleId == 2) ??
         false;
   }
-
-  int? get doctorId => AuthProvider.userId;
 
   @override
   void dispose() {
@@ -45,13 +46,29 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   @override
   void initState() {
     super.initState();
+    _loadDoctorIdAndFetchReviews();
+  }
+
+  Future<void> _loadDoctorIdAndFetchReviews() async {
+    if (isDoctor) {
+      // Učitaj DoctorId za trenutnog usera
+      try {
+        final doctors = await DoctorsProvider().get(
+          filter: {'UserId': AuthProvider.userId},
+        );
+        if (doctors.resultList.isNotEmpty) {
+          _doctorId = doctors.resultList.first.doctorId;
+        }
+      } catch (_) {}
+    }
     _fetchReviews();
   }
 
   Future<void> _fetchReviews() async {
     setState(() => _isLoading = true);
+
     final filter = <String, dynamic>{
-      if (isDoctor) "DoctorId": doctorId,
+      if (isDoctor && _doctorId != null) "DoctorId": _doctorId,
       if (!isDoctor && _selectedRating != null) "Rating": _selectedRating,
       if (!isDoctor && _doctorNameGTE?.isNotEmpty == true)
         "DoctorNameGTE": _doctorNameGTE,
@@ -65,10 +82,12 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     };
     final result = await _reviewProvider.get(filter: filter);
 
-    setState(() {
-      _reviews = result.resultList.cast<Review>();
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _reviews = result.resultList.cast<Review>();
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _deleteReview(int reviewId) async {
@@ -147,7 +166,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   }
 
   Widget _buildFilters() {
-    if (isDoctor) return const SizedBox.shrink(); 
+    if (isDoctor) return const SizedBox.shrink();
 
     return Card(
       color: Colors.blue.shade50,
@@ -274,14 +293,19 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   }
 
   Widget _buildReviewRow(Review r) {
-    ImageProvider? avatar;
+    ImageProvider avatar;
     if (r.patientProfilePicture != null &&
         r.patientProfilePicture!.isNotEmpty &&
         r.patientProfilePicture != "AA==") {
       try {
         avatar = MemoryImage(base64Decode(r.patientProfilePicture!));
-      } catch (_) {}
+      } catch (_) {
+        avatar = const AssetImage('assets/images/placeholder.png');
+      }
+    } else {
+      avatar = const AssetImage('assets/images/placeholder.png');
     }
+
     return Card(
       color: r.isDeleted! ? Colors.grey.shade100 : Colors.white,
       margin: const EdgeInsets.symmetric(vertical: 7, horizontal: 2),

@@ -22,6 +22,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
   final _entriesProvider = MedicalRecordEntriesProvider();
   final _patientsProvider = PatientsProvider();
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   List<MedicalRecord> _records = [];
   Map<int, String> _patientNames = {};
@@ -81,6 +82,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
   void dispose() {
     _debounce?.cancel();
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -417,154 +419,173 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
                                       style: TextStyle(color: Colors.grey[600]),
                                     ),
                                   )
-                                  : SizedBox(
-                                    width: 950,
-                                    child: Card(
-                                      margin: EdgeInsets.zero,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      elevation: 2,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16),
-                                        child: DataTable(
-                                          columnSpacing: 16,
-                                          border: TableBorder.symmetric(
-                                            inside: BorderSide(
-                                              color: Colors.grey.shade200,
-                                              width: 1,
+                                  : Scrollbar(
+                                    thumbVisibility: true,
+                                    controller: _scrollController,
+                                    child: SingleChildScrollView(
+                                      controller: _scrollController,
+                                      scrollDirection: Axis.horizontal,
+                                      child: SizedBox(
+                                        width: 950,
+                                        child: Card(
+                                          margin: EdgeInsets.zero,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              15,
                                             ),
                                           ),
-                                          columns: const [
-                                            DataColumn(label: Text("Type")),
-                                            DataColumn(label: Text("Date")),
-                                            DataColumn(label: Text("Title")),
-                                            DataColumn(
-                                              label: Text("Description"),
-                                            ),
-                                            DataColumn(label: Text("Actions")),
-                                          ],
-                                          rows:
-                                              (_selectedRecord!.entries ?? [])
-                                                  .where(
-                                                    (e) =>
-                                                        _entryTypeFilter ==
-                                                            "All" ||
-                                                        e.entryType ==
-                                                            _entryTypeFilter,
-                                                  )
-                                                  .map((entry) {
-                                                    final canEdit =
-                                                        isDoctor &&
-                                                        _currentDoctorId !=
-                                                            null &&
-                                                        entry.doctorId ==
-                                                            _currentDoctorId;
-                                                    return DataRow(
-                                                      cells: [
-                                                        DataCell(
-                                                          Text(
-                                                            entry.entryType ??
-                                                                "",
-                                                          ),
-                                                        ),
-                                                        DataCell(
-                                                          Text(
-                                                            formatDateString(
-                                                              entry.entryDate,
+                                          elevation: 2,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16),
+                                            child: DataTable(
+                                              columnSpacing: 16,
+                                              border: TableBorder.symmetric(
+                                                inside: BorderSide(
+                                                  color: Colors.grey.shade200,
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              columns: const [
+                                                DataColumn(label: Text("Type")),
+                                                DataColumn(label: Text("Date")),
+                                                DataColumn(
+                                                  label: Text("Title"),
+                                                ),
+                                                DataColumn(
+                                                  label: Text("Description"),
+                                                ),
+                                                DataColumn(
+                                                  label: Text("Actions"),
+                                                ),
+                                              ],
+                                              rows:
+                                                  (_selectedRecord!.entries ??
+                                                          [])
+                                                      .where(
+                                                        (e) =>
+                                                            _entryTypeFilter ==
+                                                                "All" ||
+                                                            e.entryType ==
+                                                                _entryTypeFilter,
+                                                      )
+                                                      .map((entry) {
+                                                        final canEdit =
+                                                            isDoctor &&
+                                                            _currentDoctorId !=
+                                                                null &&
+                                                            entry.doctorId ==
+                                                                _currentDoctorId;
+                                                        return DataRow(
+                                                          cells: [
+                                                            DataCell(
+                                                              Text(
+                                                                entry.entryType ??
+                                                                    "",
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                        DataCell(
-                                                          Text(
-                                                            entry.title ?? "",
-                                                          ),
-                                                        ),
-                                                        DataCell(
-                                                          SizedBox(
-                                                            width: 210,
-                                                            child: Text(
-                                                              entry.description ??
-                                                                  "",
-                                                              maxLines: 2,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
+                                                            DataCell(
+                                                              Text(
+                                                                formatDateString(
+                                                                  entry
+                                                                      .entryDate,
+                                                                ),
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                        DataCell(
-                                                          Row(
-                                                            children: [
-                                                              if (canEdit)
-                                                                IconButton(
-                                                                  icon: const Icon(
-                                                                    Icons.edit,
-                                                                    size: 18,
-                                                                  ),
-                                                                  tooltip:
-                                                                      "Edit entry",
-                                                                  onPressed:
-                                                                      () => _openEntryDialog(
-                                                                        entry:
-                                                                            entry,
-                                                                        recordId:
-                                                                            _selectedRecord!.medicalRecordId!,
+                                                            DataCell(
+                                                              Text(
+                                                                entry.title ??
+                                                                    "",
+                                                              ),
+                                                            ),
+                                                            DataCell(
+                                                              SizedBox(
+                                                                width: 210,
+                                                                child: Text(
+                                                                  entry.description ??
+                                                                      "",
+                                                                  maxLines: 2,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            DataCell(
+                                                              Row(
+                                                                children: [
+                                                                  if (canEdit)
+                                                                    IconButton(
+                                                                      icon: const Icon(
+                                                                        Icons
+                                                                            .edit,
+                                                                        size:
+                                                                            18,
                                                                       ),
-                                                                ),
-                                                              if (canEdit)
-                                                                IconButton(
-                                                                  icon: const Icon(
-                                                                    Icons
-                                                                        .delete,
-                                                                    size: 18,
-                                                                  ),
-                                                                  tooltip:
-                                                                      "Delete entry",
-                                                                  onPressed: () async {
-                                                                    final confirmed = await showCustomConfirmDialog(
-                                                                      context,
-                                                                      title:
-                                                                          "Confirm Delete",
-                                                                      text:
-                                                                          "Are you sure you want to delete this entry?",
-                                                                      confirmBtnText:
-                                                                          "Delete",
-                                                                      confirmBtnColor:
-                                                                          Colors
-                                                                              .red,
-                                                                    );
-                                                                    if (confirmed) {
-                                                                      try {
-                                                                        await _deleteEntry(
-                                                                          entry,
-                                                                        );
-                                                                        await showSuccessAlert(
+                                                                      tooltip:
+                                                                          "Edit entry",
+                                                                      onPressed:
+                                                                          () => _openEntryDialog(
+                                                                            entry:
+                                                                                entry,
+                                                                            recordId:
+                                                                                _selectedRecord!.medicalRecordId!,
+                                                                          ),
+                                                                    ),
+                                                                  if (canEdit)
+                                                                    IconButton(
+                                                                      icon: const Icon(
+                                                                        Icons
+                                                                            .delete,
+                                                                        size:
+                                                                            18,
+                                                                      ),
+                                                                      tooltip:
+                                                                          "Delete entry",
+                                                                      onPressed: () async {
+                                                                        final confirmed = await showCustomConfirmDialog(
                                                                           context,
-                                                                          "Entry deleted!",
+                                                                          title:
+                                                                              "Confirm Delete",
+                                                                          text:
+                                                                              "Are you sure you want to delete this entry?",
+                                                                          confirmBtnText:
+                                                                              "Delete",
+                                                                          confirmBtnColor:
+                                                                              Colors.red,
                                                                         );
-                                                                        await _fetchRecords(
-                                                                          selectedMedicalRecordId:
-                                                                              _selectedRecord?.medicalRecordId,
-                                                                        );
-                                                                      } catch (
-                                                                        e
-                                                                      ) {
-                                                                        await showErrorAlert(
-                                                                          context,
-                                                                          "Failed to delete entry!",
-                                                                        );
-                                                                      }
-                                                                    }
-                                                                  },
-                                                                ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  })
-                                                  .toList(),
+                                                                        if (confirmed) {
+                                                                          try {
+                                                                            await _deleteEntry(
+                                                                              entry,
+                                                                            );
+                                                                            await showSuccessAlert(
+                                                                              context,
+                                                                              "Entry deleted!",
+                                                                            );
+                                                                            await _fetchRecords(
+                                                                              selectedMedicalRecordId:
+                                                                                  _selectedRecord?.medicalRecordId,
+                                                                            );
+                                                                          } catch (
+                                                                            e
+                                                                          ) {
+                                                                            await showErrorAlert(
+                                                                              context,
+                                                                              "Failed to delete entry!",
+                                                                            );
+                                                                          }
+                                                                        }
+                                                                      },
+                                                                    ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      })
+                                                      .toList(),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
