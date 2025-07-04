@@ -1,39 +1,38 @@
 # HealthEase
-Seminarski rad iz predmeta Razvoj softvera 2 na Fakultetu informacijskih tehnologija u Mostaru
+Seminar project for the course *Software Development 2* at the Faculty of Information Technologies in Mostar
 
-# Upute za pokretanje
-- **Otvoriti HealthEase repozitorij**
-- **Otvoriti folder HealthEase unutar pomenutog repozitorija**
-- **Locirati fit-build-2025-06-11 - env.zip arhivu**
-- **Iz te arhive uraditi extract .env file-a u istom folderu (HealthEase/HealthEase)**
-- **.env file treba biti u HealthEase\HealthEase folderu**
-- **Unutar HealthEase\HealthEase, otvoriti terminal i pokrenuti komandu docker compose up --build, te sačekati da se sve uspješno build-a.**
-- **Vratiti se u HealthEase root folder i locirati fit-build-2025-06-12-desktop.zip i fit-build-2025-06-12-mobile.zip arhive**
-- **Iz tih arhiva uraditi extract, gdje biste trebali dobiti dva foldera: Release i flutter-apk.**
-- **Otvoriti Release folder i iz njega otvoriti healthease_desktop.exe**
-- **Otvoriti flutter-apk folder**
-- **File app-release.apk prenijeti na emulator i sačekati da se instalira. (Deinstalirati aplikaciju sa emulatora ukoliko je prije bila instalirana!)**
-- **Nakon instaliranja obe aplikacije, na iste se možete prijaviti koristeći kredencijale ispod.**
+# Setup Instructions
+- **Open the HealthEase repository**
+- **Navigate to the HealthEase folder within the repository**
+- **Locate the archive named fit-build-2025-06-11 - env.zip**
+- **Extract the .env file from the archive into the same folder (HealthEase/HealthEase)**
+- **The .env file should be located in the HealthEase\HealthEase folder**
+- **Inside HealthEase\HealthEase, open a terminal and run the command `docker compose up --build`, then wait for everything to build successfully**
+- **Go back to the HealthEase root folder and locate the archives: fit-build-2025-06-12-desktop.zip and fit-build-2025-06-12-mobile.zip**
+- **Extract both archives; you should get two folders: Release and flutter-apk**
+- **Open the Release folder and run `healthease_desktop.exe`**
+- **Open the flutter-apk folder**
+- **Transfer the `app-release.apk` file to the emulator and wait for it to install (Uninstall the existing app from the emulator if it was previously installed!)**
+- **After both apps are installed, you can log in using the credentials below**
 
-## Kredencijali za prijavu
+## Login Credentials
 
-### Administrator (desktop aplikacija):
-- **Korisničko ime:** `desktop`
-- **Lozinka:** `test`
+### Administrator (desktop app):
+- **Username:** `desktop`
+- **Password:** `test`
 
-### Doktor (desktop aplikacija):
-- **Korisničko ime:** `doctor`
-- **Lozinka:** `test`
+### Doctor (desktop app):
+- **Username:** `doctor`
+- **Password:** `test`
 
-### Pacijent (mobilna aplikacija):
-- **Korisničko ime:** `mobile`
-- **Lozinka:** `test`
+### Patient (mobile app):
+- **Username:** `mobile`
+- **Password:** `test`
 
-## PayPal Kredencijali
+## PayPal Credentials
 - **Email:** `sb-8arsz41900293@personal.example.com`
-- **Lozinka:** `HBBb?3Ra`
-- **Plaćanje je omogućeno na ekranu Appointments(mobile) nakon sto se appointment odobri sa desktop aplikacije**
+- **Password:** `HBBb?3Ra`
+- **Payment is available on the Appointments screen (mobile) after the appointment has been approved from the desktop application**
 
-## Mikroservis
-- **Rabbitmq je iskorišten za slanje mailova nakon što administrator dodaje novog zaposlenika na desktopu na ekranu Users** 
-  
+## Microservice
+- **RabbitMQ is used for sending emails after an administrator adds a new employee via the Users screen on the desktop app**
